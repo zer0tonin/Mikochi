@@ -1,0 +1,17 @@
+version: '3'
+services:
+  mikochi:
+    build: .
+    ports:
+      - 8080:8080
+
+  dev:
+    image: cosmtrek/air:v1.40.4
+    working_dir: "/mikochi"
+    environment:
+      air_wd: "/mikochi"
+    volumes:
+      - .:/mikochi
+    ports:
+      - 8080:8080
+    command: air -c .air.toml
