@@ -29,40 +29,55 @@ func readDataDir(path string) (result []string, err error) {
 		return result, fmt.Errorf("Invalid path")
 	}
 
-	fmt.Println(viper.GetString("dataDir"))
 	files, err := os.ReadDir(viper.GetString("dataDir") + path)
 	if err != nil {
 		return
 	}
 
 	for _, file := range files {
-		fmt.Println(file.Name())
 		result = append(result, file.Name())
 	}
 	return result, nil
 }
 
-func displayFolder(w http.ResponseWriter, path string) error {
+func displayFolder(w http.ResponseWriter, path string) {
 	files, err := readDataDir(path)
 	if err != nil {
-		return err
+		// Most likely explanation for error is that the directory doesn't exist
+		http.Error(w, "Directory not found", http.StatusInternalServerError)
+		return
 	}
 
-	folderTemplate.Execute(
+	err = folderTemplate.Execute(
 		w,
 		map[string]interface{}{
 			"files": files,
 		},
 	)
-	return nil
+	if err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+	}
 }
 
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodGet:
+			// TODO: two path /browse and /stream
+			// / should redirect to /browse
 			if r.URL.Path == "/" {
+				http.Redirect(w, r, "/browse", 301)
+				return
+			}
+
+			if r.URL.Path == "/browse" {
 				displayFolder(w, "")
+				return
+			}
+
+			if strings.HasPrefix(r.URL.Path, "/browse/") {
+				displayFolder(w, r.URL.Path[7:])
+				return
 			}
 		default:
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
