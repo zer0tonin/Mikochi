@@ -12,6 +12,7 @@ services:
       air_wd: "/mikochi"
     volumes:
       - .:/mikochi
+      - ./data:/data
     ports:
       - 8080:8080
     command: air -c .air.toml
