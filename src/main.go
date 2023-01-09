@@ -29,6 +29,7 @@ func readDataDir(path string) (result []string, err error) {
 		return result, fmt.Errorf("Invalid path")
 	}
 
+	// FIXME: filepath.Join
 	files, err := os.ReadDir(viper.GetString("dataDir") + path)
 	if err != nil {
 		return
@@ -44,7 +45,7 @@ func displayFolder(w http.ResponseWriter, path string) {
 	files, err := readDataDir(path)
 	if err != nil {
 		// Most likely explanation for error is that the directory doesn't exist
-		http.Error(w, "Directory not found", http.StatusInternalServerError)
+		http.Error(w, "Directory not found", http.StatusNotFound)
 		return
 	}
 
@@ -57,6 +58,17 @@ func displayFolder(w http.ResponseWriter, path string) {
 	if err != nil {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 	}
+}
+
+func streamFile(w http.ResponseWriter, r *http.Request) {
+	path := r.URL.Path[7:]
+	// FIXME WTF???
+	if strings.Contains(path, "..") {
+		fmt.Println("Here")
+		http.Error(w, "Invalid path", http.StatusBadRequest)
+		return
+	}
+	http.ServeFile(w, r, viper.GetString("dataDir") + path)
 }
 
 func main() {
@@ -79,6 +91,13 @@ func main() {
 				displayFolder(w, r.URL.Path[7:])
 				return
 			}
+
+			if strings.HasPrefix(r.URL.Path, "/stream/") {
+				streamFile(w, r)
+				return
+			}
+
+			http.Error(w, "Not Found", http.StatusNotFound)
 		default:
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}
