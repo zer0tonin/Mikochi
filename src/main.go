@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/spf13/viper"
@@ -24,13 +25,13 @@ func init() {
 	folderTemplate = template.Must(template.ParseFiles("./templates/folder.html"))
 }
 
-func readDataDir(path string) (result []string, err error) {
-	if strings.Contains(path, "..") {
-		return result, fmt.Errorf("Invalid path")
-	}
+func getPathInDataDir(path string) string {
+	cleanedPath := filepath.Clean(path)
+	return filepath.Join(viper.GetString("dataDir") + cleanedPath)
+}
 
-	// FIXME: filepath.Join
-	files, err := os.ReadDir(viper.GetString("dataDir") + path)
+func readDataDir(path string) (result []string, err error) {
+	files, err := os.ReadDir(path)
 	if err != nil {
 		return
 	}
@@ -42,7 +43,7 @@ func readDataDir(path string) (result []string, err error) {
 }
 
 func displayFolder(w http.ResponseWriter, path string) {
-	files, err := readDataDir(path)
+	files, err := readDataDir(getPathInDataDir(path))
 	if err != nil {
 		// Most likely explanation for error is that the directory doesn't exist
 		http.Error(w, "Directory not found", http.StatusNotFound)
@@ -61,22 +62,14 @@ func displayFolder(w http.ResponseWriter, path string) {
 }
 
 func streamFile(w http.ResponseWriter, r *http.Request) {
-	path := r.URL.Path[7:]
-	// FIXME WTF???
-	if strings.Contains(path, "..") {
-		fmt.Println("Here")
-		http.Error(w, "Invalid path", http.StatusBadRequest)
-		return
-	}
-	http.ServeFile(w, r, viper.GetString("dataDir") + path)
+	path := getPathInDataDir(r.URL.Path[7:])
+	http.ServeFile(w, r, path)
 }
 
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodGet:
-			// TODO: two path /browse and /stream
-			// / should redirect to /browse
 			if r.URL.Path == "/" {
 				http.Redirect(w, r, "/browse", 301)
 				return
