@@ -1,14 +1,39 @@
+<!DOCTYPE html>
 <html>
     <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Mikochi</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+        <link href='https://css.gg/css' rel='stylesheet'>
     </head>
     <body>
         <main>
-            <ul>
-            {{ range .files }}
-                <li>{{ . }}</li>
-            {{ end }}
-            </ul>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{ range .dirEntries }}
+                    <tr>
+                        {{ if .IsDir }}
+                        <td><i class="gg-folder"></i></i></td>
+                        {{ else }}
+                        <td><i class="gg-file"></i></td>
+                        {{ end }}
+
+                        {{ if .IsDir }}
+                        <td><a href="./{{ .Name }}">{{ .Name }}</a></td>
+                        {{ else }}
+                        <td>{{ .Name }}</td>
+                        {{ end }}
+                    </tr>
+                    {{ end }}
+                </tbody>
+            </table>
         </main>
     </body>
 </html>

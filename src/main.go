@@ -30,20 +30,8 @@ func getPathInDataDir(path string) string {
 	return filepath.Join(viper.GetString("dataDir") + cleanedPath)
 }
 
-func readDataDir(path string) (result []string, err error) {
-	files, err := os.ReadDir(path)
-	if err != nil {
-		return
-	}
-
-	for _, file := range files {
-		result = append(result, file.Name())
-	}
-	return result, nil
-}
-
 func displayFolder(w http.ResponseWriter, path string) {
-	files, err := readDataDir(getPathInDataDir(path))
+	dirEntries, err := os.ReadDir(getPathInDataDir(path))
 	if err != nil {
 		// Most likely explanation for error is that the directory doesn't exist
 		http.Error(w, "Directory not found", http.StatusNotFound)
@@ -53,7 +41,7 @@ func displayFolder(w http.ResponseWriter, path string) {
 	err = folderTemplate.Execute(
 		w,
 		map[string]interface{}{
-			"files": files,
+			"dirEntries": dirEntries,
 		},
 	)
 	if err != nil {
@@ -70,13 +58,8 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodGet:
-			if r.URL.Path == "/" {
-				http.Redirect(w, r, "/browse", 301)
-				return
-			}
-
-			if r.URL.Path == "/browse" {
-				displayFolder(w, "/")
+			if r.URL.Path == "/" || r.URL.Path == "/browse" {
+				http.Redirect(w, r, "/browse/", 301)
 				return
 			}
 
