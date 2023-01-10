@@ -31,7 +31,8 @@ func getPathInDataDir(path string) string {
 }
 
 func displayFolder(w http.ResponseWriter, path string) {
-	dirEntries, err := os.ReadDir(getPathInDataDir(path))
+	pathInDataDir := getPathInDataDir(path)
+	dirEntries, err := os.ReadDir(pathInDataDir)
 	if err != nil {
 		// Most likely explanation for error is that the directory doesn't exist
 		http.Error(w, "Directory not found", http.StatusNotFound)
@@ -42,6 +43,7 @@ func displayFolder(w http.ResponseWriter, path string) {
 		w,
 		map[string]interface{}{
 			"dirEntries": dirEntries,
+			"isRoot": pathInDataDir == viper.GetString("dataDir"),
 		},
 	)
 	if err != nil {
@@ -58,8 +60,14 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodGet:
-			if r.URL.Path == "/" || r.URL.Path == "/browse" {
+			if r.URL.Path == "/" {
 				http.Redirect(w, r, "/browse/", 301)
+				return
+			}
+
+			// if the browse page is not suffixed by "/", we append one to simplify navigation
+			if strings.HasPrefix(r.URL.Path, "/browse") && r.URL.Path[len(r.URL.Path)-1] != '/' {
+				http.Redirect(w, r, r.URL.Path + "/", 301)
 				return
 			}
 
