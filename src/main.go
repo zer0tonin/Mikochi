@@ -76,7 +76,7 @@ func main() {
 			}
 
 			if r.URL.Path == "/browse" {
-				displayFolder(w, "")
+				displayFolder(w, "/")
 				return
 			}
 
