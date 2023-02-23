@@ -2,24 +2,22 @@ package main
 
 import (
 	"fmt"
-	"html/template"
-	"net/http"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
 )
 
 var fileCache map[string]os.DirEntry
-var searchTemplate *template.Template
 
+// resets the cache
 func resetCache() {
 	fileCache = map[string]os.DirEntry{}
 	cacheFolder(fileCache, "/")
 }
 
+// recursively initalizes the cache
 func cacheFolder(cache map[string]os.DirEntry, path string) {
 	dirEntries, err := os.ReadDir(getAbsolutePath(path))
 	if err != nil {
@@ -35,6 +33,7 @@ func cacheFolder(cache map[string]os.DirEntry, path string) {
 	}
 }
 
+// refreshes the cache on data dir changes
 func watchDataDir() {
     watcher, err := fsnotify.NewWatcher()
     if err != nil {
@@ -71,22 +70,3 @@ func watchDataDir() {
     <-make(chan struct{})
 }
 
-func searchFile(w http.ResponseWriter, r *http.Request) {
-	result := map[string]os.DirEntry{}
-	path := filepath.Clean(r.URL.Path[8:])
-	for fileName, dirEntry := range fileCache {
-		if strings.Contains(filepath.Clean(fileName), path) {
-			result[fileName] = dirEntry
-		}
-	}
-
-	err := searchTemplate.Execute(
-		w,
-		map[string]interface{}{
-			"result": result,
-		},
-	)
-	if err != nil {
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
-	}
-}
