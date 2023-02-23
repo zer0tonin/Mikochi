@@ -4,14 +4,10 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
-	"os"
-	"path/filepath"
 	"strings"
 
 	"github.com/spf13/viper"
 )
-
-var folderTemplate *template.Template
 
 func init() {
 	viper.SetConfigName("config")
@@ -23,37 +19,7 @@ func init() {
 	}
 
 	folderTemplate = template.Must(template.ParseFiles("./templates/folder.html"))
-}
-
-func getPathInDataDir(path string) string {
-	cleanedPath := filepath.Clean(path)
-	return filepath.Join(viper.GetString("dataDir") + cleanedPath)
-}
-
-func displayFolder(w http.ResponseWriter, path string) {
-	pathInDataDir := getPathInDataDir(path)
-	dirEntries, err := os.ReadDir(pathInDataDir)
-	if err != nil {
-		// Most likely explanation for error is that the directory doesn't exist
-		http.Error(w, "Directory not found", http.StatusNotFound)
-		return
-	}
-
-	err = folderTemplate.Execute(
-		w,
-		map[string]interface{}{
-			"dirEntries": dirEntries,
-			"isRoot": pathInDataDir == viper.GetString("dataDir"),
-		},
-	)
-	if err != nil {
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
-	}
-}
-
-func streamFile(w http.ResponseWriter, r *http.Request) {
-	path := getPathInDataDir(r.URL.Path[7:])
-	http.ServeFile(w, r, path)
+	searchTemplate = template.Must(template.ParseFiles("./templates/search.html"))
 }
 
 func main() {
@@ -79,6 +45,10 @@ func main() {
 			if strings.HasPrefix(r.URL.Path, "/stream/") {
 				streamFile(w, r)
 				return
+			}
+
+			if strings.HasPrefix(r.URL.Path, "/search/") {
+				searchFile(w, r)
 			}
 
 			http.Error(w, "Not Found", http.StatusNotFound)
