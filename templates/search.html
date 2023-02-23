@@ -36,21 +36,22 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {{ range .dirEntries }}
+                                {{ range $path, $dirEntry := .result }}
                                 <tr>
-                                    {{ if .IsDir }}
+                                    {{ if $dirEntry.IsDir }}
                                     <td><i class="icon gg-folder"></i></i></td>
                                     {{ else }}
                                     <td><i class="icon gg-file"></i></td>
                                     {{ end }}
 
-                                    {{ if .IsDir }}
-                                    <td><a href="{{ .Name }}/">{{ .Name }}</a></td>
+                                    {{ if $dirEntry.IsDir }}
+                                    <!-- TODO: send to browse: -->
+                                    <td><a href="/browse/{{ $path }}/">{{ .Name }}</a></td>
                                     {{ else }}
-                                    <td>{{ .Name }}</td>
+                                    <td>{{ $dirEntry.Name }}</td>
                                     {{ end }}
 
-                                    {{ if .IsDir }}
+                                    {{ if $dirEntry.IsDir }}
                                     <td><i class="icon gg-arrow-right-o"></i></td>
                                     {{ else }}
                                     <td><i class="icon gg-arrow-down-o"></i><i class="icon gg-copy"></i></td>

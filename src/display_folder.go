@@ -11,7 +11,7 @@ import (
 var folderTemplate *template.Template
 
 func displayFolder(w http.ResponseWriter, path string) {
-	pathInDataDir := getPathInDataDir(path)
+	pathInDataDir := getAbsolutePath(path)
 	dirEntries, err := os.ReadDir(pathInDataDir)
 	if err != nil {
 		// Most likely explanation for error is that the directory doesn't exist

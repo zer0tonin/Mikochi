@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"html/template"
+	"os"
 	"net/http"
 	"strings"
 
@@ -20,6 +21,9 @@ func init() {
 
 	folderTemplate = template.Must(template.ParseFiles("./templates/folder.html"))
 	searchTemplate = template.Must(template.ParseFiles("./templates/search.html"))
+
+	fileCache = map[string]os.DirEntry{}
+	cacheFolder(fileCache, "/")
 }
 
 func main() {
