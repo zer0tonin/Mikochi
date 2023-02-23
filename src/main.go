@@ -23,7 +23,7 @@ func init() {
 	searchTemplate = template.Must(template.ParseFiles("./templates/search.html"))
 
 	fileCache = map[string]os.DirEntry{}
-	cacheFolder(fileCache, "/")
+	resetCache()
 }
 
 func main() {
@@ -53,6 +53,7 @@ func main() {
 
 			if strings.HasPrefix(r.URL.Path, "/search/") {
 				searchFile(w, r)
+				return
 			}
 
 			http.Error(w, "Not Found", http.StatusNotFound)
@@ -60,6 +61,7 @@ func main() {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}
 	})
+	go watchDataDir()
 	fmt.Println("Listening on " + viper.GetString("host"))
 	http.ListenAndServe(viper.GetString("host"), nil)
 }
