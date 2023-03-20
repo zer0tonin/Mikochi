@@ -1,0 +1,39 @@
+:root {
+	font-family: 'Helvetica Neue', arial, sans-serif;
+	font-weight: 400;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+
+	color-scheme: light dark;
+	color: #444;
+	background: #fafafa;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		color: #fff;
+		background: #1c1c1c;
+	}
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	min-height: 100vh;
+}
+
+#app > main {
+	display: flex;
+	padding-top: 3.5rem;
+	margin: 0 auto;
+	min-height: calc(100vh - 3.5rem);
+	max-width: 1280px;
+	align-items: center;
+	justify-content: center;
+}
+
+@media (max-width: 639px) {
+	#app > main {
+		margin: 0 2rem;
+	}
+}
