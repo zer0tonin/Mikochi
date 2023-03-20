@@ -1,7 +1,7 @@
 version: '3'
 services:
   mikochi:
-    build: .
+    build: ./backend
     ports:
       - 8080:8080
 
@@ -11,8 +11,8 @@ services:
     environment:
       air_wd: "/mikochi"
     volumes:
-      - .:/mikochi
-      - ./data:/data
+      - ./backend:/mikochi
+      - ./backend/data:/data
     ports:
       - 8080:8080
     command: air -c .air.toml
