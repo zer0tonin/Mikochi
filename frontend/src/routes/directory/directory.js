@@ -1,51 +1,52 @@
 import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
+import { Link } from 'preact-router/match';
 
-const Directory = () => {
-    const [path, setPath] = useState("/")
+import Icon from '../../components/icon';
+
+const Directory = (dirPath) => {
     const [isRoot, setIsRoot] = useState(true)
-    const [dirEntries, setDirEntries] = useState([]))
+    const [dirEntries, setDirEntries] = useState([])
 
     useEffect(() => {
-    }
+        setIsRoot(true)
+        setDirEntries([{name: "file1.mp4", isDir: false}, { name: "file2.mp4", isDir: false}])
+    }, [dirPath]);
 
     return (
-        <div>
-            <table class="table">
-                <thead>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                { !isRoot &&
                     <tr>
-                        <th></th>
-                        <th>Name</th>
-                        <th>Actions</th>
+                        <td><Icon name="folder" /></td>
+                        <td><Link href="..">..</Link></td>
                     </tr>
-                </thead>
-                <tbody>
-                    { isRoot &&
-                        <tr>
-                            <td><i class="gg-folder"></i></td>
-                            <td><a href="..">..</a></td>
-                        </tr>
-                    }
-                    { dirEntries.map((dirEntry) => 
-                        <tr>
-                            { dirEntry.isDir
-                                ? <td><i class="icon gg-folder"></i></td>
-                                : <td><i class="icon gg-file"></i></td>
-                            }
-                            { dirEntry.isDir
-                                ? <td><a href="{{ .Name }}/">{{ .Name }}</a></td>
-                                : <td>{{ .Name }}</td>
-                            }
-                            { dirEntry.isDir
-                                ? <td><i class="icon gg-arrow-right-o"></i></td>
-                                : <td><i class="icon gg-arrow-down-o"></i><i class="icon gg-copy"></i></td>
-                            }
-                        </tr>
-                    )}
-                    {{ end }}
-                </tbody>
-            </table>
-        </div>
+                }
+                { dirEntries.map((dirEntry) => 
+                    <tr>
+                        { dirEntry.isDir
+                            ? <td><Icon name="folder" /></td>
+                            : <td><Icon name="file" /></td>
+                        }
+                        { dirEntry.isDir
+                            ? <td><Link href="{{ .Name }}/">{dirEntry.name}</Link></td>
+                            : <td>{dirEntry.name}</td>
+                        }
+                        { dirEntry.isDir
+                            ? <td><Icon name="arrow-right-o" /></td>
+                            : <td><Icon name="arrow-down-o" /><Icon name="copy" /></td>
+                        }
+                    </tr>
+                )}
+            </tbody>
+        </table>
     )
 }
 
