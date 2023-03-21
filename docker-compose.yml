@@ -13,10 +13,12 @@ services:
       - 5000:5000
 
   dev-backend:
-    image: cosmtrek/air:v1.40.4
+    image: cosmtrek/air:v1.42.0
     working_dir: "/mikochi"
     environment:
       air_wd: "/mikochi"
+      host: "0.0.0.0:4000"
+      data_dir: "/data"
     volumes:
       - ./backend:/mikochi
       - ./backend/data:/data

@@ -2,30 +2,28 @@ package main
 
 import (
 	"fmt"
-	"html/template"
-	"net/http"
+	"os"
 
-	"github.com/spf13/viper"
+	"github.com/gin-gonic/gin"
 )
 
+// The watched directectory
+var dataDir string
+
 func init() {
-	viper.SetConfigName("config")
-	viper.SetConfigType("yaml")
-	viper.AddConfigPath(".")
-	err := viper.ReadInConfig()
-	if err != nil {
-		panic("Failed to load config")
-	}
-
-	folderTemplate = template.Must(template.ParseFiles("./templates/folder.html"))
-	searchTemplate = template.Must(template.ParseFiles("./templates/search.html"))
-
+	dataDir = os.Getenv("data_dir")
+	fmt.Println("Caching " + dataDir)
 	resetCache()
 }
 
 func main() {
-	http.HandleFunc("/", routes)
 	go watchDataDir()
-	fmt.Println("Listening on " + viper.GetString("host"))
-	http.ListenAndServe(viper.GetString("host"), nil)
+
+	r := gin.Default()
+	r.GET("/browse/*path", browseFolder)
+	r.GET("/stream/:path", streamFile)
+	r.GET("/search/:path", searchFile)
+	host := os.Getenv("host")
+	fmt.Println("Listening on " + host)
+	r.Run(host)
 }
