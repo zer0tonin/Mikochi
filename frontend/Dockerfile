@@ -6,6 +6,6 @@ COPY package.json /app/
 WORKDIR /app
 RUN npm install
 
-EXPOSE 8080
+EXPOSE 5000
 
 CMD ["npm", "run", "dev"]

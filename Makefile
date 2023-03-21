@@ -9,7 +9,7 @@ down:
 	docker-compose down --rmi=local --volumes
 
 dev:
-	docker-compose up dev
+	docker-compose up dev -d
 
 test:
 	go test github.com/zer0tonin/mikochi/src/...

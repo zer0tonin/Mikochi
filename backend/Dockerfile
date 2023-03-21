@@ -1,6 +1,6 @@
 FROM ubuntu:latest
 
-EXPOSE 8080
+EXPOSE 4000
 
 WORKDIR /app
 

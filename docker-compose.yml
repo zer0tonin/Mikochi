@@ -5,7 +5,14 @@ services:
     ports:
       - 8080:8080
 
-  dev:
+  dev-frontend:
+    build: ./frontend
+    volumes:
+      - ./frontend:/app
+    ports:
+      - 5000:5000
+
+  dev-backend:
     image: cosmtrek/air:v1.40.4
     working_dir: "/mikochi"
     environment:
@@ -14,5 +21,15 @@ services:
       - ./backend:/mikochi
       - ./backend/data:/data
     ports:
-      - 8080:8080
+      - 4000:4000
     command: air -c .air.toml
+
+  dev:
+    image: nginx:1.23.3
+    depends_on:
+      - dev-backend
+      - dev-frontend
+    ports:
+      - 8080:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
