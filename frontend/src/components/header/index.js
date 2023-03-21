@@ -2,6 +2,8 @@ import { h } from 'preact';
 import { Link } from 'preact-router/match';
 import style from './style.css';
 
+import Search from '../search/search';
+
 // TODO logo
 
 const Header = () => (
@@ -10,6 +12,7 @@ const Header = () => (
 			<Link href="/">
 				Mikochi
 			</Link>
+			<Search />
 		</nav>
 	</header>
 );

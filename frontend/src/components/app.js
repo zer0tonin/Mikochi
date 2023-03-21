@@ -13,6 +13,7 @@ const App = () => (
 			<Router>
 				<Directory path="/" />
 				<Directory path="/:dirPath" />
+				<Directory path="/search/:search" />
 			</Router>
 		</main>
 	</div>
