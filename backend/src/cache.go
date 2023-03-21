@@ -2,23 +2,24 @@ package main
 
 import (
 	"fmt"
+	"io/fs"
 	"os"
 	"path/filepath"
 
 	"github.com/fsnotify/fsnotify"
 )
 
-// This could be []string for now but having the os.DirEntry gives a bit of flexibility for future features
-var fileCache map[string]os.DirEntry
+// fileCache is a global cache of FileInfos from the watched data directory
+var fileCache map[string]fs.FileInfo
 
 // resets the cache
 func resetCache() {
-	fileCache = map[string]os.DirEntry{}
+	fileCache = map[string]fs.FileInfo{}
 	cacheFolder(fileCache, "/")
 }
 
 // recursively initalizes the cache
-func cacheFolder(cache map[string]os.DirEntry, path string) {
+func cacheFolder(cache map[string]fs.FileInfo, path string) {
 	dirEntries, err := os.ReadDir(getAbsolutePath(path))
 	if err != nil {
 		panic(err)
@@ -26,7 +27,11 @@ func cacheFolder(cache map[string]os.DirEntry, path string) {
 
 	for _, dirEntry := range dirEntries {
 		relativePath := filepath.Clean(path + dirEntry.Name())
-		cache[relativePath] = dirEntry
+		fileInfo, err := dirEntry.Info()
+		if err != nil {
+			panic(err)
+		}
+		cache[relativePath] = fileInfo
 		if dirEntry.IsDir() {
 			cacheFolder(cache, relativePath+"/")
 		}

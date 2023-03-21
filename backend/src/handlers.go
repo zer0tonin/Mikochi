@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io/fs"
 	"net/http"
 	"path/filepath"
 	"strings"
@@ -8,24 +9,39 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// FileDescription is just a serializable FileInfo
+type FileDescription struct {
+	Name string `json:"name"`
+	IsDir bool `json:"idDir"`
+	Size int64 `json:"size"`
+}
+
 func getAbsolutePath(path string) string {
 	cleanedPath := filepath.Clean(path)
 	return filepath.Join(dataDir + cleanedPath)
+}
+
+func fileInfoToFileDescription(fileInfo fs.FileInfo) FileDescription {
+	return FileDescription{
+		Name: fileInfo.Name(),
+		IsDir: fileInfo.IsDir(),
+		Size: fileInfo.Size(),
+	}
 }
 
 // GET /search
 func searchFile(c *gin.Context) {
 	path := filepath.Clean(c.Param("path"))
 
-	results := []string{}
-	for fileName, _ := range fileCache {
+	results := []FileDescription{}
+	for fileName, fileInfo := range fileCache {
 		if strings.Contains(filepath.Clean(fileName), path) {
-			results = append(results, fileName)
+			results = append(results, fileInfoToFileDescription(fileInfo))
 		}
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"dirEntries": results,
+		"fileInfos": results,
 		"isRoot":     false,
 	})
 }
@@ -40,15 +56,15 @@ func streamFile(c *gin.Context) {
 func browseFolder(c *gin.Context) {
 	path := filepath.Clean(c.Param("path"))
 
-	results := []string{}
-	for fileName, _ := range fileCache {
+	results := []FileDescription{}
+	for fileName, fileInfo := range fileCache {
 		if strings.HasPrefix(filepath.Clean(fileName), path) {
-			results = append(results, fileName)
+			results = append(results, fileInfoToFileDescription(fileInfo))
 		}
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"dirEntries": results,
+		"fileInfos": results,
 		"isRoot":     path == dataDir,
 	})
 }
