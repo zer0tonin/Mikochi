@@ -11,6 +11,7 @@ const App = () => (
 		<Header />
 		<main>
 			<Router>
+				<Directory path="/" />
 				<Directory path="/:dirPath" />
 			</Router>
 		</main>

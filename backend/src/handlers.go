@@ -12,7 +12,7 @@ import (
 // FileDescription is just a serializable FileInfo
 type FileDescription struct {
 	Name string `json:"name"`
-	IsDir bool `json:"idDir"`
+	IsDir bool `json:"isDir"`
 	Size int64 `json:"size"`
 }
 

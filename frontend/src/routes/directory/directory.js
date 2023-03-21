@@ -1,16 +1,33 @@
 import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
-import { Link } from 'preact-router/match';
 
 import Icon from '../../components/icon';
 
-const Directory = (dirPath) => {
+
+function formatFileSize(bytes) {
+  if (bytes === 0) return '0 bytes';
+  const k = 1024;
+  const sizes = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  const size = parseFloat((bytes / Math.pow(k, i)).toFixed(2));
+  return `${size} ${sizes[i]}`;
+}
+
+
+const Directory = ({ dirPath = '' }) => {
     const [isRoot, setIsRoot] = useState(true)
-    const [dirEntries, setDirEntries] = useState([])
+    const [fileInfos, setFileInfos] = useState([])
 
     useEffect(() => {
-        setIsRoot(true)
-        setDirEntries([{name: "file1.mp4", isDir: false}, { name: "file2.mp4", isDir: false}])
+        const fetchData = async () => {
+            const response = await fetch(`/api/browse/${dirPath}`);
+            const json = await response.json();
+            
+            setIsRoot(json['isRoot'])
+            setFileInfos(json['fileInfos'])
+        };
+
+        fetchData();
     }, [dirPath]);
 
     return (
@@ -19,6 +36,7 @@ const Directory = (dirPath) => {
                 <tr>
                     <th></th>
                     <th>Name</th>
+                    <th>Size</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -26,25 +44,32 @@ const Directory = (dirPath) => {
                 { !isRoot &&
                     <tr>
                         <td><Icon name="folder" /></td>
-                        <td><Link href="..">..</Link></td>
+                        <td><a href="..">..</a></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                 }
-                { dirEntries.map((dirEntry) => 
-                    <tr>
-                        { dirEntry.isDir
-                            ? <td><Icon name="folder" /></td>
-                            : <td><Icon name="file" /></td>
-                        }
-                        { dirEntry.isDir
-                            ? <td><Link href="{{ .Name }}/">{dirEntry.name}</Link></td>
-                            : <td>{dirEntry.name}</td>
-                        }
-                        { dirEntry.isDir
-                            ? <td><Icon name="arrow-right-o" /></td>
-                            : <td><Icon name="arrow-down-o" /><Icon name="copy" /></td>
-                        }
-                    </tr>
-                )}
+                { fileInfos.map((fileInfo) => {
+                    if (fileInfo.isDir) {
+                        return (
+                            <tr>
+                                <td><Icon name="folder" /></td>
+                                <td><a href={`${fileInfo.name}/`}>{fileInfo.name}</a></td>
+                                <td></td>
+                                <td><Icon name="arrow-right-o" /></td>
+                            </tr>
+                        )
+                    }
+                    console.log(fileInfo)
+                    return (
+                        <tr>
+                            <td><Icon name="file" /></td>
+                            <td>{fileInfo.name}</td>
+                            <td>{formatFileSize(fileInfo.size)}</td>
+                            <td><Icon name="arrow-down-o" /><Icon name="copy" /></td>
+                        </tr>
+                    );
+                })}
             </tbody>
         </table>
     )
