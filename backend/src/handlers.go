@@ -65,6 +65,6 @@ func browseFolder(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"fileInfos": results,
-		"isRoot":     path == dataDir,
+		"isRoot":     path == "/",
 	})
 }
