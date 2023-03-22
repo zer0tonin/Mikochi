@@ -2,6 +2,8 @@ import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 
 import Icon from '../../components/icon';
+// The header is directly included here to facilitate merging data from the search bar and path
+import Header from '../../components/header';
 
 
 function formatFileSize(bytes) {
@@ -14,70 +16,92 @@ function formatFileSize(bytes) {
 }
 
 
-const Directory = ({ dirPath = '', search = '' }) => {
+const Directory = ({ dirPath = '' }) => {
     const [isRoot, setIsRoot] = useState(true)
     const [fileInfos, setFileInfos] = useState([])
+    const [searchQuery, setSearchQuery] = useState('')
 
     useEffect(() => {
         const fetchData = async () => {
-            let json = null;
-            if (search == '') {
-                const response = await fetch(`/api/browse/${dirPath}`);
-                json = await response.json();
-            } else {
-                const response = await fetch(`/api/search/${search}`);
-                json = await response.json();
-            }
+            const response = await fetch(`/api/browse/${dirPath}`);
+            const json = await response.json();
             
             setIsRoot(json['isRoot'])
             setFileInfos(json['fileInfos'])
         };
 
         fetchData();
-    }, [dirPath, search]);
+    }, [dirPath]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            if (searchQuery == '') {
+                return
+            }
+
+            let uri = null
+            if (dirPath.endsWith('/')) {
+                uri = `/api/search/${dirPath}${searchQuery}`
+            } else {
+                uri = `/api/search/${dirPath}/${searchQuery}`
+            }
+            const response = await fetch(uri);
+            const json = await response.json();
+            
+            setFileInfos(json['fileInfos'])
+        };
+
+        // we use setTimeout to wait until the user stops typing before making a query
+        const timer = setTimeout(fetchData, 500)
+        return () => clearTimeout(timer)
+    }, [searchQuery]);
 
     return (
-        <table>
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Name</th>
-                    <th>Size</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                { !isRoot &&
-                    <tr>
-                        <td><Icon name="folder" /></td>
-                        <td><a href="..">..</a></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                }
-                { fileInfos.map((fileInfo) => {
-                    if (fileInfo.isDir) {
-                        return (
+        <>
+            <Header searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+            <main>
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Name</th>
+                            <th>Size</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        { !isRoot &&
                             <tr>
                                 <td><Icon name="folder" /></td>
-                                <td><a href={`${fileInfo.name}/`}>{fileInfo.name}</a></td>
+                                <td><a href="..">..</a></td>
                                 <td></td>
-                                <td><Icon name="arrow-right-o" /></td>
+                                <td></td>
                             </tr>
-                        )
-                    }
-                    console.log(fileInfo)
-                    return (
-                        <tr>
-                            <td><Icon name="file" /></td>
-                            <td>{fileInfo.name}</td>
-                            <td>{formatFileSize(fileInfo.size)}</td>
-                            <td><Icon name="arrow-down-o" /><Icon name="copy" /></td>
-                        </tr>
-                    );
-                })}
-            </tbody>
-        </table>
+                        }
+                        { fileInfos.map((fileInfo) => {
+                            if (fileInfo.isDir) {
+                                return (
+                                    <tr>
+                                        <td><Icon name="folder" /></td>
+                                        <td><a href={`${fileInfo.name}/`}>{fileInfo.name}</a></td>
+                                        <td></td>
+                                        <td><Icon name="arrow-right-o" /></td>
+                                    </tr>
+                                )
+                            }
+                            return (
+                                <tr>
+                                    <td><Icon name="file" /></td>
+                                    <td>{fileInfo.name}</td>
+                                    <td>{formatFileSize(fileInfo.size)}</td>
+                                    <td><Icon name="arrow-down-o" /><Icon name="copy" /></td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+            </main>
+        </>
     )
 }
 

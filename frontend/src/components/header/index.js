@@ -6,13 +6,13 @@ import Search from '../search/search';
 
 // TODO logo
 
-const Header = () => (
+const Header = ({ searchQuery, setSearchQuery }) => (
 	<header class={style.header}>
 		<nav role="navigation" aria-label="main navigation">
 			<Link href="/">
 				Mikochi
 			</Link>
-			<Search />
+			<Search searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 		</nav>
 	</header>
 );
