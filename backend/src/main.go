@@ -10,13 +10,12 @@ import (
 // The watched directectory
 var dataDir string
 
-func init() {
+func main() {
 	dataDir = os.Getenv("data_dir")
+
 	fmt.Println("Caching " + dataDir)
 	resetCache()
-}
 
-func main() {
 	go watchDataDir()
 
 	r := gin.Default()

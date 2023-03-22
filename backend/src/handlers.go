@@ -11,9 +11,17 @@ import (
 
 // FileDescription is just a serializable FileInfo
 type FileDescription struct {
-	Name string `json:"name"`
-	IsDir bool `json:"isDir"`
-	Size int64 `json:"size"`
+	Name  string `json:"name"`
+	IsDir bool   `json:"isDir"`
+	Size  int64  `json:"size"`
+}
+
+func fileInfoToFileDescription(fileInfo fs.FileInfo) FileDescription {
+	return FileDescription{
+		Name:  fileInfo.Name(),
+		IsDir: fileInfo.IsDir(),
+		Size:  fileInfo.Size(),
+	}
 }
 
 func getAbsolutePath(path string) string {
@@ -21,28 +29,20 @@ func getAbsolutePath(path string) string {
 	return filepath.Join(dataDir + cleanedPath)
 }
 
-func fileInfoToFileDescription(fileInfo fs.FileInfo) FileDescription {
-	return FileDescription{
-		Name: fileInfo.Name(),
-		IsDir: fileInfo.IsDir(),
-		Size: fileInfo.Size(),
-	}
-}
-
 // GET /search
 func searchFile(c *gin.Context) {
 	path := filepath.Clean(c.Param("path"))
 
 	results := []FileDescription{}
-	for fileName, fileInfo := range fileCache {
-		if strings.Contains(filepath.Clean(fileName), path) {
+	for file, fileInfo := range fileCache {
+		if strings.Contains(filepath.Clean(file), path) {
 			results = append(results, fileInfoToFileDescription(fileInfo))
 		}
 	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"fileInfos": results,
-		"isRoot":     false,
+		"isRoot":    false,
 	})
 }
 
@@ -52,19 +52,37 @@ func streamFile(c *gin.Context) {
 	c.File(pathInDataDir)
 }
 
+// fileInDir returns if a file is contained in a directory (and not a sub-directory)
+func fileInDir(file, dir string) bool {
+	suffix, found := strings.CutPrefix(file, dir)
+	if !found {
+		return false
+	}
+	return !strings.ContainsRune(suffix, '/')
+}
+
+// suffixPathWithSlash adds a trailing / at the end of a path if it is not already present
+func suffixPathWithSlash(dir string) string {
+	if strings.HasSuffix(dir, "/") {
+		return dir
+	}
+	return dir + "/"
+}
+
 // GET /browse
 func browseFolder(c *gin.Context) {
 	path := filepath.Clean(c.Param("path"))
+	path = suffixPathWithSlash(path)
 
 	results := []FileDescription{}
-	for fileName, fileInfo := range fileCache {
-		if strings.HasPrefix(filepath.Clean(fileName), path) {
+	for file, fileInfo := range fileCache {
+		if fileInDir(filepath.Clean(file), path) {
 			results = append(results, fileInfoToFileDescription(fileInfo))
 		}
 	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"fileInfos": results,
-		"isRoot":     path == "/",
+		"isRoot":    path == "/",
 	})
 }
