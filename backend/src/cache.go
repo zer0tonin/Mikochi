@@ -19,6 +19,7 @@ func resetCache() {
 }
 
 // recursively initalizes the cache
+// TODO: lock
 func cacheFolder(cache map[string]fs.FileInfo, path string) {
 	dirEntries, err := os.ReadDir(getAbsolutePath(path))
 	if err != nil {

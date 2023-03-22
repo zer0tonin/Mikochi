@@ -39,13 +39,8 @@ const Directory = ({ dirPath = '' }) => {
                 return
             }
 
-            let uri = null
-            if (dirPath.endsWith('/')) {
-                uri = `/api/search/${dirPath}${searchQuery}`
-            } else {
-                uri = `/api/search/${dirPath}/${searchQuery}`
-            }
-            const response = await fetch(uri);
+            const params = new URLSearchParams({ search: searchQuery })
+            const response = await fetch(`/api/browse/${dirPath}?${params.toString()}`);
             const json = await response.json();
             
             setFileInfos(json['fileInfos'])
@@ -83,7 +78,7 @@ const Directory = ({ dirPath = '' }) => {
                                 return (
                                     <tr>
                                         <td><Icon name="folder" /></td>
-                                        <td><a href={`${fileInfo.name}/`}>{fileInfo.name}</a></td>
+                                        <td><a href={`${fileInfo.path}/`}>{fileInfo.path}</a></td>
                                         <td></td>
                                         <td><Icon name="arrow-right-o" /></td>
                                     </tr>
@@ -92,7 +87,7 @@ const Directory = ({ dirPath = '' }) => {
                             return (
                                 <tr>
                                     <td><Icon name="file" /></td>
-                                    <td>{fileInfo.name}</td>
+                                    <td>{fileInfo.path}</td>
                                     <td>{formatFileSize(fileInfo.size)}</td>
                                     <td><Icon name="arrow-down-o" /><Icon name="copy" /></td>
                                 </tr>

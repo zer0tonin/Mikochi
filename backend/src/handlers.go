@@ -9,41 +9,24 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// FileDescription is just a serializable FileInfo
+// FileDescription is a serializable FileInfo with path
 type FileDescription struct {
-	Name  string `json:"name"`
 	IsDir bool   `json:"isDir"`
 	Size  int64  `json:"size"`
+	Path  string `json:"path"`
 }
 
-func fileInfoToFileDescription(fileInfo fs.FileInfo) FileDescription {
+func fileInfoToFileDescription(fileInfo fs.FileInfo, path string) FileDescription {
 	return FileDescription{
-		Name:  fileInfo.Name(),
 		IsDir: fileInfo.IsDir(),
 		Size:  fileInfo.Size(),
+		Path: path,
 	}
 }
 
 func getAbsolutePath(path string) string {
 	cleanedPath := filepath.Clean(path)
 	return filepath.Join(dataDir + cleanedPath)
-}
-
-// GET /search
-func searchFile(c *gin.Context) {
-	path := filepath.Clean(c.Param("path"))
-
-	results := []FileDescription{}
-	for file, fileInfo := range fileCache {
-		if strings.Contains(filepath.Clean(file), path) {
-			results = append(results, fileInfoToFileDescription(fileInfo))
-		}
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"fileInfos": results,
-		"isRoot":    false,
-	})
 }
 
 // GET /stream
@@ -54,31 +37,46 @@ func streamFile(c *gin.Context) {
 
 // fileInDir returns if a file is contained in a directory (and not a sub-directory)
 func fileInDir(file, dir string) bool {
-	suffix, found := strings.CutPrefix(file, dir)
-	if !found {
-		return false
-	}
-	return !strings.ContainsRune(suffix, '/')
+	return filepath.Dir(file) == dir
 }
 
-// suffixPathWithSlash adds a trailing / at the end of a path if it is not already present
-func suffixPathWithSlash(dir string) string {
-	if strings.HasSuffix(dir, "/") {
-		return dir
+func browseDir(dir string) []FileDescription {
+	results := []FileDescription{}
+	for file, fileInfo := range fileCache {
+		if fileInDir(file, dir) {
+			results = append(results, fileInfoToFileDescription(fileInfo, fileInfo.Name()))
+		}
 	}
-	return dir + "/"
+	return results
+}
+
+// TODO test
+func fileMatchesSearch(file, dir, search string) bool {
+	return strings.Contains(file, search) && strings.HasPrefix(file, dir)
+}
+
+func searchInDir(dir, search string) []FileDescription {
+	results := []FileDescription{}
+	for file, fileInfo := range fileCache {
+		if fileMatchesSearch(file, dir, search) {
+			path, _ := strings.CutPrefix(file, dir)
+			results = append(results, fileInfoToFileDescription(fileInfo, path))
+		}
+	}
+	return results
 }
 
 // GET /browse
 func browseFolder(c *gin.Context) {
 	path := filepath.Clean(c.Param("path"))
-	path = suffixPathWithSlash(path)
 
-	results := []FileDescription{}
-	for file, fileInfo := range fileCache {
-		if fileInDir(filepath.Clean(file), path) {
-			results = append(results, fileInfoToFileDescription(fileInfo))
-		}
+	search := c.Query("search")
+	var results []FileDescription
+	if search == "" {
+		results = browseDir(path)
+	} else {
+		search = filepath.Clean(search)
+		results = searchInDir(path, search)
 	}
 
 	c.JSON(http.StatusOK, gin.H{
