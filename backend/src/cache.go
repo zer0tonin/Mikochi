@@ -40,6 +40,7 @@ func cacheFolder(cache map[string]fs.FileInfo, path string) {
 }
 
 // refreshes the cache on data dir changes
+// TODO: do we watch subdirectories
 func watchDataDir() {
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {

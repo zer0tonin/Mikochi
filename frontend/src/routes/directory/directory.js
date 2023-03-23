@@ -4,6 +4,7 @@ import { useState, useEffect } from 'preact/hooks';
 import Icon from '../../components/icon';
 // The header is directly included here to facilitate merging data from the search bar and path
 import Header from '../../components/header';
+import Path from '../../components/path';
 
 
 function formatFileSize(bytes) {
@@ -33,6 +34,7 @@ const Directory = ({ dirPath = '' }) => {
         fetchData();
     }, [dirPath]);
 
+    // TODO: merge both effects?
     useEffect(() => {
         const fetchData = async () => {
             if (searchQuery == '') {
@@ -78,7 +80,7 @@ const Directory = ({ dirPath = '' }) => {
                                 return (
                                     <tr>
                                         <td><Icon name="folder" /></td>
-                                        <td><a href={`${fileInfo.path}/`}>{fileInfo.path}</a></td>
+                                        <td><Path fileInfo={fileInfo} /></td>
                                         <td></td>
                                         <td><Icon name="arrow-right-o" /></td>
                                     </tr>
@@ -87,7 +89,7 @@ const Directory = ({ dirPath = '' }) => {
                             return (
                                 <tr>
                                     <td><Icon name="file" /></td>
-                                    <td>{fileInfo.path}</td>
+                                    <td><Path fileInfo={fileInfo} /></td>
                                     <td>{formatFileSize(fileInfo.size)}</td>
                                     <td><Icon name="arrow-down-o" /><Icon name="copy" /></td>
                                 </tr>

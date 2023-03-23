@@ -59,7 +59,7 @@ func searchInDir(dir, search string) []FileDescription {
 	results := []FileDescription{}
 	for file, fileInfo := range fileCache {
 		if fileMatchesSearch(file, dir, search) {
-			path, _ := strings.CutPrefix(file, dir)
+			path, _ := strings.CutPrefix(file, dir + "/")
 			results = append(results, fileInfoToFileDescription(fileInfo, path))
 		}
 	}
