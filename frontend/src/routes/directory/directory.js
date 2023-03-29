@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
+import { route } from 'preact-router';
 
 import Icon from '../../components/icon';
 // The header is directly included here to facilitate merging data from the search bar and path
@@ -18,6 +19,10 @@ function formatFileSize(bytes) {
 
 
 const Directory = ({ dirPath = '' }) => {
+    if (dirPath != '' && !window.location.href.endsWith('/')) {
+        route(`/${dirPath}/`, true)
+    }
+
     const [isRoot, setIsRoot] = useState(true)
     const [fileInfos, setFileInfos] = useState([])
     const [searchQuery, setSearchQuery] = useState('')
