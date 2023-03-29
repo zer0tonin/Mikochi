@@ -21,13 +21,16 @@ function formatFileSize(bytes) {
 
 
 const Directory = ({ dirPath = '' }) => {
-    if (dirPath != '' && !window.location.href.endsWith('/')) {
-        route(`/${dirPath}/`, true)
-    }
-
     const [isRoot, setIsRoot] = useState(true)
     const [fileInfos, setFileInfos] = useState([])
     const [searchQuery, setSearchQuery] = useState('')
+
+    useEffect(() => {
+        if (dirPath != '' && !window.location.href.endsWith('/')) {
+            route(`/${dirPath}/`, true)
+        }
+        document.title = "Mikochi " + (dirPath == '' ? '' : `- /${dirPath}/`)
+    }, [dirPath])
 
     useEffect(() => {
         const fetchData = async () => {
