@@ -24,7 +24,13 @@ const Directory = ({ dirPath = '' }) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await fetch(`/api/browse/${dirPath}`);
+            const params = new URLSearchParams()
+            if (searchQuery != '') {
+                params.append('search', searchQuery)
+            }
+
+            
+            const response = await fetch(`/api/browse/${dirPath}?${params.toString()}`);
             const json = await response.json();
             
             setIsRoot(json['isRoot'])
@@ -32,26 +38,7 @@ const Directory = ({ dirPath = '' }) => {
         };
 
         fetchData();
-    }, [dirPath]);
-
-    // TODO: merge both effects?
-    useEffect(() => {
-        const fetchData = async () => {
-            if (searchQuery == '') {
-                return
-            }
-
-            const params = new URLSearchParams({ search: searchQuery })
-            const response = await fetch(`/api/browse/${dirPath}?${params.toString()}`);
-            const json = await response.json();
-            
-            setFileInfos(json['fileInfos'])
-        };
-
-        // we use setTimeout to wait until the user stops typing before making a query
-        const timer = setTimeout(fetchData, 500)
-        return () => clearTimeout(timer)
-    }, [searchQuery]);
+    }, [dirPath, searchQuery]);
 
     return (
         <>
