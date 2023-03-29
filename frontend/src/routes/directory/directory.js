@@ -2,6 +2,7 @@ import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import { route } from 'preact-router';
 
+import CopyLink from '../../components/copylink'
 import Icon from '../../components/icon';
 // The header is directly included here to facilitate merging data from the search bar and path
 import Header from '../../components/header';
@@ -83,7 +84,7 @@ const Directory = ({ dirPath = '' }) => {
                                     <td><Icon name="file" /></td>
                                     <td><Path fileInfo={fileInfo} /></td>
                                     <td>{formatFileSize(fileInfo.size)}</td>
-                                    <td><Icon name="arrow-down-o" /><Icon name="copy" /></td>
+                                    <td><Icon name="arrow-down-o" /><CopyLink filePath={`${dirPath == "" ? "" : "/" + dirPath}/${fileInfo.path}`} /></td>
                                 </tr>
                             );
                         })}
