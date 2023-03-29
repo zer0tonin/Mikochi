@@ -3,6 +3,7 @@ import { useState, useEffect } from 'preact/hooks';
 import { route } from 'preact-router';
 
 import CopyLink from '../../components/copylink'
+import Download from '../../components/download'
 import Icon from '../../components/icon';
 // The header is directly included here to facilitate merging data from the search bar and path
 import Header from '../../components/header';
@@ -69,6 +70,7 @@ const Directory = ({ dirPath = '' }) => {
                             </tr>
                         }
                         { fileInfos.map((fileInfo) => {
+                            const filePath = `${dirPath == "" ? "" : "/" + dirPath}/${fileInfo.path}`
                             if (fileInfo.isDir) {
                                 return (
                                     <tr>
@@ -84,7 +86,7 @@ const Directory = ({ dirPath = '' }) => {
                                     <td><Icon name="file" /></td>
                                     <td><Path fileInfo={fileInfo} /></td>
                                     <td>{formatFileSize(fileInfo.size)}</td>
-                                    <td><Icon name="arrow-down-o" /><CopyLink filePath={`${dirPath == "" ? "" : "/" + dirPath}/${fileInfo.path}`} /></td>
+                                    <td><Download filePath={filePath} /><CopyLink filePath={filePath} /></td>
                                 </tr>
                             );
                         })}
