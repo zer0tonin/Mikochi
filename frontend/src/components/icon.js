@@ -1,13 +1,13 @@
-import { h } from 'preact';
+import { h } from "preact";
 
 const iconStyle = {
-	margin: "0.1em",
-	display: "inline-block",
-	cursor: "pointer",
+  margin: "0.1em",
+  display: "inline-block",
+  cursor: "pointer",
 };
 
 const Icon = ({ name, onClick }) => (
-	<i style={iconStyle} class={`gg-${name}`} onClick={onClick}></i>
+  <i style={iconStyle} class={`gg-${name}`} onClick={onClick} />
 );
 
 export default Icon;
