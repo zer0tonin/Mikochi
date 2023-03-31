@@ -50,9 +50,12 @@ func browseDir(dir string) []FileDescription {
 	return results
 }
 
-// TODO test
 func fileMatchesSearch(file, dir, search string) bool {
-	return strings.Contains(file, search) && strings.HasPrefix(file, dir)
+	rel, err := filepath.Rel(dir, file)
+	if err != nil {
+		return false // file not in dir
+	}
+	return strings.Contains(rel, search) && !strings.HasPrefix(rel, "../")
 }
 
 func searchInDir(dir, search string) []FileDescription {
