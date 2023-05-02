@@ -3,10 +3,13 @@ package main
 import (
 	"io/fs"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 // FileDescription is a serializable FileInfo with path
@@ -85,5 +88,45 @@ func browseFolder(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"fileInfos": results,
 		"isRoot":    path == "/",
+	})
+}
+
+// POST /login
+func login(c *gin.Context) {
+	var credentials struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
+	err := c.BindJSON(credentials)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"err": "Couldn't deserialize credentials",
+		})
+		return
+	}
+
+	if credentials.Username != os.Getenv("USERNAME") || credentials.Password != os.Getenv("PASSWORD") {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+			"err": "Invalid credentials",
+		})
+		return
+	}
+
+	claims := jwt.RegisteredClaims{
+		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 730)),
+		Issuer: "Mikochi",
+		IssuedAt: jwt.NewNumericDate(time.Now()),
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	signedToken, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"err": "Failed to generate authentication token",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"token": signedToken,
 	})
 }

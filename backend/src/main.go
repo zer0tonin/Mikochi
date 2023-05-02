@@ -19,8 +19,13 @@ func main() {
 	go watchDataDir()
 
 	r := gin.Default()
-	r.GET("/browse/*path", browseFolder)
-	r.GET("/stream/*path", streamFile)
+	r.Use(gin.Logger())
+	r.Use(gin.Recovery())
+
+	r.GET("/browse/*path", checkJWT, browseFolder)
+	r.GET("/stream/*path", checkJWT, streamFile)
+	r.POST("/login", login)
+
 	host := os.Getenv("host")
 	fmt.Println("Listening on " + host)
 	r.Run(host)
