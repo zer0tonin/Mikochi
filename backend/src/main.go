@@ -7,11 +7,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// The watched directectory
+// Config (read from env)
 var dataDir string
+var jwtSecret string
+var username string
+var password string
+
 
 func main() {
 	dataDir = os.Getenv("data_dir")
+	jwtSecret = os.Getenv("jwt_secret")
+	username = os.Getenv("username")
+	password = os.Getenv("password")
 
 	fmt.Println("Caching " + dataDir)
 	resetCache()
@@ -24,6 +31,7 @@ func main() {
 
 	r.GET("/browse/*path", checkJWT, browseFolder)
 	r.GET("/stream/*path", checkJWT, streamFile)
+	r.GET("/refresh", checkJWT, refresh)
 	r.POST("/login", login)
 
 	host := os.Getenv("host")

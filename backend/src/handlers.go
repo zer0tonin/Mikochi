@@ -33,6 +33,7 @@ func getAbsolutePath(path string) string {
 }
 
 // GET /stream
+// streamFile streams the content of the requested file
 func streamFile(c *gin.Context) {
 	pathInDataDir := getAbsolutePath(c.Param("path"))
 	c.File(pathInDataDir)
@@ -43,6 +44,7 @@ func fileInDir(file, dir string) bool {
 	return filepath.Dir(file) == dir
 }
 
+// browseDir returns the content of a directory
 func browseDir(dir string) []FileDescription {
 	results := []FileDescription{}
 	for file, fileInfo := range fileCache {
@@ -53,6 +55,7 @@ func browseDir(dir string) []FileDescription {
 	return results
 }
 
+// fileMatchesSearch checks that a file is contained in a directory (or its subdiretories) and matches the search query
 func fileMatchesSearch(file, dir, search string) bool {
 	rel, err := filepath.Rel(dir, file)
 	if err != nil {
@@ -61,6 +64,7 @@ func fileMatchesSearch(file, dir, search string) bool {
 	return strings.Contains(rel, search) && !strings.HasPrefix(rel, "../")
 }
 
+// searchInDir returns the results of a search query inside a given directory
 func searchInDir(dir, search string) []FileDescription {
 	results := []FileDescription{}
 	for file, fileInfo := range fileCache {
@@ -73,6 +77,7 @@ func searchInDir(dir, search string) []FileDescription {
 }
 
 // GET /browse
+// browseFolder returns the content of a directory and/or search results
 func browseFolder(c *gin.Context) {
 	path := filepath.Clean(c.Param("path"))
 
@@ -92,6 +97,7 @@ func browseFolder(c *gin.Context) {
 }
 
 // POST /login
+// login takes a username/password pair and returns a JWT if they match the corresponding env vars
 func login(c *gin.Context) {
 	var credentials struct {
 		Username string `json:"username"`
@@ -105,7 +111,7 @@ func login(c *gin.Context) {
 		return
 	}
 
-	if credentials.Username != os.Getenv("USERNAME") || credentials.Password != os.Getenv("PASSWORD") {
+	if credentials.Username != username || credentials.Password != password {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 			"err": "Invalid credentials",
 		})
@@ -129,4 +135,9 @@ func login(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"token": signedToken,
 	})
+}
+
+// GET /refresh
+// refresh returns a new JWT token (should be called after an auth check)
+func refresh(c *gin.Context) {
 }

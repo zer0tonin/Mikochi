@@ -19,6 +19,9 @@ services:
       air_wd: "/mikochi"
       host: "0.0.0.0:4000"
       data_dir: "/data"
+      jwt_secret: "mikochi_secret_key"
+      username: "root"
+      password: "very_secure_password"
     volumes:
       - ./backend:/mikochi
       - ./backend/data:/data

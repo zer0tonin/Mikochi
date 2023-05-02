@@ -18,6 +18,7 @@ func parseAuthHeader(header string) (string, error) {
 	return parts[1], nil
 }
 
+// checkJWT is a middleware that will return an error if the request doesn't contain a valid auth token
 func checkJWT(c *gin.Context) {
 	encodedToken, err := parseAuthHeader(c.GetHeader("Authorization"))
 	if err != nil {
