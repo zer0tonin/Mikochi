@@ -3,7 +3,6 @@ package main
 import (
 	"io/fs"
 	"net/http"
-	"os"
 	"path/filepath"
 	"strings"
 	"time"
@@ -96,6 +95,17 @@ func browseFolder(c *gin.Context) {
 	})
 }
 
+// generateAuthToken makes a new signed JWT token valid ~1 month
+func generateAuthToken(secret []byte) (string, error) {
+	claims := jwt.RegisteredClaims{
+		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 730)),
+		Issuer: "Mikochi",
+		IssuedAt: jwt.NewNumericDate(time.Now()),
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	return token.SignedString(secret)
+}
+
 // POST /login
 // login takes a username/password pair and returns a JWT if they match the corresponding env vars
 func login(c *gin.Context) {
@@ -118,13 +128,7 @@ func login(c *gin.Context) {
 		return
 	}
 
-	claims := jwt.RegisteredClaims{
-		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 730)),
-		Issuer: "Mikochi",
-		IssuedAt: jwt.NewNumericDate(time.Now()),
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	signedToken, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
+	signedToken, err := generateAuthToken(jwtSecret)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"err": "Failed to generate authentication token",
@@ -140,4 +144,15 @@ func login(c *gin.Context) {
 // GET /refresh
 // refresh returns a new JWT token (should be called after an auth check)
 func refresh(c *gin.Context) {
+	signedToken, err := generateAuthToken(jwtSecret)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"err": "Failed to generate authentication token",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"token": signedToken,
+	})
 }

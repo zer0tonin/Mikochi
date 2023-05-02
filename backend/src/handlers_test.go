@@ -2,6 +2,8 @@ package main
 
 import (
 	"testing"
+
+	"github.com/golang-jwt/jwt/v5"
 )
 
 func TestFileInDir(t *testing.T) {
@@ -102,6 +104,35 @@ func TestFileMatchesSearch(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			if fileMatchesSearch(test.file, test.dir, test.search) != test.expected {
+				t.Fail()
+			}
+		})
+	}
+}
+
+func TestGenerateAuthToken(t *testing.T) {
+	var tests = []struct{
+		name string
+		secret string
+	}{
+		{
+			name: "Token with secret key",
+			secret: "my_jwt_secret",
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			encodedToken, err := generateAuthToken([]byte(test.secret))
+			if err != nil {
+				t.Fail()
+			}
+
+			parsedToken, err := jwt.Parse(encodedToken, func(token *jwt.Token) (interface{}, error) {
+				return []byte(test.secret), nil
+			})
+
+			if err != nil || !parsedToken.Valid {
 				t.Fail()
 			}
 		})

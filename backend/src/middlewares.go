@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"os"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -29,11 +28,10 @@ func checkJWT(c *gin.Context) {
 	}
 
 	token, err := jwt.Parse(encodedToken, func(token *jwt.Token) (interface{}, error) {
-		secret := []byte(os.Getenv("JWT_SECRET"))
-		if len(secret) > 0 {
-			return secret, nil
+		if len(jwtSecret) > 0 {
+			return jwtSecret, nil
 		}
-		return secret, fmt.Errorf("JWT_SECRET not set")
+		return jwtSecret, fmt.Errorf("jwt_secret not set")
 	})
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{

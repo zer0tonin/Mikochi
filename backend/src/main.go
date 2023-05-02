@@ -9,14 +9,14 @@ import (
 
 // Config (read from env)
 var dataDir string
-var jwtSecret string
+var jwtSecret []byte 
 var username string
 var password string
 
 
 func main() {
 	dataDir = os.Getenv("data_dir")
-	jwtSecret = os.Getenv("jwt_secret")
+	jwtSecret = []byte(os.Getenv("jwt_secret"))
 	username = os.Getenv("username")
 	password = os.Getenv("password")
 
