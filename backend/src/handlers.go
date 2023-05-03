@@ -113,7 +113,7 @@ func login(c *gin.Context) {
 		Username string `json:"username"`
 		Password string `json:"password"`
 	}
-	err := c.BindJSON(credentials)
+	err := c.BindJSON(&credentials)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"err": "Couldn't deserialize credentials",

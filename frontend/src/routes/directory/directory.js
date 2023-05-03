@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { useState, useEffect } from "preact/hooks";
+import { useState, useEffect, useContext } from "preact/hooks";
 import { route } from "preact-router";
 
 import CopyLink from "../../components/copylink";
@@ -8,6 +8,9 @@ import Icon from "../../components/icon";
 // The header is directly included here to facilitate merging data from the search bar and path
 import Header from "../../components/header";
 import Path from "../../components/path";
+
+import { AuthContext } from "../../utils/jwt";
+
 
 function formatFileSize(bytes) {
   if (bytes === 0) return "0 bytes";
@@ -19,6 +22,7 @@ function formatFileSize(bytes) {
 }
 
 const Directory = ({ dirPath = "" }) => {
+  const {jwt} = useContext(AuthContext)
   const [isRoot, setIsRoot] = useState(true);
   const [fileInfos, setFileInfos] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -38,7 +42,13 @@ const Directory = ({ dirPath = "" }) => {
       }
 
       const response = await fetch(
-        `/api/browse/${dirPath}?${params.toString()}`
+        `/api/browse/${dirPath}?${params.toString()}`,
+        {
+          headers: {
+            'Accept': 'application/json',
+            "Authorization": `Bearer ${jwt}`,
+          },
+        },
       );
       const json = await response.json();
 

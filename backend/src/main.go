@@ -30,7 +30,7 @@ func main() {
 	r.Use(gin.Recovery())
 
 	r.GET("/browse/*path", checkJWT, browseFolder)
-	r.GET("/stream/*path", checkJWT, streamFile)
+	r.GET("/stream/*path", checkJWT, streamFile) // TODO: this probably needs a single-use token passed in the URL instead
 	r.GET("/refresh", checkJWT, refresh)
 	r.POST("/login", login)
 

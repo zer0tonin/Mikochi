@@ -21,7 +21,7 @@ services:
       data_dir: "/data"
       jwt_secret: "mikochi_secret_key"
       username: "root"
-      password: "very_secure_password"
+      password: "pass"
     volumes:
       - ./backend:/mikochi
       - ./backend/data:/data

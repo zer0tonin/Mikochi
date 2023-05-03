@@ -26,8 +26,8 @@ export const refreshJWT = (setJWT) => {
         }
 
         const json = await response.json()
-        setJWT(json["token"])
         window.localStorage.setItem("jwt", json["token"])
+        setJWT(json["token"])
     }
 
     refresh()

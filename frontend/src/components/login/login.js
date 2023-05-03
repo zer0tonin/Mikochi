@@ -8,6 +8,7 @@ const Login = () => {
     const {setJWT} = useContext(AuthContext)
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
+    // TODO: show error
     const [error, setError] = useState("")
 
     const onSubmit = (e) => {
@@ -21,11 +22,12 @@ const Login = () => {
                 },
                 body: JSON.stringify({ username, password })
             })
-            const json = response.json()
+            const json = await response.json()
             if (response.status !== 200) {
                 setError(json["err"])
                 return
             }
+            window.localStorage.setItem("jwt", json["token"])
             setJWT(json["token"])
         }
         postLogin()
