@@ -6,7 +6,7 @@ import { refreshJWT, AuthContext } from "../utils/jwt"
 
 // Code-splitting is automated for `routes` directory
 import Directory from "../routes/directory/directory";
-import Login from "../routes/login/login";
+import Login from "./login/login";
 
 const App = () => {
   const [jwt, setJWT] = useState(null)
