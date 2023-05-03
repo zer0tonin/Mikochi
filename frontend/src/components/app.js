@@ -1,14 +1,12 @@
-import { h, createContext } from "preact";
+import { h } from "preact";
 import { useState, useEffect, useMemo } from "preact/hooks";
 import { Router } from "preact-router";
 
-import { refreshJWT } from "../utils/jwt"
+import { refreshJWT, AuthContext } from "../utils/jwt"
 
 // Code-splitting is automated for `routes` directory
 import Directory from "../routes/directory/directory";
 import Login from "../routes/login/login";
-
-const AuthContext = createContext()
 
 const App = () => {
   const [jwt, setJWT] = useState(null)

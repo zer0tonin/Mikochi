@@ -1,3 +1,7 @@
+import { createContext } from "preact"
+
+export const AuthContext = createContext()
+
 // refreshJWT will get the jwt stored in localStorage and use it to obtain a fresh token
 export const refreshJWT = (setJWT) => {
     const refresh = async () => {
@@ -7,9 +11,12 @@ export const refreshJWT = (setJWT) => {
             return
         }
 
-        const headers = new Headers()
-        headers.append("Authorization", `Bearer ${storedToken}`)
-        const response = await fetch(`/api/refresh`)
+        const response = await fetch(`/api/refresh`, {
+            headers: {
+                'Accept': 'application/json',
+                "Authorization": `Bearer ${storedToken}`,
+            },
+        })
 
         if (response.status !== 200) {
             // we most likely have an expired token
@@ -25,4 +32,5 @@ export const refreshJWT = (setJWT) => {
 
     refresh()
 }
+
 
