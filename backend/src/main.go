@@ -13,12 +13,16 @@ var jwtSecret []byte
 var username string
 var password string
 
+// Whitelist of single-use JWTs (for streams)
+var tokenWhitelist map[string]bool
 
 func main() {
 	dataDir = os.Getenv("data_dir")
 	jwtSecret = []byte(os.Getenv("jwt_secret"))
 	username = os.Getenv("username")
 	password = os.Getenv("password")
+
+	tokenWhitelist = map[string]bool{}
 
 	fmt.Println("Caching " + dataDir)
 	resetCache()
@@ -32,6 +36,7 @@ func main() {
 	r.GET("/browse/*path", checkJWT, browseFolder)
 	r.GET("/stream/*path", checkJWT, streamFile) // TODO: this probably needs a single-use token passed in the URL instead
 	r.GET("/refresh", checkJWT, refresh)
+	r.GET("/single-use", checkJWT, singleUse)
 	r.POST("/login", login)
 
 	host := os.Getenv("host")

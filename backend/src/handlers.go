@@ -5,10 +5,8 @@ import (
 	"net/http"
 	"path/filepath"
 	"strings"
-	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt/v5"
 )
 
 // FileDescription is a serializable FileInfo with path
@@ -92,67 +90,5 @@ func browseFolder(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"fileInfos": results,
 		"isRoot":    path == "/",
-	})
-}
-
-// generateAuthToken makes a new signed JWT token valid ~1 month
-func generateAuthToken(secret []byte) (string, error) {
-	claims := jwt.RegisteredClaims{
-		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 730)),
-		Issuer: "Mikochi",
-		IssuedAt: jwt.NewNumericDate(time.Now()),
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString(secret)
-}
-
-// POST /login
-// login takes a username/password pair and returns a JWT if they match the corresponding env vars
-func login(c *gin.Context) {
-	var credentials struct {
-		Username string `json:"username"`
-		Password string `json:"password"`
-	}
-	err := c.BindJSON(&credentials)
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"err": "Couldn't deserialize credentials",
-		})
-		return
-	}
-
-	if credentials.Username != username || credentials.Password != password {
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-			"err": "Invalid credentials",
-		})
-		return
-	}
-
-	signedToken, err := generateAuthToken(jwtSecret)
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-			"err": "Failed to generate authentication token",
-		})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"token": signedToken,
-	})
-}
-
-// GET /refresh
-// refresh returns a new JWT token (should be called after an auth check)
-func refresh(c *gin.Context) {
-	signedToken, err := generateAuthToken(jwtSecret)
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-			"err": "Failed to generate authentication token",
-		})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"token": signedToken,
 	})
 }
