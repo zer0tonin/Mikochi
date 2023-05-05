@@ -43,4 +43,15 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 2em;
+}
+
+.error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background-color: #FF6B6C;
+  color: #073642;
+  border-radius: 3px;
 }

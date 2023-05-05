@@ -8,7 +8,6 @@ const Login = () => {
     const {setJWT} = useContext(AuthContext)
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
-    // TODO: show error
     const [error, setError] = useState("")
 
     const onSubmit = (e) => {
@@ -61,6 +60,11 @@ const Login = () => {
                 <div class={style.buttonContainer}>
                     <button type="submit" class={style.submit}>Login</button>
                 </div>
+                { error !== "" && (
+                    <div class={style.error}>
+                        {error}
+                    </div>
+                )}
             </form>
         </main>
     )
