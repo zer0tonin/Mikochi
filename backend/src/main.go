@@ -13,9 +13,6 @@ var jwtSecret []byte
 var username string
 var password string
 
-// Whitelist of single-use JWTs (for streams)
-var tokenWhitelist map[string]bool
-
 func main() {
 	dataDir = os.Getenv("data_dir")
 	jwtSecret = []byte(os.Getenv("jwt_secret"))

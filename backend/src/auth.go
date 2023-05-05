@@ -4,12 +4,17 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 )
+
+// Whitelist of single-use JWTs (for streams)
+var tokenWhitelist map[string]bool
+var tokenWhitelistMutex sync.Mutex
 
 
 func parseAuthHeader(header string) (string, error) {
@@ -133,9 +138,6 @@ func checkSingleUseJWT(c *gin.Context) {
 		return
 	}
 
-	fmt.Println(claims.ID)
-	fmt.Println(tokenWhitelist[claims.ID])
-
 	if !token.Valid || !tokenWhitelist[claims.ID] {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 			"error": "Invalid or expired token",
@@ -143,7 +145,9 @@ func checkSingleUseJWT(c *gin.Context) {
 		return
 	}
 
+	tokenWhitelistMutex.Lock()
 	tokenWhitelist[claims.ID] = false
+	tokenWhitelistMutex.Unlock()
 
 	c.Next()
 }
@@ -152,7 +156,10 @@ func checkSingleUseJWT(c *gin.Context) {
 // singleUse returns a new single-use JWT token for use in streams
 func singleUse(c *gin.Context) {
 	jti := uuid.New().String()
+
+	tokenWhitelistMutex.Lock()
 	tokenWhitelist[jti] = true
+	tokenWhitelistMutex.Unlock()
 
 	claims := jwt.RegisteredClaims{
 		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24)),

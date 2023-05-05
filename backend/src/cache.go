@@ -5,12 +5,14 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"sync"
 
 	"github.com/fsnotify/fsnotify"
 )
 
 // fileCache is a global cache of FileInfos from the watched data directory
 var fileCache map[string]fs.FileInfo
+var fileCacheMutex sync.Mutex
 
 // resets the cache
 func resetCache() {
@@ -19,8 +21,7 @@ func resetCache() {
 }
 
 // recursively initalizes the cache
-// TODO: use filepath.Walk?
-// TODO: lock
+// we do not use filepath.Walk to avoid a mess with relative / absolute paths
 func cacheFolder(cache map[string]fs.FileInfo, path string) {
 	dirEntries, err := os.ReadDir(getAbsolutePath(path))
 	if err != nil {
@@ -33,7 +34,11 @@ func cacheFolder(cache map[string]fs.FileInfo, path string) {
 		if err != nil {
 			panic(err)
 		}
+
+		fileCacheMutex.Lock()
 		cache[relativePath] = fileInfo
+		fileCacheMutex.Unlock()
+
 		if dirEntry.IsDir() {
 			cacheFolder(cache, relativePath+"/")
 		}
