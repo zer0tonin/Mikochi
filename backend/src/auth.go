@@ -114,15 +114,13 @@ func refresh(c *gin.Context) {
 	})
 }
 
-// TODO: check whitelist against ID claim
-// TODO: validate that it is using the right HMAC method
-
 // checkSingleUseJWT is a middleware that will return an error if the request
 // doesn't contain a valid single-use auth token passed in the auth query param
 func checkSingleUseJWT(c *gin.Context) {
 	encodedToken := c.Query("auth")
 
-	token, err := jwt.Parse(encodedToken, func(token *jwt.Token) (interface{}, error) {
+	claims := jwt.RegisteredClaims{}
+	token, err := jwt.ParseWithClaims(encodedToken, &claims, func(token *jwt.Token) (interface{}, error) {
 		if len(jwtSecret) > 0 {
 			return jwtSecret, nil
 		}
@@ -135,12 +133,17 @@ func checkSingleUseJWT(c *gin.Context) {
 		return
 	}
 
-	if !token.Valid {
+	fmt.Println(claims.ID)
+	fmt.Println(tokenWhitelist[claims.ID])
+
+	if !token.Valid || !tokenWhitelist[claims.ID] {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 			"error": "Invalid or expired token",
 		})
 		return
 	}
+
+	tokenWhitelist[claims.ID] = false
 
 	c.Next()
 }
