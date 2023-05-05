@@ -43,60 +43,60 @@ func TestFileInDir(t *testing.T) {
 }
 
 func TestFileMatchesSearch(t *testing.T) {
-	var tests = []struct{
-		name string
-		file string
-		dir string
-		search string
+	var tests = []struct {
+		name     string
+		file     string
+		dir      string
+		search   string
 		expected bool
 	}{
 		{
-			name: "File in dir and matches search",
-			file: "/test/myfile.txt",
-			dir: "/test",
-			search: "file",
+			name:     "File in dir and matches search",
+			file:     "/test/myfile.txt",
+			dir:      "/test",
+			search:   "file",
 			expected: true,
 		},
 		{
-			name: "File in dir and doesn't match search",
-			file: "/test/myfile.txt",
-			dir: "/test",
-			search: "nope",
+			name:     "File in dir and doesn't match search",
+			file:     "/test/myfile.txt",
+			dir:      "/test",
+			search:   "nope",
 			expected: false,
 		},
 		{
-			name: "File not in dir and doesn't match search",
-			file: "/other/myfile.txt",
-			dir: "/test",
-			search: "nope",
+			name:     "File not in dir and doesn't match search",
+			file:     "/other/myfile.txt",
+			dir:      "/test",
+			search:   "nope",
 			expected: false,
 		},
 		{
-			name: "File not in dir but matches search",
-			file: "/other/myfile.txt",
-			dir: "/test",
-			search: "file",
+			name:     "File not in dir but matches search",
+			file:     "/other/myfile.txt",
+			dir:      "/test",
+			search:   "file",
 			expected: false,
 		},
 		{
-			name: "File in sub-dir and matches search",
-			file: "/test/sub/myfile.txt",
-			dir: "/test",
-			search: "file",
+			name:     "File in sub-dir and matches search",
+			file:     "/test/sub/myfile.txt",
+			dir:      "/test",
+			search:   "file",
 			expected: true,
 		},
 		{
-			name: "File in sub-dir and doesn't match search",
-			file: "/test/sub/myfile.txt",
-			dir: "/test",
-			search: "nope",
+			name:     "File in sub-dir and doesn't match search",
+			file:     "/test/sub/myfile.txt",
+			dir:      "/test",
+			search:   "nope",
 			expected: false,
 		},
 		{
-			name: "File in close-name dir and matches search",
-			file: "/testdir/sub/myfile.txt",
-			dir: "/test",
-			search: "file",
+			name:     "File in close-name dir and matches search",
+			file:     "/testdir/sub/myfile.txt",
+			dir:      "/test",
+			search:   "file",
 			expected: false,
 		},
 	}

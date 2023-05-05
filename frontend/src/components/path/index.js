@@ -10,7 +10,11 @@ const Path = ({ fileInfo }) => {
           if (i == splitPath.length - 1 && !fileInfo.isDir) {
             return <span key={i}>{val}</span>;
           }
-          return <a key={i} href={`${splitPath.slice(0, i + 1).join("/")  }/`}>{val}</a>;
+          return (
+            <a key={i} href={`${splitPath.slice(0, i + 1).join("/")}/`}>
+              {val}
+            </a>
+          );
         })
         .reduce(
           (acc, val) => (acc === null ? [val] : [...acc, " / ", val]),

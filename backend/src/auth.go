@@ -16,7 +16,6 @@ import (
 var tokenWhitelist map[string]bool
 var tokenWhitelistMutex sync.Mutex
 
-
 func parseAuthHeader(header string) (string, error) {
 	parts := strings.SplitN(header, " ", 2)
 	if len(parts) != 2 || strings.ToLower(parts[0]) != "bearer" {
@@ -61,8 +60,8 @@ func checkJWT(c *gin.Context) {
 func generateAuthToken(secret []byte) (string, error) {
 	claims := jwt.RegisteredClaims{
 		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 730)),
-		Issuer: "Mikochi",
-		IssuedAt: jwt.NewNumericDate(time.Now()),
+		Issuer:    "Mikochi",
+		IssuedAt:  jwt.NewNumericDate(time.Now()),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString(secret)
@@ -163,9 +162,9 @@ func singleUse(c *gin.Context) {
 
 	claims := jwt.RegisteredClaims{
 		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24)),
-		Issuer: "Mikochi",
-		IssuedAt: jwt.NewNumericDate(time.Now()),
-		ID: jti,
+		Issuer:    "Mikochi",
+		IssuedAt:  jwt.NewNumericDate(time.Now()),
+		ID:        jti,
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	signedToken, err := token.SignedString(jwtSecret)

@@ -11,7 +11,6 @@ import Path from "../../components/path";
 
 import { AuthContext } from "../../utils/jwt";
 
-
 function formatFileSize(bytes) {
   if (bytes === 0) return "0 bytes";
   const k = 1024;
@@ -22,7 +21,7 @@ function formatFileSize(bytes) {
 }
 
 const Directory = ({ dirPath = "" }) => {
-  const {jwt} = useContext(AuthContext)
+  const { jwt } = useContext(AuthContext);
   const [isRoot, setIsRoot] = useState(true);
   const [fileInfos, setFileInfos] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -31,7 +30,7 @@ const Directory = ({ dirPath = "" }) => {
     if (dirPath != "" && !window.location.href.endsWith("/")) {
       route(`/${dirPath}/`, true);
     }
-    document.title = `Mikochi ${  dirPath == "" ? "" : `- /${dirPath}/`}`;
+    document.title = `Mikochi ${dirPath == "" ? "" : `- /${dirPath}/`}`;
   }, [dirPath]);
 
   useEffect(() => {
@@ -45,10 +44,10 @@ const Directory = ({ dirPath = "" }) => {
         `/api/browse/${dirPath}?${params.toString()}`,
         {
           headers: {
-            'Accept': 'application/json',
-            "Authorization": `Bearer ${jwt}`,
+            Accept: "application/json",
+            Authorization: `Bearer ${jwt}`,
           },
-        },
+        }
       );
       const json = await response.json();
 
@@ -86,7 +85,7 @@ const Directory = ({ dirPath = "" }) => {
               </tr>
             )}
             {fileInfos.map((fileInfo, i) => {
-              const filePath = `${dirPath == "" ? "" : `/${  dirPath}`}/${
+              const filePath = `${dirPath == "" ? "" : `/${dirPath}`}/${
                 fileInfo.path
               }`;
               if (fileInfo.isDir) {

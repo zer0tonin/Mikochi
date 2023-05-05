@@ -6,7 +6,7 @@ const Download = ({ filePath }) => {
   return (
     <a
       href={`${window.location.protocol}//${window.location.hostname}${
-        window.location.port == "" ? "" : `:${  window.location.port}`
+        window.location.port == "" ? "" : `:${window.location.port}`
       }/api/stream${filePath}`}
       download={filePath.split("/").pop()}
       style={{ color: "#E6E1C5" }}

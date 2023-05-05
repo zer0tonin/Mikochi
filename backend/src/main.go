@@ -9,7 +9,7 @@ import (
 
 // Config (read from env)
 var dataDir string
-var jwtSecret []byte 
+var jwtSecret []byte
 var username string
 var password string
 
