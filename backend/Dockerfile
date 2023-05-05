@@ -1,12 +1,11 @@
-FROM ubuntu:latest
+FROM golang:1.20
 
 EXPOSE 4000
 
 WORKDIR /app
 
-RUN useradd mikochi
-USER mikochi
+COPY . .
 
-COPY mikochi .
+RUN go build -v -o mikochi ./...
 
 CMD ["./mikochi"]

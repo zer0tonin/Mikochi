@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider preact build",
-    "serve": "sirv build --port 8080 --cors --single",
+    "serve": "sirv build --port 5000 --cors --single --host 0.0.0.0",
     "dev": "cross-env NODE_OPTIONS=--openssl-legacy-provider preact watch -p 5000",
     "lint": "eslint src",
     "fix-lint": "eslint --fix src",
