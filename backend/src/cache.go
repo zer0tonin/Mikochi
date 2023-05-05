@@ -1,13 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"io/fs"
+	"log"
 	"os"
 	"path/filepath"
 	"sync"
 
-	"github.com/fsnotify/fsnotify"
+	"github.com/rjeczalik/notify"
 )
 
 // fileCache is a global cache of FileInfos from the watched data directory
@@ -46,39 +46,18 @@ func cacheFolder(cache map[string]fs.FileInfo, path string) {
 }
 
 // refreshes the cache on data dir changes
-// TODO: do we watch subdirectories
 func watchDataDir() {
-	watcher, err := fsnotify.NewWatcher()
-	if err != nil {
+	c := make(chan notify.EventInfo, 1)
+
+	// watcg the move, create, remove, rename events
+	if err := notify.Watch(dataDir + "/...", c, notify.InMovedTo, notify.Create, notify.Remove, notify.Rename); err != nil {
 		panic(err)
 	}
-	defer watcher.Close()
+	defer notify.Stop(c)
 
-	go func() {
-		for {
-			select {
-			case event, ok := <-watcher.Events:
-				if !ok {
-					return
-				}
-				if event.Has(fsnotify.Create) || event.Has(fsnotify.Remove) || event.Has(fsnotify.Rename) {
-					fmt.Println("event:", event)
-					resetCache()
-				}
-			case err, ok := <-watcher.Errors:
-				if !ok {
-					return
-				}
-				fmt.Println("error:", err)
-			}
-		}
-	}()
-
-	err = watcher.Add(dataDir)
-	if err != nil {
-		panic(err)
+	for ei := range c {
+		log.Printf("Event %d on file %s", ei.Event(), ei.Path())
+		// kinda brutal solution, could be improved
+		resetCache()
 	}
-
-	// Block goroutine
-	<-make(chan struct{})
 }

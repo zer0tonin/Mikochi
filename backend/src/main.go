@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -21,7 +21,7 @@ func main() {
 
 	tokenWhitelist = map[string]bool{}
 
-	fmt.Println("Caching " + dataDir)
+	log.Print("Caching " + dataDir)
 	resetCache()
 
 	go watchDataDir()
@@ -37,6 +37,6 @@ func main() {
 	r.POST("/login", login)
 
 	host := os.Getenv("host")
-	fmt.Println("Listening on " + host)
+	log.Print("Listening on " + host)
 	r.Run(host)
 }
