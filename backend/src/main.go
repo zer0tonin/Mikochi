@@ -35,6 +35,9 @@ func main() {
 	r.GET("/refresh", checkJWT, refresh)
 	r.GET("/single-use", checkJWT, singleUse)
 	r.POST("/login", login)
+	r.GET("/ready", func (c *gin.Context) {
+		c.JSON(200, gin.H{"status": "ok"})
+	})
 
 	host := os.Getenv("host")
 	log.Print("Listening on " + host)

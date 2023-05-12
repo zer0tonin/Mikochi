@@ -12,13 +12,13 @@ imageBackend:
   repository: zer0tonin/mikochi-backend
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "0.1.0"
+  tag: "0.1.1"
 
 imageFrontend:
   repository: zer0tonin/mikochi-frontend
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "0.1.0"
+  tag: "0.1.1"
 
 imagePullSecrets: []
 nameOverride: ""

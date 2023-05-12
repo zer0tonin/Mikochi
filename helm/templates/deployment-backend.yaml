@@ -38,13 +38,15 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /
+              path: /ready
               port: http
           readinessProbe:
             httpGet:
-              path: /
+              path: /ready
               port: http
           env:
+            - name: host
+              value: "0.0.0.0:4000"
             - name: data_dir
               value: "/data"
             - name: jwt_secret
