@@ -10,7 +10,6 @@ services:
   backend:
     build: ./backend
     environment:
-      air_wd: "/mikochi"
       host: "0.0.0.0:4000"
       data_dir: "/data"
       jwt_secret: "mikochi_secret_key"
