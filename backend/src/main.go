@@ -19,7 +19,7 @@ func main() {
 	username = os.Getenv("username")
 	password = os.Getenv("password")
 
-	tokenWhitelist = map[string]bool{}
+	tokenWhitelist = map[string]string{}
 
 	log.Print("Caching " + dataDir)
 	resetCache()

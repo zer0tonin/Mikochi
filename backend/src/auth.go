@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 	"sync"
@@ -13,7 +14,8 @@ import (
 )
 
 // Whitelist of single-use JWTs (for streams)
-var tokenWhitelist map[string]bool
+// Each token is valid for one route and 24h
+var tokenWhitelist map[string]string
 var tokenWhitelistMutex sync.Mutex
 
 func parseAuthHeader(header string) (string, error) {
@@ -89,6 +91,7 @@ func login(c *gin.Context) {
 		return
 	}
 
+	log.Printf("Succesful login as %f", username)
 	signedToken, err := generateAuthToken(jwtSecret)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
@@ -137,16 +140,14 @@ func checkSingleUseJWT(c *gin.Context) {
 		return
 	}
 
-	if !token.Valid || !tokenWhitelist[claims.ID] {
+	log.Printf(tokenWhitelist[claims.ID])
+	log.Printf(c.Param("path"))
+	if !token.Valid || !(tokenWhitelist[claims.ID] == c.Param("path")) {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 			"error": "Invalid or expired token",
 		})
 		return
 	}
-
-	tokenWhitelistMutex.Lock()
-	tokenWhitelist[claims.ID] = false
-	tokenWhitelistMutex.Unlock()
 
 	c.Next()
 }
@@ -157,7 +158,8 @@ func singleUse(c *gin.Context) {
 	jti := uuid.New().String()
 
 	tokenWhitelistMutex.Lock()
-	tokenWhitelist[jti] = true
+	tokenWhitelist[jti] = c.Query("target")
+	log.Printf(c.Query("target"))
 	tokenWhitelistMutex.Unlock()
 
 	claims := jwt.RegisteredClaims{
