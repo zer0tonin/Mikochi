@@ -9,7 +9,7 @@ import Directory from "../routes/directory/directory";
 import Login from "./login/login";
 
 const App = () => {
-  const [jwt, setJWT] = useState(null);
+  const [jwt, setJWT] = useState("blank");
   useEffect(() => refreshJWT(setJWT), []);
   const auth = useMemo(() => {
     return { jwt, setJWT };
