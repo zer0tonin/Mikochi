@@ -1,7 +1,7 @@
 import { h } from "preact";
-import { route } from "preact-router";
 
-const Path = ({ fileInfo }) => {
+export const Path = ({ fileInfo, currentDir }) => {
+  // a Path can represent multiple sub-directories during search
   const splitPath = fileInfo.path.split("/");
 
   return (
@@ -9,17 +9,15 @@ const Path = ({ fileInfo }) => {
       {splitPath
         .map((val, i) => {
           if (i == splitPath.length - 1 && !fileInfo.isDir) {
+            // files are shown as text and not links
             return <span key={i}>{val}</span>;
           }
+          // preact-router has trouble with relative links so we rebuild it from the root
+          const target = currentDir != "" ? `/${currentDir}/${splitPath.slice(0, i + 1).join("/")}/` : `/${splitPath.slice(0, i + 1).join("/")}/`;
           return (
             <a
               key={i}
-              href="#"
-              onClick={(e) => {
-                // preact-router doesn't handle those links automatically
-                e.preventDefault();
-                route(`${splitPath.slice(0, i + 1).join("/")}/`)
-              }}
+              href={target}
             >
               {val}
             </a>
@@ -33,4 +31,15 @@ const Path = ({ fileInfo }) => {
   );
 };
 
-export default Path;
+export const DoubleDotPath = ({ currentDir }) => {
+  const split = currentDir.split("/")
+  const target = split.slice(0, split.length - 1).join("/")
+  // same as above, link as to start with / for preact-router
+  return (
+    <a
+      href={`/${target}`}
+    >
+      ..
+    </a>
+  );
+}

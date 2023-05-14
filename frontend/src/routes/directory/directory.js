@@ -7,7 +7,7 @@ import Download from "../../components/download";
 import Icon from "../../components/icon";
 // The header is directly included here to facilitate merging data from the search bar and path
 import Header from "../../components/header";
-import Path from "../../components/path";
+import { DoubleDotPath, Path } from "../../components/path";
 
 import { AuthContext } from "../../utils/jwt";
 
@@ -21,6 +21,7 @@ function formatFileSize(bytes) {
 }
 
 const Directory = ({ dirPath = "" }) => {
+  console.log(dirPath)
   const { jwt } = useContext(AuthContext);
   const [isRoot, setIsRoot] = useState(true);
   const [fileInfos, setFileInfos] = useState([]);
@@ -78,7 +79,7 @@ const Directory = ({ dirPath = "" }) => {
                   <Icon name="folder" />
                 </td>
                 <td>
-                  <a href="..">..</a>
+                  <DoubleDotPath currentDir={dirPath} />
                 </td>
                 <td />
                 <td />
@@ -95,7 +96,7 @@ const Directory = ({ dirPath = "" }) => {
                       <Icon name="folder" />
                     </td>
                     <td>
-                      <Path fileInfo={fileInfo} />
+                      <Path fileInfo={fileInfo} currentDir={dirPath} />
                     </td>
                     <td />
                     <td>
@@ -110,7 +111,7 @@ const Directory = ({ dirPath = "" }) => {
                     <Icon name="file" />
                   </td>
                   <td>
-                    <Path fileInfo={fileInfo} />
+                    <Path fileInfo={fileInfo} currentDir={dirPath} />
                   </td>
                   <td>{formatFileSize(fileInfo.size)}</td>
                   <td>
