@@ -32,8 +32,28 @@ const Directory = ({ dirPath = "" }) => {
       route(`/${dirPath}/`, true);
     }
     document.title = `Mikochi ${dirPath == "" ? "" : `- /${dirPath}/`}`;
+    setSearchQuery("")
+
+    const fetchData = async () => {
+      const response = await fetch(
+        `/api/browse/${dirPath}`,
+        {
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
+      );
+      const json = await response.json();
+
+      setIsRoot(json["isRoot"]);
+      setFileInfos(json["fileInfos"]);
+    };
+
+    fetchData();
   }, [dirPath]);
 
+  // this two useEffect hooks look similar, but trying to combine them will get you into a race condition hell
   useEffect(() => {
     const fetchData = async () => {
       const params = new URLSearchParams();
@@ -57,7 +77,7 @@ const Directory = ({ dirPath = "" }) => {
     };
 
     fetchData();
-  }, [dirPath, searchQuery]);
+  }, [searchQuery]);
 
   return (
     <>
