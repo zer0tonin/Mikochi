@@ -1,4 +1,5 @@
 import { h } from "preact";
+import { route } from "preact-router";
 
 const Path = ({ fileInfo }) => {
   const splitPath = fileInfo.path.split("/");
@@ -11,7 +12,15 @@ const Path = ({ fileInfo }) => {
             return <span key={i}>{val}</span>;
           }
           return (
-            <a key={i} href={`${splitPath.slice(0, i + 1).join("/")}/`}>
+            <a
+              key={i}
+              href="#"
+              onClick={(e) => {
+                // preact-router doesn't handle those links automatically
+                e.preventDefault();
+                route(`${splitPath.slice(0, i + 1).join("/")}/`)
+              }}
+            >
               {val}
             </a>
           );
