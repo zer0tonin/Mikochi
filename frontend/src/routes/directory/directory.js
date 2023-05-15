@@ -24,7 +24,7 @@ const formatFileSize = (bytes) => {
 const sorting = {
   "name_asc": (a, b) => a.path > b.path,
   "name_desc": (a, b) => a.path < b.path,
-  "size_asc": (a, b) => a.size < b.size,
+  "size_asc": (a, b) => a.size > b.size,
   "size_desc": (a, b) => a.size < b.size,
 }
 
