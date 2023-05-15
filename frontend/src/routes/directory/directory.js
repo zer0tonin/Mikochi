@@ -11,7 +11,7 @@ import { DoubleDotPath, Path } from "../../components/path";
 
 import { AuthContext } from "../../utils/jwt";
 
-function formatFileSize(bytes) {
+const formatFileSize = (bytes) => {
   if (bytes === 0) return "0 bytes";
   const k = 1024;
   const sizes = ["bytes", "KB", "MB", "GB", "TB", "PB", "WTF?"];
@@ -20,12 +20,16 @@ function formatFileSize(bytes) {
   return `${size} ${sizes[i]}`;
 }
 
+const sortByName = (a, b) => {
+  return a.path > b.path
+}
+
 const Directory = ({ dirPath = "" }) => {
-  console.log(dirPath)
   const { jwt } = useContext(AuthContext);
   const [isRoot, setIsRoot] = useState(true);
   const [fileInfos, setFileInfos] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [compare, setCompare] = useState(() => sortByName);
 
   useEffect(() => {
     if (dirPath != "" && !window.location.href.endsWith("/")) {
@@ -87,7 +91,7 @@ const Directory = ({ dirPath = "" }) => {
           <thead>
             <tr>
               <th />
-              <th>Name</th>
+              <th>Name <i class="gg-chevron-down" style={{display: "inline"}} /></th>
               <th>Size</th>
               <th>Actions</th>
             </tr>
@@ -105,7 +109,7 @@ const Directory = ({ dirPath = "" }) => {
                 <td />
               </tr>
             )}
-            {fileInfos.map((fileInfo, i) => {
+            {fileInfos.sort(compare).map((fileInfo, i) => {
               const filePath = `${dirPath == "" ? "" : `/${dirPath}`}/${
                 fileInfo.path
               }`;
