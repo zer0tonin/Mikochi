@@ -12,6 +12,7 @@ export const NameHeader = ({ compare, setCompare }) => {
           setCompare("name_asc")
         }
       }}
+      style={{cursor: "pointer"}}
     >
       Name
       &nbsp;
@@ -32,6 +33,7 @@ export const SizeHeader = ({ compare, setCompare }) => {
           setCompare("size_asc")
         }
       }}
+      style={{cursor: "pointer"}}
     >
       Size
       &nbsp;
