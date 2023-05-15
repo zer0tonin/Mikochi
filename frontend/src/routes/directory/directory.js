@@ -127,9 +127,7 @@ const Directory = ({ dirPath = "" }) => {
                       <Path fileInfo={fileInfo} currentDir={dirPath} />
                     </td>
                     <td />
-                    <td>
-                      <Icon name="arrow-right-o" />
-                    </td>
+                    <td/>
                   </tr>
                 );
               }
