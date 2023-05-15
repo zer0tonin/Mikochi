@@ -3,6 +3,7 @@ package main
 import (
 	"io/fs"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -94,4 +95,25 @@ func browseFolder(c *gin.Context) {
 		"fileInfos": results,
 		"isRoot":    path == "/",
 	})
+}
+
+// PUT /move
+// move is used to move a file or change its name
+func move(c *gin.Context) {
+	var command struct {
+		NewPath string `json:"new_path"`
+	}
+	err := c.BindJSON(&command)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"err": "Couldn't deserialize command",
+		})
+		return
+	}
+
+	path := getAbsolutePath(c.Param("path"))
+	newPath := getAbsolutePath(command.NewPath)
+
+	os.Rename(path, newPath)
+	// cache refresh should be triggered automatically
 }

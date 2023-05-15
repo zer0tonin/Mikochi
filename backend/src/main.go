@@ -32,9 +32,12 @@ func main() {
 
 	r.GET("/browse/*path", checkJWT, browseFolder)
 	r.GET("/stream/*path", checkSingleUseJWT, streamFile)
+	r.PUT("/move/*path", checkJWT, move)
+
 	r.GET("/refresh", checkJWT, refresh)
 	r.GET("/single-use", checkJWT, singleUse)
 	r.POST("/login", login)
+
 	r.GET("/ready", func (c *gin.Context) {
 		c.JSON(200, gin.H{"status": "ok"})
 	})
