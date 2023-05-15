@@ -8,6 +8,7 @@ import Icon from "../../components/icon";
 // The header is directly included here to facilitate merging data from the search bar and path
 import Header from "../../components/header";
 import { DoubleDotPath, Path } from "../../components/path";
+import { NameHeader, SizeHeader } from "../../components/sorting";
 
 import { AuthContext } from "../../utils/jwt";
 
@@ -20,8 +21,11 @@ const formatFileSize = (bytes) => {
   return `${size} ${sizes[i]}`;
 }
 
-const sortByName = (a, b) => {
-  return a.path > b.path
+const sorting = {
+  "name_asc": (a, b) => a.path > b.path,
+  "name_desc": (a, b) => a.path < b.path,
+  "size_asc": (a, b) => a.size < b.size,
+  "size_desc": (a, b) => a.size < b.size,
 }
 
 const Directory = ({ dirPath = "" }) => {
@@ -29,7 +33,7 @@ const Directory = ({ dirPath = "" }) => {
   const [isRoot, setIsRoot] = useState(true);
   const [fileInfos, setFileInfos] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [compare, setCompare] = useState(() => sortByName);
+  const [compare, setCompare] = useState("name_asc");
 
   useEffect(() => {
     if (dirPath != "" && !window.location.href.endsWith("/")) {
@@ -91,8 +95,8 @@ const Directory = ({ dirPath = "" }) => {
           <thead>
             <tr>
               <th />
-              <th>Name <i class="gg-chevron-down" style={{display: "inline"}} /></th>
-              <th>Size</th>
+              <NameHeader compare={compare} setCompare={setCompare} />
+              <SizeHeader compare={compare} setCompare={setCompare} />
               <th>Actions</th>
             </tr>
           </thead>
@@ -109,7 +113,7 @@ const Directory = ({ dirPath = "" }) => {
                 <td />
               </tr>
             )}
-            {fileInfos.sort(compare).map((fileInfo, i) => {
+            {fileInfos.sort(sorting[compare]).map((fileInfo, i) => {
               const filePath = `${dirPath == "" ? "" : `/${dirPath}`}/${
                 fileInfo.path
               }`;
