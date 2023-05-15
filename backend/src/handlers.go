@@ -58,6 +58,9 @@ func fileMatchesSearch(file, dir, search string) bool {
 	if err != nil {
 		return false // file not in dir
 	}
+	// we want search to be case insensitive
+	rel = strings.ToLower(rel)
+	search = strings.ToLower(search)
 	return strings.Contains(rel, search) && !strings.HasPrefix(rel, "../")
 }
 

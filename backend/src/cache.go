@@ -49,8 +49,8 @@ func cacheFolder(cache map[string]fs.FileInfo, path string) {
 func watchDataDir() {
 	c := make(chan notify.EventInfo, 1)
 
-	// watcg the move, create, remove, rename events
-	if err := notify.Watch(dataDir + "/...", c, notify.InMovedTo, notify.Create, notify.Remove, notify.Rename); err != nil {
+	// watcg the create, remove, rename events
+	if err := notify.Watch(dataDir + "/...", c, notify.Create, notify.Remove, notify.Rename); err != nil {
 		panic(err)
 	}
 	defer notify.Stop(c)

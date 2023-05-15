@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"testing"
+
+	"github.com/golang-jwt/jwt/v5"
 )
 
 func TestParseAuthHeader(t *testing.T) {

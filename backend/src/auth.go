@@ -91,7 +91,7 @@ func login(c *gin.Context) {
 		return
 	}
 
-	log.Printf("Succesful login as %f", username)
+	log.Printf("Succesful login as %s", username)
 	signedToken, err := generateAuthToken(jwtSecret)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{

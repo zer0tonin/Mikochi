@@ -2,8 +2,6 @@ package main
 
 import (
 	"testing"
-
-	"github.com/golang-jwt/jwt/v5"
 )
 
 func TestFileInDir(t *testing.T) {
