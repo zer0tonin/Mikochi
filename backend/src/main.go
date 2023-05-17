@@ -33,6 +33,7 @@ func main() {
 	r.GET("/browse/*path", checkJWT, browseFolder)
 	r.GET("/stream/*path", checkSingleUseJWT, streamFile)
 	r.PUT("/move/*path", checkJWT, move)
+	r.DELETE("/delete/*path", checkJWT, delete)
 
 	r.GET("/refresh", checkJWT, refresh)
 	r.GET("/single-use", checkJWT, singleUse)

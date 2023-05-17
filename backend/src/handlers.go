@@ -128,3 +128,23 @@ func move(c *gin.Context) {
 
 	// cache refresh should be triggered automatically
 }
+
+// DELETE /delete
+// delete deletes a file from the filesystem
+func delete(c *gin.Context) {
+	path := getAbsolutePath(c.Param("path"))
+
+	err := os.Remove(path)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"err": "Couldn't move file",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": "ok",
+	})
+
+	// cache refresh should be triggered automatically
+}

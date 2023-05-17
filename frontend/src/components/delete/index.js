@@ -6,14 +6,13 @@ import style from "./style.css";
 import Icon from "../icon";
 
 
-const RenameModal = ({ isOpen, close, filePath, refresh }) => {
+const DeleteModal = ({ isOpen, close, filePath, refresh }) => {
   if (!isOpen) {
     return null
   }
 
   const { jwt } = useContext(AuthContext);
   const [error, setError] = useState("");
-  const [path, setPath] = useState(filePath);
   const ref = useRef();
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -29,17 +28,16 @@ const RenameModal = ({ isOpen, close, filePath, refresh }) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    const putMove = async () => {
+    const sendDelete = async () => {
       const response = await fetch(
-        `/api/move${filePath}`,
+        `/api/delete${filePath}`,
         {
-          method: "PUT",
+          method: "DELETE",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
             Authorization: `Bearer ${jwt}`,
           },
-          body: JSON.stringify({ newPath: path }),
         },
       );
 
@@ -51,40 +49,43 @@ const RenameModal = ({ isOpen, close, filePath, refresh }) => {
       close()
       refresh()
     }
-    putMove();
+    sendDelete();
   }
 
   return (
     <div class={style.modal} ref={ref}>
       <div class={style.modalHeader}>
-        Rename / Move
+        Permanently delete file?
         <Icon name="close" onClick={close} />
       </div>
       <div class={style.modalContent}>
-        <form onSubmit={onSubmit}>
-          <input
-            type="text"
-            value={path}
-            class={style.input}
-            onChange={(e) => setPath(e.target.value)}
-          />
-          <button type="submit" class={style.submit}>
-            Rename
-          </button>
-          {error !== "" && <div class={style.error}>{error}</div>}
-        </form>
+        <button
+          type="submit"
+          onClick={onSubmit}
+          class={style.submit}
+        >
+          Delete
+        </button>
+        <button
+          type="cancel"
+          onClick={close}
+          class={style.cancel}
+        >
+          Cancel
+        </button>
+        {error !== "" && <div class={style.error}>{error}</div>}
       </div>
     </div>
   );
 };
 
-const Rename = ({ filePath, refresh }) => {
+const Delete = ({ filePath, refresh }) => {
   const [modalOpen, setModalOpen] = useState(false);
 
   return (
     <>
-      <Icon name="rename" onClick={() => setModalOpen(true)} />
-      <RenameModal
+      <Icon name="remove" onClick={() => setModalOpen(true)} />
+      <DeleteModal
         isOpen={modalOpen}
         close={() => setModalOpen(false)}
         filePath={filePath}
@@ -94,4 +95,4 @@ const Rename = ({ filePath, refresh }) => {
   );
 };
 
-export default Rename;
+export default Delete;
