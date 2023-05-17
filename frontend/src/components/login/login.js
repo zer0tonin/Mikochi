@@ -28,6 +28,7 @@ const Login = () => {
       }
       window.localStorage.setItem("jwt", json["token"]);
       setJWT(json["token"]);
+      setError("")
     };
     postLogin();
   };

@@ -4,6 +4,7 @@ import { route } from "preact-router";
 
 import CopyLink from "../../components/copylink";
 import Download from "../../components/download";
+import Rename from "../../components/rename";
 import Icon from "../../components/icon";
 // The header is directly included here to facilitate merging data from the search bar and path
 import Header from "../../components/header";
@@ -34,6 +35,7 @@ const Directory = ({ dirPath = "" }) => {
   const [fileInfos, setFileInfos] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [compare, setCompare] = useState("name_asc");
+  const [refresh, setRefresh] = useState(0);
 
   useEffect(() => {
     if (dirPath != "" && !window.location.href.endsWith("/")) {
@@ -85,7 +87,7 @@ const Directory = ({ dirPath = "" }) => {
     };
 
     fetchData();
-  }, [searchQuery]);
+  }, [searchQuery, refresh]);
 
   return (
     <>
@@ -143,6 +145,10 @@ const Directory = ({ dirPath = "" }) => {
                   <td>
                     <Download filePath={filePath} />
                     <CopyLink filePath={filePath} />
+                    <Rename
+                      filePath={filePath}
+                      refresh={() => setRefresh(refresh + 1)} // very hacky
+                    />
                   </td>
                 </tr>
               );

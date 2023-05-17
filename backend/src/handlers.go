@@ -101,7 +101,7 @@ func browseFolder(c *gin.Context) {
 // move is used to move a file or change its name
 func move(c *gin.Context) {
 	var command struct {
-		NewPath string `json:"new_path"`
+		NewPath string `json:"newPath"`
 	}
 	err := c.BindJSON(&command)
 	if err != nil {
@@ -114,6 +114,17 @@ func move(c *gin.Context) {
 	path := getAbsolutePath(c.Param("path"))
 	newPath := getAbsolutePath(command.NewPath)
 
-	os.Rename(path, newPath)
+	err = os.Rename(path, newPath)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"err": "Couldn't move file",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": "ok",
+	})
+
 	// cache refresh should be triggered automatically
 }
