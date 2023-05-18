@@ -6,6 +6,7 @@ import CopyLink from "../../components/copylink";
 import Download from "../../components/download";
 import Rename from "../../components/rename";
 import Delete from "../../components/delete";
+import Upload from "../../components/upload";
 import Icon from "../../components/icon";
 // The header is directly included here to facilitate merging data from the search bar and path
 import Header from "../../components/header";
@@ -160,6 +161,10 @@ const Directory = ({ dirPath = "" }) => {
             })}
           </tbody>
         </table>
+        <Upload
+          dirPath={dirPath}
+          refresh={() => setRefresh(refresh + 1)}
+        />
       </main>
     </>
   );

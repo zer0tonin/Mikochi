@@ -1,0 +1,72 @@
+.floating {
+  position: fixed;
+  bottom: 10%;
+  right: 10%;
+}
+
+.floating i {
+    --ggs: 3;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  overflow: auto;
+  border-radius: 1em;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.modalContent {
+  padding: 1em;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  background-color: #002b36;
+  padding: 1em;
+}
+
+.fileUpload{
+  border: none;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 3px;
+  margin-left: 1em;
+  color: #002b36;
+  background-color: #769FB6;
+}
+
+.input {
+    display: none;
+}
+
+.submit {
+  border: none;
+  color: #002b36;
+  background-color: #d4cb92;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 3px;
+  margin-left: 1em;
+}
+
+.error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background-color: #ff6b6c;
+  color: #073642;
+  border-radius: 3px;
+  margin-top: 1em;
+}
