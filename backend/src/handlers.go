@@ -3,6 +3,7 @@ package main
 import (
 	"io"
 	"io/fs"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -106,6 +107,7 @@ func move(c *gin.Context) {
 	}
 	err := c.BindJSON(&command)
 	if err != nil {
+		log.Printf("Err: %s", err.Error())
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"err": "Couldn't deserialize command",
 		})
@@ -117,6 +119,7 @@ func move(c *gin.Context) {
 
 	err = os.Rename(path, newPath)
 	if err != nil {
+		log.Printf("Err: %s", err.Error())
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"err": "Couldn't move file",
 		})
@@ -137,6 +140,7 @@ func delete(c *gin.Context) {
 
 	err := os.Remove(path)
 	if err != nil {
+		log.Printf("Err: %s", err.Error())
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"err": "Couldn't move file",
 		})
@@ -155,6 +159,7 @@ func delete(c *gin.Context) {
 func upload(c *gin.Context) {
 	file, err := c.FormFile("file")
 	if err != nil {
+		log.Printf("Err: %s", err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{
 			"err": "Couldn't read file from request",
 		})
@@ -164,6 +169,7 @@ func upload(c *gin.Context) {
 	pathInDataDir := getAbsolutePath(c.Param("path"))
 	dst, err := os.Create(pathInDataDir)
 	if err != nil {
+		log.Printf("Err: %s", err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"err": "Couldn't create destination file",
 		})
@@ -173,6 +179,7 @@ func upload(c *gin.Context) {
 
 	src, err := file.Open()
 	if err != nil {
+		log.Printf("Err: %s", err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"err": "Failed to open file from request",
 		})
@@ -183,6 +190,7 @@ func upload(c *gin.Context) {
 	// Copy the file to the destination
 	_, err = io.Copy(dst, src)
 	if err != nil {
+		log.Printf("Err: %s", err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"err": "Failed to write file",
 		})
