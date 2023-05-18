@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io"
 	"io/fs"
 	"net/http"
 	"os"
@@ -147,4 +148,48 @@ func delete(c *gin.Context) {
 	})
 
 	// cache refresh should be triggered automatically
+}
+
+// PUT /upload
+// writes data received in multi-part to the disk
+func upload(c *gin.Context) {
+	file, err := c.FormFile("file")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"err": "Couldn't read file from request",
+		})
+		return
+	}
+
+	pathInDataDir := getAbsolutePath(c.Param("path"))
+	dst, err := os.Create(pathInDataDir)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"err": "Couldn't create destination file",
+		})
+		return
+	}
+	defer dst.Close()
+
+	src, err := file.Open()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"err": "Failed to open file from request",
+		})
+		return
+	}
+	defer src.Close()
+
+	// Copy the file to the destination
+	_, err = io.Copy(dst, src)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"err": "Failed to write file",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": "ok",
+	})
 }

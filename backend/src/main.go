@@ -34,6 +34,7 @@ func main() {
 	r.GET("/stream/*path", checkSingleUseJWT, streamFile)
 	r.PUT("/move/*path", checkJWT, move)
 	r.DELETE("/delete/*path", checkJWT, delete)
+	r.PUT("/upload/*path", checkJWT, upload)
 
 	r.GET("/refresh", checkJWT, refresh)
 	r.GET("/single-use", checkJWT, singleUse)
