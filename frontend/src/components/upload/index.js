@@ -31,13 +31,13 @@ const UploadModal = ({ isOpen, close, dirPath, refresh }) => {
     const upload = async () => {
       const formData = new FormData();
       formData.append('file', selectedFile)
+
       const response = await fetch(
-        `/api/upload${dirPath}/${selectedFile.name}`,
+        dirPath != "" ? `/api/upload/${dirPath}/${selectedFile.name}` : `/api/upload/${selectedFile.name}`,
         {
           method: "PUT",
           headers: {
             Accept: "application/json",
-            "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${jwt}`,
           },
           body: formData,
@@ -51,6 +51,7 @@ const UploadModal = ({ isOpen, close, dirPath, refresh }) => {
       setError("")
       close()
       refresh()
+      setSelectedFile(null)
     }
 
     e.preventDefault();
@@ -86,7 +87,7 @@ const UploadModal = ({ isOpen, close, dirPath, refresh }) => {
 }
 
 const Upload = ({ dirPath, refresh }) => {
-  const [modalOpen, setModalOpen] = useState(true);
+  const [modalOpen, setModalOpen] = useState(false);
   return (
     <>
       <div class={style.floating}>
