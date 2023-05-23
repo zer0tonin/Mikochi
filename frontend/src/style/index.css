@@ -34,6 +34,7 @@ body {
 @media (max-width: 639px) {
   #app > main {
     margin: 0 2rem;
+    max-width: 100%;
   }
 }
 
@@ -48,8 +49,23 @@ a {
 
 table {
   width: 100%;
+  margin: auto;
+  table-layout: fixed;
 }
 
 table > thead {
   color: #80a4ed;
+}
+
+td {
+  word-wrap: break-word;
+  vertical-align: baseline;
+}
+
+th:first-of-type {
+  width: 2em;
+}
+
+td:first-of-type {
+  width: 2em;
 }

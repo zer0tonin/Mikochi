@@ -1,9 +1,9 @@
 import { h } from "preact";
 
 const iconStyle = {
-  margin: "0.1em",
   display: "inline-block",
   cursor: "pointer",
+  marginLeft: "0.4em",
 };
 
 const Icon = ({ name, onClick }) => (
