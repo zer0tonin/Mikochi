@@ -69,3 +69,11 @@ th:first-of-type {
 td:first-of-type {
   width: 2em;
 }
+
+th:nth-of-type(3) {
+  width: 8em;
+}
+
+td:nth-of-type(3) {
+  width: 8em;
+}
