@@ -5,10 +5,9 @@ import { AuthContext } from "../../utils/jwt";
 import style from "./style.css";
 import Icon from "../icon";
 
-
 const DeleteModal = ({ isOpen, close, filePath, refresh }) => {
   if (!isOpen) {
-    return null
+    return null;
   }
 
   const { jwt } = useContext(AuthContext);
@@ -17,9 +16,9 @@ const DeleteModal = ({ isOpen, close, filePath, refresh }) => {
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (ref.current && !ref.current.contains(e.target)) {
-        close()
+        close();
       }
-    }
+    };
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -29,28 +28,25 @@ const DeleteModal = ({ isOpen, close, filePath, refresh }) => {
   const onSubmit = (e) => {
     e.preventDefault();
     const sendDelete = async () => {
-      const response = await fetch(
-        `/api/delete${filePath}`,
-        {
-          method: "DELETE",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${jwt}`,
-          },
+      const response = await fetch(`/api/delete${filePath}`, {
+        method: "DELETE",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
         },
-      );
+      });
 
       if (response.status !== 200) {
         setError(json["err"]);
         return;
       }
-      setError("")
-      close()
-      refresh()
-    }
+      setError("");
+      close();
+      refresh();
+    };
     sendDelete();
-  }
+  };
 
   return (
     <div class={style.modal} ref={ref}>
@@ -59,18 +55,10 @@ const DeleteModal = ({ isOpen, close, filePath, refresh }) => {
         <Icon name="close" onClick={close} />
       </div>
       <div class={style.modalContent}>
-        <button
-          type="submit"
-          onClick={onSubmit}
-          class={style.submit}
-        >
+        <button type="submit" onClick={onSubmit} class={style.submit}>
           Delete
         </button>
-        <button
-          type="cancel"
-          onClick={close}
-          class={style.cancel}
-        >
+        <button type="cancel" onClick={close} class={style.cancel}>
           Cancel
         </button>
         {error !== "" && <div class={style.error}>{error}</div>}

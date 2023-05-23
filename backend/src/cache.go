@@ -16,11 +16,11 @@ var fileCacheMutex sync.Mutex
 
 // resets the cache
 func resetCache() {
-    defer func() {
-        if r := recover(); r != nil {
+	defer func() {
+		if r := recover(); r != nil {
 			log.Print("Failed to refresh cache")
-        }
-    }()
+		}
+	}()
 
 	newFileCache := map[string]fs.FileInfo{}
 	cacheFolder(newFileCache, "/")
@@ -60,7 +60,7 @@ func watchDataDir() {
 	c := make(chan notify.EventInfo, 1)
 
 	// watcg the create, remove, rename events on the data dir and sub directories
-	if err := notify.Watch(dataDir + "/...", c, notify.Create, notify.Remove, notify.Rename); err != nil {
+	if err := notify.Watch(dataDir+"/...", c, notify.Create, notify.Remove, notify.Rename); err != nil {
 		panic(err)
 	}
 	defer notify.Stop(c)

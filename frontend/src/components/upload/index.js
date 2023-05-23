@@ -7,7 +7,7 @@ import Icon from "../icon";
 
 const UploadModal = ({ isOpen, close, dirPath, refresh }) => {
   if (!isOpen) {
-    return null
+    return null;
   }
 
   const { jwt } = useContext(AuthContext);
@@ -18,9 +18,9 @@ const UploadModal = ({ isOpen, close, dirPath, refresh }) => {
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (ref.current && !ref.current.contains(e.target)) {
-        close()
+        close();
       }
-    }
+    };
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -30,10 +30,12 @@ const UploadModal = ({ isOpen, close, dirPath, refresh }) => {
   const onSubmit = (e) => {
     const upload = async () => {
       const formData = new FormData();
-      formData.append('file', selectedFile)
+      formData.append("file", selectedFile);
 
       const response = await fetch(
-        dirPath != "" ? `/api/upload/${dirPath}/${selectedFile.name}` : `/api/upload/${selectedFile.name}`,
+        dirPath != ""
+          ? `/api/upload/${dirPath}/${selectedFile.name}`
+          : `/api/upload/${selectedFile.name}`,
         {
           method: "PUT",
           headers: {
@@ -41,22 +43,22 @@ const UploadModal = ({ isOpen, close, dirPath, refresh }) => {
             Authorization: `Bearer ${jwt}`,
           },
           body: formData,
-        },
+        }
       );
 
       if (response.status !== 200) {
         setError(json["err"]);
         return;
       }
-      setError("")
-      close()
-      refresh()
-      setSelectedFile(null)
-    }
+      setError("");
+      close();
+      refresh();
+      setSelectedFile(null);
+    };
 
     e.preventDefault();
     upload();
-  }
+  };
 
   return (
     <div class={style.modal} ref={ref}>
@@ -74,7 +76,11 @@ const UploadModal = ({ isOpen, close, dirPath, refresh }) => {
               onChange={(e) => setSelectedFile(e.target.files[0])}
             />
             &nbsp;
-            {selectedFile != null ? <span>{selectedFile.name}</span> : <span>File</span>}
+            {selectedFile != null ? (
+              <span>{selectedFile.name}</span>
+            ) : (
+              <span>File</span>
+            )}
           </label>
           <button type="submit" class={style.submit}>
             Upload
@@ -84,17 +90,14 @@ const UploadModal = ({ isOpen, close, dirPath, refresh }) => {
       </div>
     </div>
   );
-}
+};
 
 const Upload = ({ dirPath, refresh }) => {
   const [modalOpen, setModalOpen] = useState(false);
   return (
     <>
       <div class={style.floating}>
-        <Icon
-          name="software-upload"
-          onClick={() => setModalOpen(true)}
-        />
+        <Icon name="software-upload" onClick={() => setModalOpen(true)} />
       </div>
       <UploadModal
         isOpen={modalOpen}

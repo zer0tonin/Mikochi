@@ -40,7 +40,7 @@ func main() {
 	r.GET("/single-use", checkJWT, singleUse)
 	r.POST("/login", login)
 
-	r.GET("/ready", func (c *gin.Context) {
+	r.GET("/ready", func(c *gin.Context) {
 		c.JSON(200, gin.H{"status": "ok"})
 	})
 

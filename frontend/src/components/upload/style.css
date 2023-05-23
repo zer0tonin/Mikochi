@@ -5,7 +5,7 @@
 }
 
 .floating i {
-    --ggs: 3;
+  --ggs: 3;
 }
 
 .modal {
@@ -31,7 +31,7 @@
   padding: 1em;
 }
 
-.fileUpload{
+.fileUpload {
   border: none;
   padding: 10px;
   text-align: center;
@@ -41,11 +41,11 @@
   border-radius: 3px;
   margin-left: 1em;
   color: #002b36;
-  background-color: #769FB6;
+  background-color: #769fb6;
 }
 
 .input {
-    display: none;
+  display: none;
 }
 
 .submit {

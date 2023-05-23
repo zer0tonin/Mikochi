@@ -4,13 +4,12 @@ import { useContext } from "preact/hooks";
 import { AuthContext } from "../utils/jwt";
 import Icon from "./icon";
 
-
 const downloadFile = (request, fileName) => {
-  const link = document.createElement('a');
+  const link = document.createElement("a");
   link.href = request;
   link.download = fileName;
   link.click();
-}
+};
 
 const Download = ({ filePath }) => {
   const { jwt } = useContext(AuthContext);
@@ -32,16 +31,12 @@ const Download = ({ filePath }) => {
       `${window.location.protocol}//${window.location.hostname}${
         window.location.port == "" ? "" : `:${window.location.port}`
       }/api/stream${filePath}?${auth.toString()}`,
-      filePath.split("/").at(-1),
+      filePath.split("/").at(-1)
     );
   };
 
   return (
-    <a
-      href="#"
-      onClick={downloadWithAuth}
-      style={{ color: "#E6E1C5" }}
-    >
+    <a href="#" onClick={downloadWithAuth} style={{ color: "#E6E1C5" }}>
       <Icon name="arrow-down-o" />
     </a>
   );

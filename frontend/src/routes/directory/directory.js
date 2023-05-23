@@ -22,14 +22,14 @@ const formatFileSize = (bytes) => {
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   const size = parseFloat((bytes / Math.pow(k, i)).toFixed(2));
   return `${size} ${sizes[i]}`;
-}
+};
 
 const sorting = {
-  "name_asc": (a, b) => a.path > b.path,
-  "name_desc": (a, b) => a.path < b.path,
-  "size_asc": (a, b) => a.size > b.size,
-  "size_desc": (a, b) => a.size < b.size,
-}
+  name_asc: (a, b) => a.path > b.path,
+  name_desc: (a, b) => a.path < b.path,
+  size_asc: (a, b) => a.size > b.size,
+  size_desc: (a, b) => a.size < b.size,
+};
 
 const Directory = ({ dirPath = "" }) => {
   const { jwt } = useContext(AuthContext);
@@ -44,18 +44,15 @@ const Directory = ({ dirPath = "" }) => {
       route(`/${dirPath}/`, true);
     }
     document.title = `Mikochi ${dirPath == "" ? "" : `- /${dirPath}/`}`;
-    setSearchQuery("")
+    setSearchQuery("");
 
     const fetchData = async () => {
-      const response = await fetch(
-        `/api/browse/${dirPath}`,
-        {
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${jwt}`,
-          },
-        }
-      );
+      const response = await fetch(`/api/browse/${dirPath}`, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
       const json = await response.json();
 
       setIsRoot(json["isRoot"]);
@@ -131,7 +128,7 @@ const Directory = ({ dirPath = "" }) => {
                       <Path fileInfo={fileInfo} currentDir={dirPath} />
                     </td>
                     <td />
-                    <td/>
+                    <td />
                   </tr>
                 );
               }
@@ -161,10 +158,7 @@ const Directory = ({ dirPath = "" }) => {
             })}
           </tbody>
         </table>
-        <Upload
-          dirPath={dirPath}
-          refresh={() => setRefresh(refresh + 1)}
-        />
+        <Upload dirPath={dirPath} refresh={() => setRefresh(refresh + 1)} />
       </main>
     </>
   );
