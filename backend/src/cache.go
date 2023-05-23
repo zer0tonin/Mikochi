@@ -16,8 +16,20 @@ var fileCacheMutex sync.Mutex
 
 // resets the cache
 func resetCache() {
-	fileCache = map[string]fs.FileInfo{}
-	cacheFolder(fileCache, "/")
+    defer func() {
+        if r := recover(); r != nil {
+			log.Print("Failed to refresh cache")
+        }
+    }()
+
+	newFileCache := map[string]fs.FileInfo{}
+	cacheFolder(newFileCache, "/")
+
+	// just doing this at once should avoid excessive lock/unlock
+	fileCacheMutex.Lock()
+	fileCache = newFileCache
+	fileCacheMutex.Unlock()
+	log.Print("Refreshed cached")
 }
 
 // recursively initalizes the cache
@@ -25,19 +37,17 @@ func resetCache() {
 func cacheFolder(cache map[string]fs.FileInfo, path string) {
 	dirEntries, err := os.ReadDir(getAbsolutePath(path))
 	if err != nil {
-		panic(err)
+		log.Panicf("Error while refreshing cache: %s", err.Error())
 	}
 
 	for _, dirEntry := range dirEntries {
 		relativePath := filepath.Clean(path + dirEntry.Name())
 		fileInfo, err := dirEntry.Info()
 		if err != nil {
-			panic(err)
+			log.Panicf("Error while refreshing cache: %s", err.Error())
 		}
 
-		fileCacheMutex.Lock()
 		cache[relativePath] = fileInfo
-		fileCacheMutex.Unlock()
 
 		if dirEntry.IsDir() {
 			cacheFolder(cache, relativePath+"/")
@@ -49,7 +59,7 @@ func cacheFolder(cache map[string]fs.FileInfo, path string) {
 func watchDataDir() {
 	c := make(chan notify.EventInfo, 1)
 
-	// watcg the create, remove, rename events
+	// watcg the create, remove, rename events on the data dir and sub directories
 	if err := notify.Watch(dataDir + "/...", c, notify.Create, notify.Remove, notify.Rename); err != nil {
 		panic(err)
 	}
