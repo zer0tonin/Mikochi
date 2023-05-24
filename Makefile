@@ -13,5 +13,4 @@ test:
 release:
 	git tag $(version)
 	git push origin main --tags
-	docker buildx build --platform linux/amd64,linux/arm64 -t zer0tonin/mikochi-frontend:latest -t zer0tonin/mikochi-frontend:$(version) --push -f ./frontend/Dockerfile-prod ./frontend
-	docker buildx build --platform linux/amd64,linux/arm64 -t zer0tonin/mikochi-frontend:latest -t zer0tonin/mikochi-backend:$(version) --push ./backend
+	docker buildx build --platform linux/amd64,linux/arm64 -t zer0tonin/mikochi:latest -t zer0tonin/mikochi:$(version) --push .
