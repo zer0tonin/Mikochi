@@ -1,16 +1,9 @@
 version: '3'
 services:
-  frontend:
-    build:
-      context: frontend
-      dockerfile: Dockerfile-prod
-    ports:
-      - 5000:5000
-
-  backend:
-    build: ./backend
+  mikochi:
+    build: .
     environment:
-      host: "0.0.0.0:4000"
+      host: "0.0.0.0:8080"
       data_dir: "/data"
       jwt_secret: "mikochi_secret_key"
       username: "root"
@@ -18,17 +11,7 @@ services:
     volumes:
       - ./data:/data
     ports:
-      - 4000:4000
-
-  mikochi:
-    image: nginx:1.23.3
-    depends_on:
-      - backend
-      - frontend
-    ports:
-      - 8080:80
-    volumes:
-      - ./nginx-release.conf:/etc/nginx/nginx.conf
+      - 8080:8080
 
   dev-frontend:
     build: ./frontend

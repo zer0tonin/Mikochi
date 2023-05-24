@@ -1,11 +1,8 @@
 down:
 	docker-compose down --rmi=local --volumes
 
-build: down
-	docker-compose build mikochi
-
-run: build
-	docker-compose up mikochi -d
+run: down
+	docker-compose up mikochi
 
 dev: down
 	docker-compose up dev -d
