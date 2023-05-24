@@ -52,7 +52,7 @@ const DeleteModal = ({ isOpen, close, filePath, refresh }) => {
     <div class={style.modal} ref={ref}>
       <div class={style.modalHeader}>
         Permanently delete file?
-        <Icon name="close" onClick={close} />
+        <Icon name="close" onClick={close} title="Close" />
       </div>
       <div class={style.modalContent}>
         <button type="submit" onClick={onSubmit} class={style.submit}>
@@ -72,7 +72,7 @@ const Delete = ({ filePath, refresh }) => {
 
   return (
     <>
-      <Icon name="remove" onClick={() => setModalOpen(true)} />
+      <Icon name="remove" onClick={() => setModalOpen(true)} title="Delete" />
       <DeleteModal
         isOpen={modalOpen}
         close={() => setModalOpen(false)}

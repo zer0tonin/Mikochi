@@ -6,8 +6,8 @@ const iconStyle = {
   marginLeft: "0.4em",
 };
 
-const Icon = ({ name, onClick }) => (
-  <i style={iconStyle} class={`gg-${name}`} onClick={onClick} />
+const Icon = ({ name, title, onClick }) => (
+  <i style={iconStyle} class={`gg-${name}`} onClick={onClick} title={title} aria-label={title} />
 );
 
 export default Icon;

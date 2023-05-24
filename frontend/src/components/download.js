@@ -37,7 +37,7 @@ const Download = ({ filePath }) => {
 
   return (
     <a href="#" onClick={downloadWithAuth} style={{ color: "#E6E1C5" }}>
-      <Icon name="arrow-down-o" />
+      <Icon name="arrow-down-o" title="Download" />
     </a>
   );
 };

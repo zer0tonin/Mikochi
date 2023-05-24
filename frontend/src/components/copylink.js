@@ -55,7 +55,7 @@ const CopyLink = ({ filePath }) => {
       }/api/stream${filePath}?${auth.toString()}`
     );
   };
-  return <Icon name="copy" onClick={copyWithAuth} />;
+  return <Icon name="copy" onClick={copyWithAuth} title="Copy stream link" />;
 };
 
 export default CopyLink;

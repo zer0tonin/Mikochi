@@ -64,7 +64,7 @@ const UploadModal = ({ isOpen, close, dirPath, refresh }) => {
     <div class={style.modal} ref={ref}>
       <div class={style.modalHeader}>
         File upload
-        <Icon name="close" onClick={close} />
+        <Icon name="close" onClick={close} title="Close" />
       </div>
       <div class={style.modalContent}>
         <form onSubmit={onSubmit}>
@@ -74,6 +74,7 @@ const UploadModal = ({ isOpen, close, dirPath, refresh }) => {
               type="file"
               class={style.input}
               onChange={(e) => setSelectedFile(e.target.files[0])}
+              aria-label="Select a file"
             />
             &nbsp;
             {selectedFile != null ? (
@@ -97,7 +98,7 @@ const Upload = ({ dirPath, refresh }) => {
   return (
     <>
       <div class={style.floating}>
-        <Icon name="software-upload" onClick={() => setModalOpen(true)} />
+        <Icon name="software-upload" onClick={() => setModalOpen(true)} title="Upload" />
       </div>
       <UploadModal
         isOpen={modalOpen}

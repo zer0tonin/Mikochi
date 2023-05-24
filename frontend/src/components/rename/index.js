@@ -54,7 +54,7 @@ const RenameModal = ({ isOpen, close, filePath, refresh }) => {
     <div class={style.modal} ref={ref}>
       <div class={style.modalHeader}>
         Rename / Move
-        <Icon name="close" onClick={close} />
+        <Icon name="close" onClick={close} title="Close" />
       </div>
       <div class={style.modalContent}>
         <form onSubmit={onSubmit}>
@@ -79,7 +79,7 @@ const Rename = ({ filePath, refresh }) => {
 
   return (
     <>
-      <Icon name="rename" onClick={() => setModalOpen(true)} />
+      <Icon name="rename" onClick={() => setModalOpen(true)} title="Rename" />
       <RenameModal
         isOpen={modalOpen}
         close={() => setModalOpen(false)}

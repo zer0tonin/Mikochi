@@ -1,8 +1,10 @@
 # Mikochi: a minimalist remote file browser
 
-Mikochi aims at being a remote file browser, for use in self-hosted servers / NAS.
-It uses JavaScript/Preact for the frontend, and Go/Gin for the backend.
+Mikochi is a remote file browser, for use in self-hosted servers / NAS.
 It allows you to browse remote folders, upload files, delete, rename, download and stream files to VLC/mpv.
+
+It comes with a web interface powered by JavaScript/Preact, and an API built in Go/Gin.
+
 
 # Getting started
 
@@ -25,7 +27,7 @@ zer0tonin/mikochi:latest
 
 # Configuration
 
-Mikochi is configured using environment variabled
+Mikochi is configured using environment variables
 
 | Key        | Description                        |
 |----------- |------------------------------------|

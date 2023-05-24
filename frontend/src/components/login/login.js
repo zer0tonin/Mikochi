@@ -44,6 +44,7 @@ const Login = () => {
             class={style.input}
             id="username"
             placeholder="Username"
+            aria-label="Username"
           />
           <i class={`${style.userIcon} gg-user`} />
         </div>
@@ -55,6 +56,7 @@ const Login = () => {
             class={style.input}
             id="password"
             placeholder="Password"
+            aria-label="Password"
           />
           <i class={`${style.keyIcon} gg-key`} />
         </div>

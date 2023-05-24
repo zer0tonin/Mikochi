@@ -17,6 +17,7 @@ const Search = ({ searchQuery, setSearchQuery }) => {
         type="text"
         value={searchQuery}
         onInput={onSearchInput}
+        aria-label="search"
       />
       <i class={`${style.searchIcon} gg-search`} />
     </form>
