@@ -1,5 +1,4 @@
 import { h } from "preact";
-import { Link } from "preact-router/match";
 import style from "./style.css";
 
 import Search from "../search/search";
@@ -9,7 +8,12 @@ import Search from "../search/search";
 const Header = ({ searchQuery, setSearchQuery }) => (
   <header class={style.header}>
     <nav role="navigation" aria-label="main navigation">
-      <Link href="/">Mikochi</Link>
+      <a
+        href="/"
+        onClick={() => setSearchQuery("")}
+      >
+        Mikochi
+      </a>
       <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
     </nav>
   </header>
