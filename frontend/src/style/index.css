@@ -77,3 +77,21 @@ th:nth-of-type(3) {
 td:nth-of-type(3) {
   width: 8em;
 }
+
+th:last-of-type {
+  width: 8em;
+}
+
+th:last-of-type {
+  width: 8em;
+}
+
+@media (max-width: 639px) {
+  th:last-of-type {
+    width: 4em;
+  }
+
+  th:last-of-type {
+    width: 4em;
+  }
+}
