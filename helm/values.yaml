@@ -8,17 +8,11 @@ mikochi:
 
 replicaCount: 1
 
-imageBackend:
-  repository: zer0tonin/mikochi-backend
+image:
+  repository: zer0tonin/mikochi
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "0.1.9"
-
-imageFrontend:
-  repository: zer0tonin/mikochi-frontend
-  pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: "0.1.9"
+  tag: "1.0.0"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -37,13 +31,9 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
-serviceBackend:
+service:
   type: ClusterIP
-  port: 4000
-
-serviceFrontend:
-  type: ClusterIP
-  port: 5000
+  port: 8080
 
 ingress:
   enabled: false
@@ -56,10 +46,6 @@ ingress:
       paths:
         - path: /
           pathType: ImplementationSpecific
-          backend: backend
-        - path: /api
-          pathType: ImplementationSpecific
-          backend: frontend
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
@@ -76,13 +62,6 @@ resources: {}
   # requests:
   #   cpu: 100m
   #   memory: 128Mi
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
 
 nodeSelector: {}
 

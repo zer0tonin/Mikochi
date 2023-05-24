@@ -44,12 +44,8 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "Mikochi.backendSelectorLabels" -}}
-app.kubernetes.io/name: {{ include "Mikochi.name" . }}-backend
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
-{{- define "Mikochi.frontendSelectorLabels" -}}
-app.kubernetes.io/name: {{ include "Mikochi.name" . }}-frontend
+{{- define "Mikochi.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "Mikochi.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 

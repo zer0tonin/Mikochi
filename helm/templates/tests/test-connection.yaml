@@ -11,5 +11,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ include "Mikochi.fullname" . }}:{{ .Values.serviceBackend.port }}']
+      args: ['{{ include "Mikochi.fullname" . }}:{{ .Values.service.port }}']
   restartPolicy: Never

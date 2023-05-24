@@ -40,6 +40,7 @@ Mikochi is configured using environment variabled
 I welcome any PRs aimed at improving or fixing existing features, especially on the following subjects:
 
 - making a linux/arm/v7 docker build (npm seems to have trouble with this architecture)
+- making a smarter cache refresh
 - making a fuzzier search
 - improving accessibility
 
@@ -48,8 +49,10 @@ I welcome any PRs aimed at improving or fixing existing features, especially on 
 The development environment and build pipeline rely on Docker/docker-compose.
 
 Run the dockerized development environment with:
-```
+```sh
 make dev
 ```
 
 It will start a frontend container (listening on 5000), a backend container (listening on 4000) and an nginx to wire both (listening on 8080).
+
+Use `make build` to run a production build in a single container.

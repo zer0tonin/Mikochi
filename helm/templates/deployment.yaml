@@ -1,16 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "Mikochi.fullname" . }}-backend
+  name: {{ include "Mikochi.fullname" . }}
   labels:
     {{- include "Mikochi.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
-      {{- include "Mikochi.backendSelectorLabels" . | nindent 6 }}
+      {{- include "Mikochi.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,7 +16,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "Mikochi.backendSelectorLabels" . | nindent 8 }}
+        {{- include "Mikochi.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -30,11 +28,11 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.imageBackend.repository }}:{{ .Values.imageBackend.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.imageBackend.pullPolicy }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.serviceBackend.port }}
+              containerPort: {{ .Values.service.port }}
               protocol: TCP
           livenessProbe:
             httpGet:
@@ -46,7 +44,7 @@ spec:
               port: http
           env:
             - name: host
-              value: "0.0.0.0:4000"
+              value: "0.0.0.0:8080"
             - name: data_dir
               value: "/data"
             - name: jwt_secret
