@@ -12,6 +12,7 @@ const Header = ({ searchQuery, setSearchQuery }) => (
         href="/"
         onClick={() => setSearchQuery("")}
       >
+        <img src="../../assets/logo.png" width="56" height="56" />
         Mikochi
       </a>
       <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
