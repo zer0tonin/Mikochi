@@ -17,6 +17,7 @@ func main() {
 	viper.SetDefault("USERNAME", "root")
 	viper.SetDefault("PASSWORD", "pass")
 	viper.SetDefault("HOST", "0.0.0.0:8080")
+	viper.AutomaticEnv()
 
 	browser.ResetCache()
 
