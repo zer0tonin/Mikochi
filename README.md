@@ -11,6 +11,13 @@ It comes with a web interface powered by JavaScript/Preact, and an API built in 
 
 ## Binary
 
+Launch the app using a pre-compiled binary from the latest [release](https://github.com/zer0tonin/Mikochi/releases):
+
+```sh
+wget -c https://github.com/zer0tonin/Mikochi/releases/download/1.1.1/mikochi-linux-amd64.tar.gz -O - | tar -xz
+HOST=127.0.0.1:8080 USERNAME=zer0tonin PASSWORD=horsebatterysomething ./mikochi
+```
+
 ## Docker
 
 Launch the app using docker:
