@@ -1,4 +1,4 @@
-package main
+package browser
 
 import (
 	"io/fs"
@@ -8,14 +8,16 @@ import (
 	"sync"
 
 	"github.com/rjeczalik/notify"
+	"github.com/spf13/viper"
 )
 
 // fileCache is a global cache of FileInfos from the watched data directory
-var fileCache map[string]fs.FileInfo
-var fileCacheMutex sync.Mutex
+var fileCache = map[string]fs.FileInfo{}
+var fileCacheMutex = sync.Mutex{}
 
 // resets the cache
-func resetCache() {
+func ResetCache() {
+	log.Printf("Caching %s", viper.GetString("DATA_DIR"))
 	defer func() {
 		if r := recover(); r != nil {
 			log.Print("Failed to refresh cache")
@@ -56,11 +58,11 @@ func cacheFolder(cache map[string]fs.FileInfo, path string) {
 }
 
 // refreshes the cache on data dir changes
-func watchDataDir() {
+func WatchDataDir() {
 	c := make(chan notify.EventInfo, 1)
 
 	// watcg the create, remove, rename events on the data dir and sub directories
-	if err := notify.Watch(dataDir+"/...", c, notify.Create, notify.Remove, notify.Rename); err != nil {
+	if err := notify.Watch(viper.GetString("DATA_DIR") + "/...", c, notify.Create, notify.Remove, notify.Rename); err != nil {
 		panic(err)
 	}
 	defer notify.Stop(c)
@@ -68,6 +70,6 @@ func watchDataDir() {
 	for ei := range c {
 		log.Printf("Event %d on file %s", ei.Event(), ei.Path())
 		// kinda brutal solution, could be improved
-		resetCache()
+		ResetCache()
 	}
 }

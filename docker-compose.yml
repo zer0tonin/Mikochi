@@ -2,11 +2,6 @@ version: '3'
 services:
   mikochi:
     build: .
-    environment:
-      host: "0.0.0.0:8080"
-      data_dir: "/data"
-      username: "root"
-      password: "pass"
     volumes:
       - ./data:/data
     ports:
@@ -24,10 +19,7 @@ services:
     working_dir: "/mikochi"
     environment:
       air_wd: "/mikochi"
-      host: "0.0.0.0:4000"
-      data_dir: "/data"
-      username: "root"
-      password: "pass"
+      HOST: "0.0.0.0:4000"
     volumes:
       - ./backend:/mikochi
       - ./data:/data
