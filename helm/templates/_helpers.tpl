@@ -48,7 +48,3 @@ Selector labels
 app.kubernetes.io/name: {{ include "Mikochi.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
-
-{{- define "Mikochi.jwtSecret" -}}
-{{- randAlphaNum 24 | nospace -}}
-{{- end -}}

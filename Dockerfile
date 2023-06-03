@@ -2,7 +2,7 @@ FROM golang:1.20
 
 COPY ./backend /backend/
 WORKDIR /backend
-RUN go build -v -o mikochi ./...
+RUN go build -v -o mikochi .
 
 
 FROM node:19.1.0-alpine

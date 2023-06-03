@@ -43,21 +43,12 @@ spec:
               path: /ready
               port: http
           env:
-            - name: host
-              value: "0.0.0.0:8080"
-            - name: data_dir
-              value: "/data"
-            - name: jwt_secret
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "Mikochi.fullname" . }}
-                  key: jwt-secret
-            - name: username
+            - name: USERNAME
               valueFrom:
                 secretKeyRef:
                   name: {{ include "Mikochi.fullname" . }}
                   key: username
-            - name: password
+            - name: PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ include "Mikochi.fullname" . }}
