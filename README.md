@@ -54,7 +54,7 @@ I welcome any PRs aimed at improving or fixing existing features, especially on 
 - improving accessibility
 - s3/minio support
 
-# Launching the development environment
+## Launching the development environment
 
 The development environment and build pipeline rely on Docker/docker-compose.
 

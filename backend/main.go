@@ -17,11 +17,18 @@ func main() {
 	viper.SetDefault("USERNAME", "root")
 	viper.SetDefault("PASSWORD", "pass")
 	viper.SetDefault("HOST", "0.0.0.0:8080")
+	viper.SetDefault("ENV", "production")
 	viper.AutomaticEnv()
 
 	browser.ResetCache()
 
 	go browser.WatchDataDir()
+
+	if viper.GetString("ENV") == "production" {
+		gin.SetMode(gin.ReleaseMode)
+	} else {
+		gin.SetMode(gin.DebugMode)
+	}
 
 	r := gin.Default()
 	r.Use(gin.Logger())

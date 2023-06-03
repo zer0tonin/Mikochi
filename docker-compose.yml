@@ -20,6 +20,7 @@ services:
     environment:
       air_wd: "/mikochi"
       HOST: "0.0.0.0:4000"
+      ENV: "development"
     volumes:
       - ./backend:/mikochi
       - ./data:/data
