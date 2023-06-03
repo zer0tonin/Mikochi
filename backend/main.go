@@ -59,5 +59,8 @@ func main() {
 
 	host := viper.GetString("HOST")
 	log.Print("Listening on " + host)
-	r.Run(host)
+	err := r.Run(host)
+	if err != nil {
+		log.Panicf("Failed to launch web server: %s", err.Error())
+	}
 }

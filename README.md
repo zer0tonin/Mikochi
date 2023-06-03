@@ -24,9 +24,9 @@ Launch the app using docker:
 
 ```sh
 docker run -v ~/Code/Mikochi/data:/data \
--p 8080:8080 -e host="0.0.0.0:8080" \
--e data_dir="/data" -e jwt_secret=my_secret \
--e username=root -e password=pass \
+-p 8080:8080 -e HOST="0.0.0.0:8080" \
+-e DATA_DIR="/data" -e JWT_SECRET=my_super_secret \
+-e USERNAME=my_username -e PASSWORD=my_secure_password \
 zer0tonin/mikochi:latest
 ```
 
