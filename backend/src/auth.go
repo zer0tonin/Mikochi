@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/rand"
 	"fmt"
 	"log"
 	"net/http"
@@ -28,6 +29,9 @@ func parseAuthHeader(header string) (string, error) {
 
 // checkJWT is a middleware that will return an error if the request doesn't contain a valid auth token
 func checkJWT(c *gin.Context) {
+	log.Printf("dataDir: %s", dataDir)
+	log.Printf("username: %s", username)
+	log.Printf("password: %s", password)
 	encodedToken, err := parseAuthHeader(c.GetHeader("Authorization"))
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
@@ -181,4 +185,15 @@ func singleUse(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"token": signedToken,
 	})
+}
+
+// generateRandomSecret creates a 256 bytes array used as a jwt secret when no env var is set
+func generateRandomSecret() []byte {
+	bytes := make([]byte, 256)
+	_, err := rand.Read(bytes)
+	// Note that err == nil only if we read len(b) bytes.
+	if err != nil {
+		log.Panicf("Failed to generate JWT secret: %s", err.Error())
+	}
+	return bytes
 }

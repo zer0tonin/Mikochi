@@ -5,7 +5,6 @@ services:
     environment:
       host: "0.0.0.0:8080"
       data_dir: "/data"
-      jwt_secret: "mikochi_secret_key"
       username: "root"
       password: "pass"
     volumes:
@@ -27,7 +26,6 @@ services:
       air_wd: "/mikochi"
       host: "0.0.0.0:4000"
       data_dir: "/data"
-      jwt_secret: "mikochi_secret_key"
       username: "root"
       password: "pass"
     volumes:

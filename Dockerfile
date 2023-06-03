@@ -5,7 +5,7 @@ WORKDIR /backend
 RUN go build -v -o mikochi ./...
 
 
-FROM node:19-alpine
+FROM node:19.1.0-alpine
 
 COPY ./frontend /frontend/
 WORKDIR /frontend

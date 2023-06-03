@@ -15,10 +15,28 @@ var username string
 var password string
 
 func main() {
-	dataDir = os.Getenv("data_dir")
-	jwtSecret = []byte(os.Getenv("jwt_secret"))
-	username = os.Getenv("username")
-	password = os.Getenv("password")
+	var ok bool
+	dataDir, ok = os.LookupEnv("data_dir")
+	if !ok {
+		dataDir = "/data"
+	}
+
+	jwtSecretString, ok := os.LookupEnv("jwt_secret")
+	if !ok {
+		jwtSecret = generateRandomSecret()
+	} else {
+		jwtSecret = []byte(jwtSecretString)
+	}
+
+	username, ok = os.LookupEnv("username")
+	if !ok {
+		username = "root"
+	}
+
+	password, ok = os.LookupEnv("password")
+	if !ok {
+		password = "pass"
+	}
 
 	tokenWhitelist = map[string]string{}
 
