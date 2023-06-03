@@ -31,6 +31,7 @@ func Login(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusTooManyRequests, gin.H{
 			"err": "You are being rate limited",
 		})
+		return
 	}
 
 	if credentials.Username != viper.GetString("USERNAME") || credentials.Password != viper.GetString("PASSWORD") {

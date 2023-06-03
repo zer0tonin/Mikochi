@@ -30,13 +30,19 @@ zer0tonin/mikochi:latest
 
 Mikochi is configured using environment variables
 
-| Key        | Description                        |
-|----------- |------------------------------------|
-| host       | The ip:port mikochi will listen on |
-| data_dir   | The directory accessed by mikochi  |
-| jwt_secret | A secret string for jwt validation |
-| username   | The username to login with         |
-| password   | The password to login with         |
+| Key        | Description                        | Default    |
+|----------- |------------------------------------|------------|
+| HOST       | The ip:port mikochi will listen on | 0.0.0.0:80 |
+| DATA_DIR   | The directory accessed by mikochi  | /data      |
+| JWT_SECRET | A secret string for jwt validation | [Random]   |
+| USERNAME   | The username to login with         | root       |
+| PASSWORD   | The password to login with         | pass       |
+
+# Security considerations
+
+It is encouraged to use Mikochi behind a reverse proxy (ie. nginx), and use it to [configure TLS](nginx.org/en/docs/http/configuring_https_servers.html).
+This will stop any attackers from being able to replay requests and access your files.
+Additionally, using [rate limits](http://nginx.org/en/docs/http/ngx_http_limit_req_module.html) can help slow down bruteforce and DDoS attacks.
 
 # Contributing
 
@@ -46,6 +52,7 @@ I welcome any PRs aimed at improving or fixing existing features, especially on 
 - making a smarter cache refresh
 - making a fuzzier search
 - improving accessibility
+- s3/minio support
 
 # Launching the development environment
 
