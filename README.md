@@ -7,9 +7,9 @@ It comes with a web interface powered by JavaScript/Preact, and an API built in 
 
 ![Screenshot of the web interface](https://github.com/zer0tonin/Mikochi/blob/main/screenshot.jpg?raw=true)
 
-# Getting started
+## Getting started
 
-## Binary
+### Binary
 
 Launch the app using a pre-compiled binary from the latest [release](https://github.com/zer0tonin/Mikochi/releases):
 
@@ -18,7 +18,7 @@ wget -c https://github.com/zer0tonin/Mikochi/releases/download/1.1.1/mikochi-lin
 HOST=127.0.0.1:8080 USERNAME=zer0tonin PASSWORD=horsebatterysomething ./mikochi
 ```
 
-## Docker
+### Docker
 
 Launch the app using docker:
 
@@ -30,7 +30,7 @@ docker run -v ~/Code/Mikochi/data:/data \
 zer0tonin/mikochi:latest
 ```
 
-## Kubernetes
+### Kubernetes
 
 
 # Configuration
@@ -45,13 +45,13 @@ Mikochi is configured using environment variables
 | USERNAME   | The username to login with         | root       |
 | PASSWORD   | The password to login with         | pass       |
 
-# Security considerations
+## Security considerations
 
 It is encouraged to use Mikochi behind a reverse proxy (ie. nginx), and use it to [configure TLS](nginx.org/en/docs/http/configuring_https_servers.html).
 This will stop any attackers from being able to replay requests and access your files.
 Additionally, using [rate limits](http://nginx.org/en/docs/http/ngx_http_limit_req_module.html) can help slow down bruteforce and DDoS attacks.
 
-# Contributing
+## Contributing
 
 I welcome any PRs aimed at improving or fixing existing features, especially on the following subjects:
 
@@ -60,7 +60,7 @@ I welcome any PRs aimed at improving or fixing existing features, especially on 
 - improving accessibility
 - s3/minio support
 
-## Launching the development environment
+### Launching the development environment
 
 The development environment and build pipeline rely on Docker/docker-compose.
 
