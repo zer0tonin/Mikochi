@@ -10,4 +10,14 @@ const Icon = ({ name, title, onClick }) => (
   <i style={iconStyle} class={`gg-${name}`} onClick={onClick} title={title} aria-label={title} />
 );
 
+const bigIconStyle = {
+  display: "inline-block",
+  cursor: "pointer",
+  "--ggs": 3,
+};
+
+export const BigIcon = ({ name, title, onClick }) => (
+  <i style={bigIconStyle} class={`gg-${name}`} onClick={onClick} title={title} aria-label={title} />
+);
+
 export default Icon;

@@ -4,8 +4,14 @@
   right: 10%;
 }
 
-.floating i {
-  --ggs: 3;
+.floatingUpload {
+  position: relative;
+  bottom: 2em;
+}
+
+.floatingMkdir {
+  position: relative;
+  right: 5em;
 }
 
 .modal {
@@ -46,6 +52,13 @@
 
 .input {
   display: none;
+}
+
+.textInput {
+  padding: 10px;
+  border: none;
+  border-radius: 20px;
+  outline: none;
 }
 
 .submit {

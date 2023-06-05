@@ -57,7 +57,6 @@ I welcome any PRs aimed at improving or fixing existing features, especially on 
 
 - making a linux/arm/v7 docker build (npm seems to have trouble with this architecture)
 - making a smarter cache refresh
-- making a fuzzier search
 - improving accessibility
 - s3/minio support
 

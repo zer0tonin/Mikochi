@@ -144,7 +144,7 @@ func Upload(c *gin.Context) {
 // Mkdir creates a new (empty) directory
 func Mkdir(c *gin.Context) {
 	pathInDataDir := getAbsolutePath(c.Param("path"))
-	err := os.Mkdir(pathInDataDir, 0644)
+	err := os.Mkdir(pathInDataDir, 0755)
 	if err != nil {
 		log.Printf("Err: %s", err.Error())
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{

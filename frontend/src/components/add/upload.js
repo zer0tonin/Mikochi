@@ -3,7 +3,7 @@ import { useContext, useEffect, useRef, useState } from "preact/hooks";
 
 import { AuthContext } from "../../utils/jwt";
 import style from "./style.css";
-import Icon from "../icon";
+import Icon, { BigIcon } from "../icon";
 
 const UploadModal = ({ isOpen, close, dirPath, refresh }) => {
   if (!isOpen) {
@@ -97,8 +97,8 @@ const Upload = ({ dirPath, refresh }) => {
   const [modalOpen, setModalOpen] = useState(false);
   return (
     <>
-      <div class={style.floating}>
-        <Icon name="software-upload" onClick={() => setModalOpen(true)} title="Upload" />
+      <div class={style.floatingUpload}>
+        <BigIcon name="software-upload" onClick={() => setModalOpen(true)} title="Upload" />
       </div>
       <UploadModal
         isOpen={modalOpen}
