@@ -98,7 +98,7 @@ func Upload(c *gin.Context) {
 	file, err := c.FormFile("file")
 	if err != nil {
 		log.Printf("Err: %s", err.Error())
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"err": "Couldn't read file from request",
 		})
 		return
@@ -108,7 +108,7 @@ func Upload(c *gin.Context) {
 	dst, err := os.Create(pathInDataDir)
 	if err != nil {
 		log.Printf("Err: %s", err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"err": "Couldn't create destination file",
 		})
 		return
@@ -118,7 +118,7 @@ func Upload(c *gin.Context) {
 	src, err := file.Open()
 	if err != nil {
 		log.Printf("Err: %s", err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"err": "Failed to open file from request",
 		})
 		return
@@ -129,7 +129,25 @@ func Upload(c *gin.Context) {
 	_, err = io.Copy(dst, src)
 	if err != nil {
 		log.Printf("Err: %s", err.Error())
-		c.JSON(http.StatusInternalServerError, gin.H{
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"err": "Failed to write file",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status": "ok",
+	})
+}
+
+// PUT /mkdir
+// Mkdir creates a new (empty) directory
+func Mkdir(c *gin.Context) {
+	pathInDataDir := getAbsolutePath(c.Param("path"))
+	err := os.Mkdir(pathInDataDir, 0644)
+	if err != nil {
+		log.Printf("Err: %s", err.Error())
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"err": "Failed to write file",
 		})
 		return

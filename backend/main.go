@@ -46,6 +46,7 @@ func main() {
 	api.PUT("/move/*path", auth.CheckJWT, browser.Move)
 	api.DELETE("/delete/*path", auth.CheckJWT, browser.Delete)
 	api.PUT("/upload/*path", auth.CheckJWT, browser.Upload)
+	api.PUT("/mkdir/*path", auth.CheckJWT, browser.Mkdir)
 
 	// authentication
 	api.GET("/refresh", auth.CheckJWT, auth.Refresh)
