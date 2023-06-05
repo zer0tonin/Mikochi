@@ -76,11 +76,11 @@ func Move(c *gin.Context) {
 func Delete(c *gin.Context) {
 	path := getAbsolutePath(c.Param("path"))
 
-	err := os.Remove(path)
+	err := os.RemoveAll(path)
 	if err != nil {
 		log.Printf("Err: %s", err.Error())
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-			"err": "Couldn't move file",
+			"err": "Couldn't remove file",
 		})
 		return
 	}

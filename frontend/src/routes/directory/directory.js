@@ -37,7 +37,7 @@ const Directory = ({ dirPath = "" }) => {
   const [fileInfos, setFileInfos] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [compare, setCompare] = useState("name_asc");
-  const [refresh, setRefresh] = useState(0);
+  const [refresh, setRefresh] = useState(0); // super hacky way to trigger effects
 
   useEffect(() => {
     if (dirPath != "" && !window.location.href.endsWith("/")) {
@@ -128,7 +128,16 @@ const Directory = ({ dirPath = "" }) => {
                       <Path fileInfo={fileInfo} currentDir={dirPath} />
                     </td>
                     <td />
-                    <td />
+                    <td>
+                      <Rename
+                        filePath={filePath}
+                        refresh={() => setRefresh(refresh + 1)}
+                      />
+                      <Delete
+                        filePath={filePath}
+                        refresh={() => setRefresh(refresh + 1)}
+                      />
+                    </td>
                   </tr>
                 );
               }
@@ -146,7 +155,7 @@ const Directory = ({ dirPath = "" }) => {
                     <CopyLink filePath={filePath} />
                     <Rename
                       filePath={filePath}
-                      refresh={() => setRefresh(refresh + 1)} // very hacky
+                      refresh={() => setRefresh(refresh + 1)}
                     />
                     <Delete
                       filePath={filePath}
