@@ -1,11 +1,13 @@
 package browser
 
 import (
+	"fmt"
 	"io/fs"
 	"path/filepath"
 	"strings"
 
 	"github.com/spf13/viper"
+	"github.com/lithammer/fuzzysearch/fuzzy"
 )
 
 // FileDescription is a serializable FileInfo with path
@@ -48,12 +50,14 @@ func browseDir(dir string) []FileDescription {
 func fileMatchesSearch(file, dir, search string) bool {
 	rel, err := filepath.Rel(dir, file)
 	if err != nil {
+		fmt.Println("here")
 		return false // file not in dir
 	}
 	// we want search to be case insensitive
 	rel = strings.ToLower(rel)
 	search = strings.ToLower(search)
-	return strings.Contains(rel, search) && !strings.HasPrefix(rel, "../")
+	fmt.Println(fuzzy.RankMatch(search, rel))
+	return fuzzy.RankMatch(search, rel) > 0 && !strings.HasPrefix(rel, "../")
 }
 
 // searchInDir returns the results of a search query inside a given directory

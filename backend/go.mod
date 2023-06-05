@@ -6,6 +6,7 @@ require (
 	github.com/gin-gonic/gin v1.9.0
 	github.com/golang-jwt/jwt/v5 v5.0.0
 	github.com/google/uuid v1.3.0
+	github.com/lithammer/fuzzysearch v1.1.8
 	github.com/rjeczalik/notify v0.9.3
 	github.com/spf13/viper v1.16.0
 )
