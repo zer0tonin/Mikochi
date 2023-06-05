@@ -98,7 +98,11 @@ const Upload = ({ dirPath, refresh }) => {
   return (
     <>
       <div class={style.floatingUpload}>
-        <BigIcon name="software-upload" onClick={() => setModalOpen(true)} title="Upload" />
+        <BigIcon
+          name="software-upload"
+          onClick={() => setModalOpen(true)}
+          title="Upload"
+        />
       </div>
       <UploadModal
         isOpen={modalOpen}

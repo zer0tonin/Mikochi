@@ -62,7 +62,7 @@ func WatchDataDir() {
 	c := make(chan notify.EventInfo, 1)
 
 	// watcg the create, remove, rename events on the data dir and sub directories
-	if err := notify.Watch(viper.GetString("DATA_DIR") + "/...", c, notify.Create, notify.Remove, notify.Rename); err != nil {
+	if err := notify.Watch(viper.GetString("DATA_DIR")+"/...", c, notify.Create, notify.Remove, notify.Rename); err != nil {
 		panic(err)
 	}
 	defer notify.Stop(c)

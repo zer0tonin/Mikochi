@@ -5,9 +5,8 @@ import (
 	"time"
 )
 
-
 type accessLimit struct {
-	attempts int
+	attempts    int
 	nextAttempt time.Time
 }
 
@@ -33,12 +32,12 @@ func (r *RateLimiter) increaseRateLimit(key string) {
 	limit, ok := r.accessMap[key]
 	if !ok {
 		r.accessMap[key] = accessLimit{
-			attempts: 1,
+			attempts:    1,
 			nextAttempt: time.Now().Add(time.Second),
 		}
 	} else {
 		r.accessMap[key] = accessLimit{
-			attempts: limit.attempts + 1,
+			attempts:    limit.attempts + 1,
 			nextAttempt: time.Now().Add(time.Duration(math.Pow(2, float64(limit.attempts))) * time.Second),
 		}
 	}
@@ -46,7 +45,7 @@ func (r *RateLimiter) increaseRateLimit(key string) {
 
 func (r *RateLimiter) resetRateLimit(key string) {
 	r.accessMap[key] = accessLimit{
-		attempts: 0,
+		attempts:    0,
 		nextAttempt: time.Now(),
 	}
 }

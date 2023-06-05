@@ -7,7 +7,13 @@ const iconStyle = {
 };
 
 const Icon = ({ name, title, onClick }) => (
-  <i style={iconStyle} class={`gg-${name}`} onClick={onClick} title={title} aria-label={title} />
+  <i
+    style={iconStyle}
+    class={`gg-${name}`}
+    onClick={onClick}
+    title={title}
+    aria-label={title}
+  />
 );
 
 const bigIconStyle = {
@@ -17,7 +23,13 @@ const bigIconStyle = {
 };
 
 export const BigIcon = ({ name, title, onClick }) => (
-  <i style={bigIconStyle} class={`gg-${name}`} onClick={onClick} title={title} aria-label={title} />
+  <i
+    style={bigIconStyle}
+    class={`gg-${name}`}
+    onClick={onClick}
+    title={title}
+    aria-label={title}
+  />
 );
 
 export default Icon;

@@ -6,7 +6,7 @@ import Upload from "./upload";
 import Mkdir from "./mkdir";
 import { BigIcon } from "../icon";
 
-const Add = ({dirPath, refresh}) => {
+const Add = ({ dirPath, refresh }) => {
   const [extend, setExtend] = useState(false);
 
   if (extend) {
@@ -14,7 +14,11 @@ const Add = ({dirPath, refresh}) => {
       <div class={style.floating}>
         <Upload dirPath={dirPath} refresh={refresh} />
         <Mkdir dirPath={dirPath} refresh={refresh} />
-        <BigIcon name="close-o" onClick={() => setExtend(false)} title="Cancel" />
+        <BigIcon
+          name="close-o"
+          onClick={() => setExtend(false)}
+          title="Cancel"
+        />
       </div>
     );
   }
@@ -24,6 +28,6 @@ const Add = ({dirPath, refresh}) => {
       <BigIcon name="add" onClick={() => setExtend(true)} title="Create" />
     </div>
   );
-}
+};
 
 export default Add;

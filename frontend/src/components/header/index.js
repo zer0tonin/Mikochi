@@ -6,10 +6,7 @@ import Search from "../search/search";
 const Header = ({ searchQuery, setSearchQuery }) => (
   <header class={style.header}>
     <nav role="navigation" aria-label="main navigation">
-      <a
-        href="/"
-        onClick={() => setSearchQuery("")}
-      >
+      <a href="/" onClick={() => setSearchQuery("")}>
         <img src="../../assets/logo.png" width="56" height="56" />
         Mikochi
       </a>

@@ -6,8 +6,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/spf13/viper"
 	"github.com/lithammer/fuzzysearch/fuzzy"
+	"github.com/spf13/viper"
 )
 
 // FileDescription is a serializable FileInfo with path

@@ -31,9 +31,7 @@ const MkdirModal = ({ isOpen, close, dirPath, refresh }) => {
     e.preventDefault();
     const putMkdir = async () => {
       const response = await fetch(
-        dirPath != ""
-          ? `/api/mkdir/${dirPath}/${name}`
-          : `/api/mkdir/${name}`,
+        dirPath != "" ? `/api/mkdir/${dirPath}/${name}` : `/api/mkdir/${name}`,
         {
           method: "PUT",
           headers: {
@@ -83,7 +81,11 @@ const Mkdir = ({ dirPath, refresh }) => {
   return (
     <>
       <div class={style.floatingMkdir}>
-        <BigIcon name="folder-add" onClick={() => setModalOpen(true)} title="Create directory" />
+        <BigIcon
+          name="folder-add"
+          onClick={() => setModalOpen(true)}
+          title="Create directory"
+        />
       </div>
       <MkdirModal
         isOpen={modalOpen}
