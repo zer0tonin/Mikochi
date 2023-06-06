@@ -29,6 +29,7 @@ const sorting = {
   name_desc: (a, b) => a.path < b.path,
   size_asc: (a, b) => a.size > b.size,
   size_desc: (a, b) => a.size < b.size,
+  none: () => 0,
 };
 
 const Directory = ({ dirPath = "" }) => {
@@ -90,7 +91,13 @@ const Directory = ({ dirPath = "" }) => {
 
   return (
     <>
-      <Header searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+      <Header
+        searchQuery={searchQuery}
+        setSearchQuery={(search) => {
+          setSearchQuery(search);
+          setCompare("none");
+        }}
+      />
       <main>
         <table>
           <thead>
