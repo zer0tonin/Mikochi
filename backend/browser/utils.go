@@ -1,10 +1,9 @@
 package browser
 
 import (
-	"fmt"
 	"io/fs"
 	"path/filepath"
-	"strings"
+	"sort"
 
 	"github.com/lithammer/fuzzysearch/fuzzy"
 	"github.com/spf13/viper"
@@ -46,28 +45,22 @@ func browseDir(dir string) []FileDescription {
 	return results
 }
 
-// fileMatchesSearch checks that a file is contained in a directory (or its subdiretories) and matches the search query
-func fileMatchesSearch(file, dir, search string) bool {
-	rel, err := filepath.Rel(dir, file)
-	if err != nil {
-		fmt.Println("here")
-		return false // file not in dir
-	}
-	// we want search to be case insensitive
-	rel = strings.ToLower(rel)
-	search = strings.ToLower(search)
-	fmt.Println(fuzzy.RankMatch(search, rel))
-	return fuzzy.RankMatch(search, rel) > 0 && !strings.HasPrefix(rel, "../")
-}
-
 // searchInDir returns the results of a search query inside a given directory
 func searchInDir(dir, search string) []FileDescription {
-	results := []FileDescription{}
-	for file, fileInfo := range fileCache {
-		if fileMatchesSearch(file, dir, search) {
-			path, _ := strings.CutPrefix(file, dir+"/")
-			results = append(results, fileInfoToFileDescription(fileInfo, path))
+	children := []string{}
+	for file := range fileCache {
+		if filepath.HasPrefix(file, dir) {
+			children = append(children, file)
 		}
+	}
+
+	matches := fuzzy.RankFindNormalizedFold(search, children)
+	sort.Sort(matches)
+
+	results := []FileDescription{}
+	for _, match := range matches {
+		fileInfo := fileInfoToFileDescription(fileCache[match.Target], match.Target)
+		results = append(results, fileInfo)
 	}
 	return results
 }
