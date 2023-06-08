@@ -4,7 +4,7 @@ import style from "./style.css";
 const Search = ({ searchQuery, setSearchQuery }) => {
   const onSearchInput = (e) => {
     const timer = setTimeout(() => setSearchQuery(e.target.value), 500);
-    return () => clearTimeout(timer)
+    return () => clearTimeout(timer);
   };
 
   const onSubmit = (e) => {

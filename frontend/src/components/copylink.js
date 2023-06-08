@@ -57,11 +57,16 @@ const CopyLink = ({ filePath }) => {
       }/api/stream${filePath}?${auth.toString()}`
     );
     setShowToast(true);
-    setTimeout(() => setShowToast(false), 2000)
+    setTimeout(() => setShowToast(false), 2000);
   };
   return (
     <>
-      <Icon name="copy" onClick={copyWithAuth} title="Copy stream link to clipboard" />;
+      <Icon
+        name="copy"
+        onClick={copyWithAuth}
+        title="Copy stream link to clipboard"
+      />
+      ;
       <Toast isVisible={showToast} text="Link copied to clipboard" />
     </>
   );
