@@ -1,9 +1,10 @@
 import { h } from "preact";
-import { useContext } from "preact/hooks";
+import { useContext, useState } from "preact/hooks";
 
 import { AuthContext } from "../utils/jwt";
 
 import Icon from "./icon";
+import Toast from "./toast";
 
 // copyToClipboard will copy text to the clipboard using navigator.clipboard if available
 // or fallback to document.execCommand
@@ -35,6 +36,7 @@ const copyToClipboard = async (textToCopy) => {
 
 const CopyLink = ({ filePath }) => {
   const { jwt } = useContext(AuthContext);
+  const [showToast, setShowToast] = useState(false);
 
   const copyWithAuth = async () => {
     const target = new URLSearchParams();
@@ -54,8 +56,15 @@ const CopyLink = ({ filePath }) => {
         window.location.port == "" ? "" : `:${window.location.port}`
       }/api/stream${filePath}?${auth.toString()}`
     );
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 2000)
   };
-  return <Icon name="copy" onClick={copyWithAuth} title="Copy stream link" />;
+  return (
+    <>
+      <Icon name="copy" onClick={copyWithAuth} title="Copy stream link to clipboard" />;
+      <Toast isVisible={showToast} text="Link copied to clipboard" />
+    </>
+  );
 };
 
 export default CopyLink;
