@@ -23,11 +23,10 @@ HOST=127.0.0.1:8080 USERNAME=zer0tonin PASSWORD=horsebatterysomething ./mikochi
 Launch the app using docker:
 
 ```sh
-docker run -v ~/Code/Mikochi/data:/data \
--p 8080:8080 -e HOST="0.0.0.0:8080" \
--e DATA_DIR="/data" -e JWT_SECRET=my_super_secret \
--e USERNAME=my_username -e PASSWORD=my_secure_password \
-zer0tonin/mikochi:latest
+docker run \
+-p 8080:8080 -v $(PWD)/data:/data \
+-e DATA_DIR="/data" -e USERNAME=zer0tonin \
+-e PASSWORD=horsebatterysomething zer0tonin/mikochi:latest
 ```
 
 ### Kubernetes
@@ -63,7 +62,7 @@ Additionally, using [rate limits](http://nginx.org/en/docs/http/ngx_http_limit_r
 
 I welcome any PRs aimed at improving or fixing existing features, especially on the following subjects:
 
-- making a linux/arm/v7 docker build (npm seems to have trouble with this architecture)
+- making a non-hacky linux/arm/v7 docker build (npm seems to have trouble with this architecture)
 - making a smarter cache refresh
 - improving accessibility
 - s3/minio support
