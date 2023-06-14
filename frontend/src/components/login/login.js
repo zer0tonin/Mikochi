@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { useContext, useState } from "preact/hooks";
+import { useContext, useEffect, useState } from "preact/hooks";
 import style from "./style.css";
 
 import { AuthContext } from "../../utils/jwt";
@@ -9,6 +9,10 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    document.title = `Mikochi - Login`;
+  }, []);
 
   const onSubmit = (e) => {
     e.preventDefault();

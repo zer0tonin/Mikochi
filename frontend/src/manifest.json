@@ -1,6 +1,6 @@
 {
-  "name": "frontend",
-  "short_name": "frontend",
+  "name": "Mikochi",
+  "short_name": "Mikochi",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",

@@ -1,4 +1,4 @@
-# frontend
+# Mikochi
 
 ## CLI Commands
 
