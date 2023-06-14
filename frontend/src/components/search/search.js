@@ -1,8 +1,14 @@
 import { h } from "preact";
+import { useState } from "preact/hooks";
 import style from "./style.css";
 
 const Search = ({ searchQuery, setSearchQuery }) => {
+  const [value, setValue] = useState(searchQuery);
+
   const onSearchInput = (e) => {
+    setValue(e.target.value);
+
+    // only trigger search when the user stops typing
     const timer = setTimeout(() => setSearchQuery(e.target.value), 500);
     return () => clearTimeout(timer);
   };
@@ -16,7 +22,7 @@ const Search = ({ searchQuery, setSearchQuery }) => {
       <input
         class={style.searchInput}
         type="text"
-        value={searchQuery}
+        value={value}
         onInput={onSearchInput}
         aria-label="search"
       />
