@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider preact build",
+    "build": "preact build",
     "serve": "sirv build --port 5000 --cors --single --host 0.0.0.0",
-    "dev": "cross-env NODE_OPTIONS=--openssl-legacy-provider preact watch -p 5000",
+    "dev": "preact watch -p 5000",
     "lint": "eslint src",
     "fix-lint": "eslint --fix src",
     "test": "jest",
@@ -23,7 +23,6 @@
     ]
   },
   "devDependencies": {
-    "cross-env": "^7.0.3",
     "enzyme": "^3.11.0",
     "enzyme-adapter-preact-pure": "^4.0.0",
     "eslint": "^8.30.0",
@@ -31,15 +30,15 @@
     "eslint-config-prettier": "^8.8.0",
     "jest": "^27.0.0",
     "jest-preset-preact": "^4.0.5",
-    "preact-cli": "^3.4.2",
+    "preact-cli": "^3.4.5",
     "prettier": "2.8.7",
     "sirv-cli": "^2.0.2",
     "unimported": "^1.26.0"
   },
   "dependencies": {
-    "preact": "^10.11.3",
-    "preact-render-to-string": "^5.2.6",
-    "preact-router": "^3.2.1"
+    "preact": "^10.15.1",
+    "preact-render-to-string": "5.1.9",
+    "preact-router": "^4.1.1"
   },
   "jest": {
     "preset": "jest-preset-preact",
