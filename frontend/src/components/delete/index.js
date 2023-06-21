@@ -4,6 +4,8 @@ import { useContext, useEffect, useRef, useState } from "preact/hooks";
 import { AuthContext } from "../../utils/jwt";
 import style from "./style.css";
 import Icon from "../icon";
+import Modal, { ModalContent } from "../modal";
+
 
 const DeleteModal = ({ isOpen, close, filePath, refresh }) => {
   if (!isOpen) {
@@ -12,18 +14,6 @@ const DeleteModal = ({ isOpen, close, filePath, refresh }) => {
 
   const { jwt } = useContext(AuthContext);
   const [error, setError] = useState("");
-  const ref = useRef();
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (ref.current && !ref.current.contains(e.target)) {
-        close();
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [ref]);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -49,12 +39,12 @@ const DeleteModal = ({ isOpen, close, filePath, refresh }) => {
   };
 
   return (
-    <div class={style.modal} ref={ref}>
+    <Modal isOpen={isOpen} close={close}>
       <div class={style.modalHeader}>
         Permanently delete file?
         <Icon name="close" onClick={close} title="Close" />
       </div>
-      <div class={style.modalContent}>
+      <ModalContent>
         <button type="submit" onClick={onSubmit} class={style.submit}>
           Delete
         </button>
@@ -62,8 +52,8 @@ const DeleteModal = ({ isOpen, close, filePath, refresh }) => {
           Cancel
         </button>
         {error !== "" && <div class={style.error}>{error}</div>}
-      </div>
-    </div>
+      </ModalContent>
+    </Modal>
   );
 };
 
