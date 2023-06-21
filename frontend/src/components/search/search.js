@@ -1,9 +1,15 @@
 import { h } from "preact";
-import { useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import style from "./style.css";
 
 const Search = ({ searchQuery, setSearchQuery }) => {
   const [value, setValue] = useState(searchQuery);
+
+  useEffect(() => {
+    if (searchQuery === "") {
+      setValue(searchQuery)
+    }
+  }, [searchQuery])
 
   const onSearchInput = (e) => {
     setValue(e.target.value);
