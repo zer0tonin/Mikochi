@@ -5,6 +5,8 @@ import { AuthContext } from "../../utils/jwt";
 import style from "./style.css";
 import Icon from "../icon";
 
+import Modal, { ModalContent, ModalHeader } from "../modal";
+
 const RenameModal = ({ isOpen, close, filePath, refresh }) => {
   if (!isOpen) {
     return null;
@@ -13,18 +15,6 @@ const RenameModal = ({ isOpen, close, filePath, refresh }) => {
   const { jwt } = useContext(AuthContext);
   const [error, setError] = useState("");
   const [path, setPath] = useState(filePath);
-  const ref = useRef();
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (ref.current && !ref.current.contains(e.target)) {
-        close();
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [ref]);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -51,12 +41,11 @@ const RenameModal = ({ isOpen, close, filePath, refresh }) => {
   };
 
   return (
-    <div class={style.modal} ref={ref}>
-      <div class={style.modalHeader}>
+    <Modal isOpen={isOpen} close={close}>
+      <ModalHeader close={close}>
         Rename / Move
-        <Icon name="close" onClick={close} title="Close" />
-      </div>
-      <div class={style.modalContent}>
+      </ModalHeader>
+      <ModalContent>
         <form onSubmit={onSubmit}>
           <input
             type="text"
@@ -69,8 +58,8 @@ const RenameModal = ({ isOpen, close, filePath, refresh }) => {
           </button>
           {error !== "" && <div class={style.error}>{error}</div>}
         </form>
-      </div>
-    </div>
+      </ModalContent>
+    </Modal>
   );
 };
 
