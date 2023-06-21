@@ -4,6 +4,7 @@ import { useContext, useEffect, useRef, useState } from "preact/hooks";
 import { AuthContext } from "../../utils/jwt";
 import style from "./style.css";
 import Icon, { BigIcon } from "../icon";
+import Modal, { ModalContent, ModalHeader } from "../modal";
 
 const UploadModal = ({ isOpen, close, dirPath, refresh }) => {
   if (!isOpen) {
@@ -13,19 +14,6 @@ const UploadModal = ({ isOpen, close, dirPath, refresh }) => {
   const { jwt } = useContext(AuthContext);
   const [selectedFile, setSelectedFile] = useState(null);
   const [error, setError] = useState("");
-
-  const ref = useRef();
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (ref.current && !ref.current.contains(e.target)) {
-        close();
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [ref]);
 
   const onSubmit = (e) => {
     const upload = async () => {
@@ -61,12 +49,11 @@ const UploadModal = ({ isOpen, close, dirPath, refresh }) => {
   };
 
   return (
-    <div class={style.modal} ref={ref}>
-      <div class={style.modalHeader}>
+    <Modal isOpen={isOpen} close={close}>
+      <ModalHeader close={close}>
         File upload
-        <Icon name="close" onClick={close} title="Close" />
-      </div>
-      <div class={style.modalContent}>
+      </ModalHeader>
+      <ModalContent>
         <form onSubmit={onSubmit}>
           <label class={style.fileUpload}>
             <Icon name="file-add" />
@@ -88,8 +75,8 @@ const UploadModal = ({ isOpen, close, dirPath, refresh }) => {
           </button>
           {error !== "" && <div class={style.error}>{error}</div>}
         </form>
-      </div>
-    </div>
+      </ModalContent>
+    </Modal>
   );
 };
 
