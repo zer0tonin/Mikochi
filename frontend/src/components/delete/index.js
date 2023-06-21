@@ -6,7 +6,6 @@ import style from "./style.css";
 import Icon from "../icon";
 import Modal, { ModalContent } from "../modal";
 
-
 const DeleteModal = ({ isOpen, close, filePath, refresh }) => {
   if (!isOpen) {
     return null;

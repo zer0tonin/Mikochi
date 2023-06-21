@@ -50,9 +50,7 @@ const UploadModal = ({ isOpen, close, dirPath, refresh }) => {
 
   return (
     <Modal isOpen={isOpen} close={close}>
-      <ModalHeader close={close}>
-        File upload
-      </ModalHeader>
+      <ModalHeader close={close}>File upload</ModalHeader>
       <ModalContent>
         <form onSubmit={onSubmit}>
           <label class={style.fileUpload}>

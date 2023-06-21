@@ -42,9 +42,7 @@ const RenameModal = ({ isOpen, close, filePath, refresh }) => {
 
   return (
     <Modal isOpen={isOpen} close={close}>
-      <ModalHeader close={close}>
-        Rename / Move
-      </ModalHeader>
+      <ModalHeader close={close}>Rename / Move</ModalHeader>
       <ModalContent>
         <form onSubmit={onSubmit}>
           <input

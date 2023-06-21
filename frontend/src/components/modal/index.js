@@ -10,16 +10,12 @@ export const ModalHeader = ({ close, children }) => {
       {children}
       <Icon name="close" onClick={close} title="Close" />
     </div>
-  )
-}
+  );
+};
 
 export const ModalContent = ({ children }) => {
-  return (
-      <div class={style.modalContent}>
-        { children }
-      </div>
-  )
-}
+  return <div class={style.modalContent}>{children}</div>;
+};
 
 const Modal = ({ isOpen, close, children }) => {
   if (!isOpen) {

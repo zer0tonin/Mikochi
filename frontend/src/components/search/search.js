@@ -7,9 +7,9 @@ const Search = ({ searchQuery, setSearchQuery }) => {
 
   useEffect(() => {
     if (searchQuery === "") {
-      setValue(searchQuery)
+      setValue(searchQuery);
     }
-  }, [searchQuery])
+  }, [searchQuery]);
 
   const onSearchInput = (e) => {
     setValue(e.target.value);
