@@ -46,6 +46,9 @@ const Directory = ({ dirPath = "" }) => {
     }
     document.title = `Mikochi ${dirPath == "" ? "" : `- /${dirPath}/`}`;
     setSearchQuery("");
+    if (compare == "none") {
+      setCompare("name_asc");
+    }
 
     const fetchData = async () => {
       const response = await fetch(`/api/browse/${dirPath}`, {
