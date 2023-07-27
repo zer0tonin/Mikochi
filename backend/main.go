@@ -31,7 +31,6 @@ func main() {
 	}
 
 	r := gin.Default()
-	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
 
 	// in production builds, this route serves the frontend files

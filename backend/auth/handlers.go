@@ -81,7 +81,6 @@ func SingleUse(c *gin.Context) {
 
 	tokenWhitelistMutex.Lock()
 	tokenWhitelist[jti] = c.Query("target")
-	log.Printf(c.Query("target"))
 	tokenWhitelistMutex.Unlock()
 
 	claims := jwt.RegisteredClaims{
