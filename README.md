@@ -37,7 +37,7 @@ For Kubernetes users, Mikochi is installable using a [helm chart](https://artifa
 
 ```sh
 helm repo add zer0tonin https://zer0tonin.github.io/helm-charts/
-helm --kubeconfig kubeconfig install mikochi zer0tonin/mikochi \
+helm install mikochi zer0tonin/mikochi \
 --version 1.2.6 --set mikochi.username=zer0tonin \
 --set mikochi.password=my_super_password --set persistence.enabled=true
 ```
