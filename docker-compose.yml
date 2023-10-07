@@ -15,7 +15,7 @@ services:
       - 5000:5000
 
   dev-backend:
-    image: cosmtrek/air:v1.42.0
+    image: cosmtrek/air:v1.45.0
     working_dir: "/mikochi"
     environment:
       air_wd: "/mikochi"
