@@ -30,15 +30,15 @@
     "eslint-config-prettier": "^8.8.0",
     "jest": "^27.0.0",
     "jest-preset-preact": "^4.0.5",
-    "preact-cli": "^3.4.5",
+    "preact-cli": "^3.5.0",
     "prettier": "2.8.7",
     "sirv-cli": "^2.0.2",
     "unimported": "^1.26.0"
   },
   "dependencies": {
-    "preact": "^10.15.1",
+    "preact": "^10.18.1",
     "preact-render-to-string": "5.1.9",
-    "preact-router": "^4.1.1"
+    "preact-router": "^4.1.2"
   },
   "jest": {
     "preset": "jest-preset-preact",
