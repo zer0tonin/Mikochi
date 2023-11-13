@@ -1,6 +1,7 @@
 package browser
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -13,7 +14,8 @@ import (
 // GET /stream
 // StreamFile streams the content of the requested file
 func StreamFile(c *gin.Context) {
-	pathInDataDir := getAbsolutePath(c.Param("path"))
+	path := c.Param("path")
+	pathInDataDir := getAbsolutePath(path)
 
 	dir, err := isDir(pathInDataDir)
 	if err != nil {
@@ -24,6 +26,11 @@ func StreamFile(c *gin.Context) {
 	}
 
 	if dir {
+		c.Header(
+			"Content-Disposition",
+			fmt.Sprintf("attachment; filename=%s.tar.gz", path[1:len(path)-1]),
+		)
+		writeTarGz(pathInDataDir, c.Writer)
 	} else {
 		c.File(pathInDataDir)
 	}
