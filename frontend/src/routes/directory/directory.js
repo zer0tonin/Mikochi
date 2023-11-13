@@ -139,6 +139,7 @@ const Directory = ({ dirPath = "" }) => {
                     </td>
                     <td />
                     <td>
+                      <Download filePath={`${filePath}/`} />
                       <Rename
                         filePath={filePath}
                         refresh={() => setRefresh(refresh + 1)}

@@ -14,7 +14,19 @@ import (
 // StreamFile streams the content of the requested file
 func StreamFile(c *gin.Context) {
 	pathInDataDir := getAbsolutePath(c.Param("path"))
-	c.File(pathInDataDir)
+
+	dir, err := isDir(pathInDataDir)
+	if err != nil {
+		log.Printf("Err: %s", err.Error())
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"err": "Failed to stat file",
+		})
+	}
+
+	if dir {
+	} else {
+		c.File(pathInDataDir)
+	}
 }
 
 // GET /browse

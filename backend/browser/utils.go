@@ -2,6 +2,7 @@ package browser
 
 import (
 	"io/fs"
+	"os"
 	"path/filepath"
 	"sort"
 
@@ -63,4 +64,17 @@ func searchInDir(dir, search string) []FileDescription {
 		results = append(results, fileInfo)
 	}
 	return results
+}
+
+func isDir(filepath string) (bool, error) {
+	fileInfo, err := os.Stat(filepath)
+	if err != nil {
+		return false, err
+	}
+
+	return fileInfo.IsDir(), nil
+}
+
+func sendTarGz() error {
+	return nil
 }
