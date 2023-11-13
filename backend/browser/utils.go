@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
 
 	"github.com/lithammer/fuzzysearch/fuzzy"
 	"github.com/spf13/viper"
@@ -50,7 +51,7 @@ func browseDir(dir string) []FileDescription {
 func searchInDir(dir, search string) []FileDescription {
 	children := []string{}
 	for file := range fileCache {
-		if filepath.HasPrefix(file, dir) {
+		if strings.HasPrefix(file, dir) {
 			children = append(children, file)
 		}
 	}
