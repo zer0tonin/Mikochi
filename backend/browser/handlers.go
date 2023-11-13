@@ -23,6 +23,7 @@ func StreamFile(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"err": "Failed to stat file",
 		})
+		return
 	}
 
 	if dir {

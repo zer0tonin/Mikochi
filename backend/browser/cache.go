@@ -3,8 +3,8 @@ package browser
 import (
 	"io/fs"
 	"log"
-	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 
 	"github.com/rjeczalik/notify"
@@ -37,23 +37,25 @@ func ResetCache() {
 // recursively initalizes the cache
 // we do not use filepath.Walk to avoid a mess with relative / absolute paths
 func cacheFolder(cache map[string]fs.FileInfo, path string) {
-	dirEntries, err := os.ReadDir(getAbsolutePath(path))
+	rootPath := getAbsolutePath(path)
+	err := filepath.WalkDir(
+		rootPath,
+		func(path string, dirEntry fs.DirEntry, err error) error {
+			relativePath := strings.TrimPrefix(path, rootPath)
+			if relativePath == "" {
+				return nil
+			}
+			fileInfo, err := dirEntry.Info()
+			if err != nil {
+				return err
+			}
+
+			cache[relativePath] = fileInfo
+			return nil
+		},
+	)
 	if err != nil {
 		log.Panicf("Error while refreshing cache: %s", err.Error())
-	}
-
-	for _, dirEntry := range dirEntries {
-		relativePath := filepath.Clean(path + dirEntry.Name())
-		fileInfo, err := dirEntry.Info()
-		if err != nil {
-			log.Panicf("Error while refreshing cache: %s", err.Error())
-		}
-
-		cache[relativePath] = fileInfo
-
-		if dirEntry.IsDir() {
-			cacheFolder(cache, relativePath+"/")
-		}
 	}
 }
 
