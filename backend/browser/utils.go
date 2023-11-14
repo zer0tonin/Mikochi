@@ -85,7 +85,7 @@ func writeTarGz(filepath string, w io.Writer) error {
 	tarWriter := tar.NewWriter(gzipWriter)
 	defer tarWriter.Close()
 
-	 writeDirectoryToTarGz(filepath, tarWriter, filepath)
+	writeDirectoryToTarGz(filepath, tarWriter, filepath)
 
 	return nil
 }
