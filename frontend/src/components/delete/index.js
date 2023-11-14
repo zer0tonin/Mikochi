@@ -6,7 +6,7 @@ import style from "./style.css";
 import Icon from "../icon";
 import Modal, { ModalContent } from "../modal";
 
-const DeleteModal = ({ isOpen, close, filePath, refresh }) => {
+const DeleteModal = ({ isOpen, close, filePath, refresh, setRefresh }) => {
   const { jwt } = useContext(AuthContext);
   const [error, setError] = useState("");
 
@@ -31,8 +31,8 @@ const DeleteModal = ({ isOpen, close, filePath, refresh }) => {
         return;
       }
       setError("");
+      setRefresh(refresh + 1);
       close();
-      refresh();
     };
     sendDelete();
   };
@@ -56,7 +56,7 @@ const DeleteModal = ({ isOpen, close, filePath, refresh }) => {
   );
 };
 
-const Delete = ({ filePath, refresh }) => {
+const Delete = ({ filePath, refresh, setRefresh }) => {
   const [modalOpen, setModalOpen] = useState(false);
 
   return (
@@ -67,6 +67,7 @@ const Delete = ({ filePath, refresh }) => {
         close={() => setModalOpen(false)}
         filePath={filePath}
         refresh={refresh}
+        setRefresh={setRefresh}
       />
     </>
   );

@@ -136,11 +136,13 @@ const Directory = ({ dirPath = "" }) => {
                       <Download filePath={`${filePath}/`} />
                       <Rename
                         filePath={filePath}
-                        refresh={() => setRefresh(refresh + 1)}
+                        refresh={refresh}
+                        setRefresh={setRefresh}
                       />
                       <Delete
                         filePath={filePath}
-                        refresh={() => setRefresh(refresh + 1)}
+                        refresh={refresh}
+                        setRefresh={setRefresh}
                       />
                     </td>
                   </tr>
@@ -160,11 +162,13 @@ const Directory = ({ dirPath = "" }) => {
                     <CopyLink filePath={filePath} />
                     <Rename
                       filePath={filePath}
-                      refresh={() => setRefresh(refresh + 1)}
+                      refresh={refresh}
+                      setRefresh={setRefresh}
                     />
                     <Delete
                       filePath={filePath}
-                      refresh={() => setRefresh(refresh + 1)}
+                      refresh={refresh}
+                      setRefresh={setRefresh}
                     />
                   </td>
                 </tr>
@@ -172,7 +176,7 @@ const Directory = ({ dirPath = "" }) => {
             })}
           </tbody>
         </table>
-        <Add dirPath={dirPath} refresh={() => setRefresh(refresh + 1)} />
+        <Add dirPath={dirPath} refresh={refresh} setRefresh={setRefresh} />
       </main>
     </>
   );

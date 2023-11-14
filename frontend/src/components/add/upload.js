@@ -6,7 +6,7 @@ import style from "./style.css";
 import Icon, { BigIcon } from "../icon";
 import Modal, { ModalContent, ModalHeader } from "../modal";
 
-const UploadModal = ({ isOpen, close, dirPath, refresh }) => {
+const UploadModal = ({ isOpen, close, dirPath, refresh, setRefresh }) => {
   const { jwt } = useContext(AuthContext);
   const [selectedFile, setSelectedFile] = useState(null);
   const [error, setError] = useState("");
@@ -39,9 +39,9 @@ const UploadModal = ({ isOpen, close, dirPath, refresh }) => {
         return;
       }
       setError("");
-      close();
-      refresh();
       setSelectedFile(null);
+      setRefresh(refresh + 1);
+      close();
     };
 
     e.preventDefault();
@@ -78,7 +78,7 @@ const UploadModal = ({ isOpen, close, dirPath, refresh }) => {
   );
 };
 
-const Upload = ({ dirPath, refresh }) => {
+const Upload = ({ dirPath, refresh, setRefresh }) => {
   const [modalOpen, setModalOpen] = useState(false);
   return (
     <>
@@ -94,6 +94,7 @@ const Upload = ({ dirPath, refresh }) => {
         close={() => setModalOpen(false)}
         dirPath={dirPath}
         refresh={refresh}
+        setRefresh={setRefresh}
       />
     </>
   );

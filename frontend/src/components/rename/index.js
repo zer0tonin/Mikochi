@@ -7,7 +7,7 @@ import Icon from "../icon";
 
 import Modal, { ModalContent, ModalHeader } from "../modal";
 
-const RenameModal = ({ isOpen, close, filePath, refresh }) => {
+const RenameModal = ({ isOpen, close, filePath, refresh, setRefresh }) => {
   const { jwt } = useContext(AuthContext);
   const [error, setError] = useState("");
   const [path, setPath] = useState(filePath);
@@ -34,8 +34,8 @@ const RenameModal = ({ isOpen, close, filePath, refresh }) => {
         return;
       }
       setError("");
+      setRefresh(refresh + 1);
       close();
-      refresh();
     };
     putMove();
   };
@@ -61,7 +61,7 @@ const RenameModal = ({ isOpen, close, filePath, refresh }) => {
   );
 };
 
-const Rename = ({ filePath, refresh }) => {
+const Rename = ({ filePath, refresh, setRefresh }) => {
   const [modalOpen, setModalOpen] = useState(false);
 
   return (
@@ -72,6 +72,7 @@ const Rename = ({ filePath, refresh }) => {
         close={() => setModalOpen(false)}
         filePath={filePath}
         refresh={refresh}
+        setRefresh={setRefresh}
       />
     </>
   );

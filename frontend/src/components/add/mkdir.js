@@ -6,7 +6,7 @@ import style from "./style.css";
 import { BigIcon } from "../icon";
 import Modal, { ModalContent, ModalHeader } from "../modal";
 
-const MkdirModal = ({ isOpen, close, dirPath, refresh }) => {
+const MkdirModal = ({ isOpen, close, dirPath, refresh, setRefresh }) => {
   const { jwt } = useContext(AuthContext);
   const [error, setError] = useState("");
   const [name, setName] = useState("");
@@ -34,8 +34,9 @@ const MkdirModal = ({ isOpen, close, dirPath, refresh }) => {
         return;
       }
       setError("");
+      setName("");
+      setRefresh(refresh + 1);
       close();
-      refresh();
     };
     putMkdir();
   };
@@ -61,7 +62,7 @@ const MkdirModal = ({ isOpen, close, dirPath, refresh }) => {
   );
 };
 
-const Mkdir = ({ dirPath, refresh }) => {
+const Mkdir = ({ dirPath, refresh, setRefresh }) => {
   const [modalOpen, setModalOpen] = useState(false);
   return (
     <>
@@ -77,6 +78,7 @@ const Mkdir = ({ dirPath, refresh }) => {
         close={() => setModalOpen(false)}
         dirPath={dirPath}
         refresh={refresh}
+        setRefresh={setRefresh}
       />
     </>
   );

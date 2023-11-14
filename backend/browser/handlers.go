@@ -41,8 +41,8 @@ func StreamFile(c *gin.Context) {
 // BrowseFolder returns the content of a directory and/or search results
 func BrowseFolder(c *gin.Context) {
 	path := filepath.Clean(c.Param("path"))
-
 	search := c.Query("search")
+
 	var results []FileDescription
 	if search == "" {
 		results = browseDir(path)
@@ -84,11 +84,12 @@ func Move(c *gin.Context) {
 		return
 	}
 
+	// we make a synchronous reset cache to avoid querying /browse on stale data
+	ResetCache()
+
 	c.JSON(http.StatusOK, gin.H{
 		"status": "ok",
 	})
-
-	// cache refresh should be triggered automatically
 }
 
 // DELETE /delete
@@ -105,11 +106,12 @@ func Delete(c *gin.Context) {
 		return
 	}
 
+	// we make a synchronous reset cache to avoid querying /browse on stale data
+	ResetCache()
+
 	c.JSON(http.StatusOK, gin.H{
 		"status": "ok",
 	})
-
-	// cache refresh should be triggered automatically
 }
 
 // PUT /upload
@@ -155,6 +157,9 @@ func Upload(c *gin.Context) {
 		return
 	}
 
+	// we make a synchronous reset cache to avoid querying /browse on stale data
+	ResetCache()
+
 	c.JSON(http.StatusOK, gin.H{
 		"status": "ok",
 	})
@@ -172,6 +177,9 @@ func Mkdir(c *gin.Context) {
 		})
 		return
 	}
+
+	// we make a synchronous reset cache to avoid querying /browse on stale data
+	ResetCache()
 
 	c.JSON(http.StatusOK, gin.H{
 		"status": "ok",

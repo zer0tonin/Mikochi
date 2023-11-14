@@ -6,14 +6,14 @@ import Upload from "./upload";
 import Mkdir from "./mkdir";
 import { BigIcon } from "../icon";
 
-const Add = ({ dirPath, refresh }) => {
+const Add = ({ dirPath, refresh, setRefresh }) => {
   const [extend, setExtend] = useState(false);
 
   if (extend) {
     return (
       <div class={style.floating}>
-        <Upload dirPath={dirPath} refresh={refresh} />
-        <Mkdir dirPath={dirPath} refresh={refresh} />
+        <Upload dirPath={dirPath} refresh={refresh} setRefresh={setRefresh} />
+        <Mkdir dirPath={dirPath} refresh={refresh} setRefresh={setRefresh} />
         <BigIcon
           name="close-o"
           onClick={() => setExtend(false)}
