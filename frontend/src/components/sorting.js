@@ -1,5 +1,4 @@
 import { h } from "preact";
-import { useState } from "preact/hooks";
 
 export const NameHeader = ({ compare, setCompare }) => {
   return (
@@ -47,4 +46,44 @@ export const SizeHeader = ({ compare, setCompare }) => {
       )}
     </th>
   );
+};
+
+export const sorting = {
+  name_asc: (a, b) => {
+    if (a.path > b.path) {
+      return 1;
+    }
+    if (a.path == b.path) {
+      return 0;
+    }
+    return -1;
+  },
+  name_desc: (a, b) => {
+    if (a.path < b.path) {
+      return 1;
+    }
+    if (a.path == b.path) {
+      return 0;
+    }
+    return -1;
+  },
+  size_asc: (a, b) => {
+    if (a.size > b.size) {
+      return 1;
+    }
+    if (a.size == b.size) {
+      return 0;
+    }
+    return -1;
+  },
+  size_desc: (a, b) => {
+    if (a.size < b.size) {
+      return 1;
+    }
+    if (a.size == b.size) {
+      return 0;
+    }
+    return -1;
+  },
+  none: () => 0,
 };

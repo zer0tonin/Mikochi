@@ -18,10 +18,6 @@ export const ModalContent = ({ children }) => {
 };
 
 const Modal = ({ isOpen, close, children }) => {
-  if (!isOpen) {
-    return null;
-  }
-
   const ref = useRef();
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -33,7 +29,11 @@ const Modal = ({ isOpen, close, children }) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [ref]);
+  }, [ref, close]);
+
+  if (!isOpen) {
+    return null;
+  }
 
   return (
     <div class={style.modal} ref={ref}>

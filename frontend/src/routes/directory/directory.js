@@ -11,7 +11,7 @@ import Icon from "../../components/icon";
 // The header is directly included here to facilitate merging data from the search bar and path
 import Header from "../../components/header";
 import { DoubleDotPath, Path } from "../../components/path";
-import { NameHeader, SizeHeader } from "../../components/sorting";
+import { NameHeader, SizeHeader, sorting } from "../../components/sorting";
 
 import { AuthContext } from "../../utils/jwt";
 
@@ -22,46 +22,6 @@ const formatFileSize = (bytes) => {
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   const size = parseFloat((bytes / Math.pow(k, i)).toFixed(2));
   return `${size} ${sizes[i]}`;
-};
-
-const sorting = {
-  name_asc: (a, b) => {
-    if (a.path > b.path) {
-      return 1;
-    }
-    if (a.path == b.path) {
-      return 0;
-    }
-    return -1;
-  },
-  name_desc: (a, b) => {
-    if (a.path < b.path) {
-      return 1;
-    }
-    if (a.path == b.path) {
-      return 0;
-    }
-    return -1;
-  },
-  size_asc: (a, b) => {
-    if (a.size > b.size) {
-      return 1;
-    }
-    if (a.size == b.size) {
-      return 0;
-    }
-    return -1;
-  },
-  size_desc: (a, b) => {
-    if (a.size < b.size) {
-      return 1;
-    }
-    if (a.size == b.size) {
-      return 0;
-    }
-    return -1;
-  },
-  none: () => 0,
 };
 
 const Directory = ({ dirPath = "" }) => {
@@ -96,6 +56,7 @@ const Directory = ({ dirPath = "" }) => {
     };
 
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dirPath]);
 
   // this two useEffect hooks look similar, but trying to combine them will get you into a race condition hell
@@ -122,6 +83,7 @@ const Directory = ({ dirPath = "" }) => {
     };
 
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, refresh]);
 
   return (

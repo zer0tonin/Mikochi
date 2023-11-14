@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { useContext, useEffect, useRef, useState } from "preact/hooks";
+import { useContext, useState } from "preact/hooks";
 
 import { AuthContext } from "../../utils/jwt";
 import style from "./style.css";
@@ -8,13 +8,13 @@ import Icon from "../icon";
 import Modal, { ModalContent, ModalHeader } from "../modal";
 
 const RenameModal = ({ isOpen, close, filePath, refresh }) => {
-  if (!isOpen) {
-    return null;
-  }
-
   const { jwt } = useContext(AuthContext);
   const [error, setError] = useState("");
   const [path, setPath] = useState(filePath);
+
+  if (!isOpen) {
+    return null;
+  }
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -30,7 +30,7 @@ const RenameModal = ({ isOpen, close, filePath, refresh }) => {
       });
 
       if (response.status !== 200) {
-        setError(json["err"]);
+        setError(response.json()["err"]);
         return;
       }
       setError("");
