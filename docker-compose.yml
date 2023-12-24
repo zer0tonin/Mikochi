@@ -15,10 +15,8 @@ services:
       - 5000:5000
 
   dev-backend:
-    image: cosmtrek/air:v1.45.0
-    working_dir: "/mikochi"
+    build: ./backend
     environment:
-      air_wd: "/mikochi"
       HOST: "0.0.0.0:4000"
       ENV: "development"
     volumes:
@@ -26,7 +24,7 @@ services:
       - ./data:/data
     ports:
       - 4000:4000
-    command: air -c .air.toml
+      - 2345:2345
 
   dev:
     image: nginx:1.23.3
