@@ -9,15 +9,6 @@ It comes with a web interface powered by JavaScript/Preact, and an API built in 
 
 ## Getting started
 
-### Binary
-
-Launch the app using a pre-compiled binary from the latest [release](https://github.com/zer0tonin/Mikochi/releases):
-
-```sh
-wget -c https://github.com/zer0tonin/Mikochi/releases/download/1.3.1/mikochi-linux-amd64.tar.gz -O - | tar -xz
-HOST=127.0.0.1:8080 USERNAME=zer0tonin PASSWORD=horsebatterysomething ./mikochi
-```
-
 ### Docker
 
 Launch the app using [docker](https://hub.docker.com/r/zer0tonin/mikochi):
@@ -31,6 +22,8 @@ docker run \
 
 (For arm/v7 users, use the `latest-armv7` or `1.3.1-armv7` tag)
 
+You'll find a complete tutorial on installing Mikochi securely with Docker and Traefik [here](https://alicegg.tech/2024/01/04/mikochi-tutorial).
+
 ### Kubernetes
 
 For Kubernetes users, Mikochi is installable using a [helm chart](https://artifacthub.io/packages/helm/zer0tonin/mikochi):
@@ -40,6 +33,15 @@ helm repo add zer0tonin https://zer0tonin.github.io/helm-charts/
 helm install mikochi zer0tonin/mikochi \
 --version 1.3.1 --set mikochi.username=zer0tonin \
 --set mikochi.password=my_super_password --set persistence.enabled=true
+```
+
+### Binary
+
+Launch the app using a pre-compiled binary from the latest [release](https://github.com/zer0tonin/Mikochi/releases):
+
+```sh
+wget -c https://github.com/zer0tonin/Mikochi/releases/download/1.3.1/mikochi-linux-amd64.tar.gz -O - | tar -xz
+HOST=127.0.0.1:8080 USERNAME=zer0tonin PASSWORD=horsebatterysomething ./mikochi
 ```
 
 ## Configuration
@@ -53,12 +55,6 @@ Mikochi is configured using environment variables
 | JWT_SECRET | A secret string for jwt validation | [Random]   |
 | USERNAME   | The username to login with         | root       |
 | PASSWORD   | The password to login with         | pass       |
-
-## Security considerations
-
-It is encouraged to use Mikochi behind a reverse proxy (ie. nginx), and use it to [configure TLS](nginx.org/en/docs/http/configuring_https_servers.html).
-This will stop any attackers from being able to replay requests and access your files.
-Additionally, using [rate limits](http://nginx.org/en/docs/http/ngx_http_limit_req_module.html) can help slow down bruteforce and DDoS attacks.
 
 ## Contributing
 
