@@ -1,22 +1,35 @@
 import { render } from 'preact';
-import { LocationProvider, Router, Route } from 'preact-iso';
+import { useState, useEffect, useMemo } from "preact/hooks";
+import { LocationProvider, lazy, Router, Route } from 'preact-iso';
 
-import { Header } from './components/Header.jsx';
-import { Home } from './pages/Home/index.jsx';
-import { NotFound } from './pages/_404.jsx';
-import './style.css';
+import { refreshJWT, AuthContext } from "./jwt";
+
+const Login = lazy(() => import("./pages/Login"));
+const Directory = lazy(() => import("./pages/Directory"));
+import './index.css';
 
 export function App() {
+  const [jwt, setJWT] = useState(null);
+  useEffect(() => refreshJWT(setJWT), []);
+  const auth = useMemo(() => {
+    return { jwt, setJWT };
+  }, [jwt]);
+
 	return (
-		<LocationProvider>
-			<Header />
-			<main>
+		<AuthContext.Provider value={auth}>
+		  <div id="app">
+			{jwt === null ? (
+			  <Login />
+			) : (
+			<LocationProvider>
 				<Router>
-					<Route path="/" component={Home} />
-					<Route default component={NotFound} />
+					<Route path="/" component={Directory} />
+					<Route path="/:dirPath" component={Directory} />
 				</Router>
-			</main>
-		</LocationProvider>
+			</LocationProvider>
+			)}
+		  </div>
+		</AuthContext.Provider>
 	);
 }
 
