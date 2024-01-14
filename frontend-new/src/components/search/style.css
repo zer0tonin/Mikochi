@@ -1,0 +1,17 @@
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+.searchInput {
+  padding: 10px;
+  border: none;
+  border-radius: 20px;
+  outline: none;
+}
+
+.searchIcon {
+  color: #073642;
+  margin-left: -50px;
+  margin-top: 8px;
+}

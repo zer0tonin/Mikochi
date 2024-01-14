@@ -1,0 +1,51 @@
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  background-color: #ff6b6c;
+  color: #073642;
+  padding: 1em;
+}
+
+.input {
+  padding: 10px;
+  border: none;
+  border-radius: 20px;
+  outline: none;
+}
+
+.submit {
+  border: none;
+  background-color: #ff6b6c;
+  color: #073642;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 3px;
+  margin-left: 1em;
+}
+
+.cancel {
+  border: none;
+  color: #002b36;
+  background-color: #d4cb92;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 3px;
+  margin-left: 1em;
+}
+
+.error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background-color: #ff6b6c;
+  color: #073642;
+  border-radius: 3px;
+  margin-top: 1em;
+}

@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { useState, useEffect, useContext } from "preact/hooks";
-import { route } from "preact-router";
+import { useLocation } from "preact-iso";
 
 import CopyLink from "../../components/copylink";
 import Download from "../../components/download";
@@ -13,7 +13,7 @@ import Header from "../../components/header";
 import { DoubleDotPath, Path } from "../../components/path";
 import { NameHeader, SizeHeader, sorting } from "../../components/sorting";
 
-import { AuthContext } from "../../utils/jwt";
+import { AuthContext } from "../../jwt";
 
 const formatFileSize = (bytes) => {
   if (bytes === 0) return "0 bytes";
@@ -25,6 +25,7 @@ const formatFileSize = (bytes) => {
 };
 
 const Directory = ({ dirPath = "" }) => {
+  const location = useLocation();
   const { jwt } = useContext(AuthContext);
   const [isRoot, setIsRoot] = useState(true);
   const [fileInfos, setFileInfos] = useState([]);
@@ -34,7 +35,7 @@ const Directory = ({ dirPath = "" }) => {
 
   useEffect(() => {
     if (dirPath != "" && !window.location.href.endsWith("/")) {
-      route(`/${dirPath}/`, true);
+      location.route(`/${dirPath}/`);
     }
     document.title = `Mikochi ${dirPath == "" ? "" : `- /${dirPath}/`}`;
     setSearchQuery("");
