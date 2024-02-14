@@ -7,7 +7,7 @@ const Header = ({ searchQuery, setSearchQuery }) => (
   <header class="header">
     <nav role="navigation" aria-label="main navigation">
       <a href="/" onClick={() => setSearchQuery("")}>
-        <img src="../../assets/logo.png" width="56" height="56" />
+        <img src="/logo.png" width="56" height="56" />
         Mikochi
       </a>
       <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
