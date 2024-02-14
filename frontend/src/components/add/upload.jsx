@@ -57,7 +57,7 @@ const UploadModal = ({ isOpen, close, dirPath, refresh, setRefresh }) => {
             <Icon name="file-add" />
             <input
               type="file"
-              class="input"
+              class="hiddenInput"
               onChange={(e) => setSelectedFile(e.target.files[0])}
               aria-label="Select a file"
             />

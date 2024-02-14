@@ -48,7 +48,7 @@ const RenameModal = ({ isOpen, close, filePath, refresh, setRefresh }) => {
           <input
             type="text"
             value={path}
-            class="input"
+            class="renameInput"
             onChange={(e) => setPath(e.target.value)}
           />
           <button type="submit" class="submit">
