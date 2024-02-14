@@ -15,9 +15,10 @@ const Download = ({ filePath }) => {
   const { jwt } = useContext(AuthContext);
 
   const downloadWithAuth = async () => {
-    const target = new URLSearchParams();
-    target.append("target", filePath);
-    const response = await fetch(`/api/single-use?${target.toString()}`, {
+    const encodedFilePath = encodeURI(
+      filePath.startsWith('/') ? filePath : `/${filePath}`
+    );
+    const response = await fetch(`/api/single-use?target=${encodedFilePath}`, {
       headers: {
         Accept: "application/json",
         Authorization: `Bearer ${jwt}`,
@@ -30,7 +31,7 @@ const Download = ({ filePath }) => {
     downloadFile(
       `${window.location.protocol}//${window.location.hostname}${
         window.location.port == "" ? "" : `:${window.location.port}`
-      }/api/stream${filePath}?${auth.toString()}`,
+      }/api/stream${encodedFilePath}?${auth.toString()}`,
       filePath.split("/").at(-1),
     );
   };
