@@ -39,10 +39,9 @@ const CopyLink = ({ filePath }) => {
   const [showToast, setShowToast] = useState(false);
 
   const copyWithAuth = async () => {
-    const encodedFilePath = encodeURI(
-      filePath.startsWith('/') ? filePath : `/${filePath}`
-    );
-    const response = await fetch(`/api/single-use?target=${encodedFilePath}`, {
+    const target = new URLSearchParams();
+    target.append("target", filePath);
+    const response = await fetch(`/api/single-use?${target.toString()}`, {
       headers: {
         Accept: "application/json",
         Authorization: `Bearer ${jwt}`,
@@ -55,7 +54,7 @@ const CopyLink = ({ filePath }) => {
     await copyToClipboard(
       `${window.location.protocol}//${window.location.hostname}${
         window.location.port == "" ? "" : `:${window.location.port}`
-      }/api/stream${encodedFilePath}?${auth.toString()}`,
+      }/api/stream${filePath}?${auth.toString()}`,
     );
     setShowToast(true);
     setTimeout(() => setShowToast(false), 2000);
