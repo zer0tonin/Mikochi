@@ -95,11 +95,6 @@ const Directory = () => {
       <Header
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
-        setSearchQuery={(search) => {
-          setSearchQuery(search);
-          setCompare("none");
-          setRefresh(refresh + 1);
-        }}
       />
       <main>
         <table>

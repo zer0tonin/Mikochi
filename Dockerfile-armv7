@@ -9,7 +9,7 @@ FROM ubuntu:latest
 
 WORKDIR /app
 COPY --from=0 /backend/mikochi ./
-COPY  ./frontend/build/ ./static/
+COPY  ./frontend/dist/ ./static/
 
 EXPOSE 8080
 

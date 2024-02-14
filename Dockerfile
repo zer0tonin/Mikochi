@@ -17,7 +17,7 @@ FROM ubuntu:latest
 
 WORKDIR /app
 COPY --from=0 /backend/mikochi ./
-COPY --from=1 /frontend/build/ ./static/
+COPY --from=1 /frontend/dist/ ./static/
 
 EXPOSE 8080
 
