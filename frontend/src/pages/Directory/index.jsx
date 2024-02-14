@@ -17,7 +17,6 @@ import { AuthContext } from "../../jwt";
 
 import "./style.css";
 
-
 const formatFileSize = (bytes) => {
   if (bytes === 0) return "0 bytes";
   const k = 1024;
@@ -51,7 +50,7 @@ const Directory = () => {
             Accept: "application/json",
             Authorization: `Bearer ${jwt}`,
           },
-        }
+        },
       );
       const json = await response.json();
 
@@ -77,7 +76,7 @@ const Directory = () => {
     if (!location.path.endsWith("/")) {
       location.route(`${location.path}/`);
     }
-    if (location.path == '/') {
+    if (location.path == "/") {
       document.title = `Mikochi`;
     } else {
       document.title = `Mikochi - ${location.path}/`;
@@ -89,9 +88,7 @@ const Directory = () => {
     }
 
     setRefresh(refresh + 1);
-  }, [location.path])
-
-
+  }, [location.path]);
 
   return (
     <>
@@ -101,7 +98,7 @@ const Directory = () => {
         setSearchQuery={(search) => {
           setSearchQuery(search);
           setCompare("none");
-          setRefresh(refresh+1);
+          setRefresh(refresh + 1);
         }}
       />
       <main>
@@ -129,7 +126,7 @@ const Directory = () => {
             )}
             {fileInfos.sort(sorting[compare]).map((fileInfo, i) => {
               let filePath;
-              if (searchQuery == "" && location.path != '/') {
+              if (searchQuery == "" && location.path != "/") {
                 filePath = `${location.path}/${fileInfo.path}`;
               } else {
                 filePath = fileInfo.path;
@@ -188,7 +185,11 @@ const Directory = () => {
             })}
           </tbody>
         </table>
-        <Add dirPath={location.path} refresh={refresh} setRefresh={setRefresh} />
+        <Add
+          dirPath={location.path}
+          refresh={refresh}
+          setRefresh={setRefresh}
+        />
       </main>
     </>
   );

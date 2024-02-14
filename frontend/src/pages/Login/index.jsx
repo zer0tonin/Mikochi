@@ -2,8 +2,7 @@ import { h } from "preact";
 import { useContext, useEffect, useState } from "preact/hooks";
 import "./style.css";
 
-import {AuthContext} from "../../jwt";
-
+import { AuthContext } from "../../jwt";
 
 const Login = () => {
   const { setJWT } = useContext(AuthContext);

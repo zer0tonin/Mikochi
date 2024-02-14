@@ -33,7 +33,7 @@ export const Path = ({ fileInfo, currentDir }) => {
         })
         .reduce(
           (acc, val) => (acc === null ? [val] : [...acc, " / ", val]),
-          null
+          null,
         )}
     </>
   );

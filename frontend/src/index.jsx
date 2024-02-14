@@ -1,13 +1,12 @@
-import { render } from 'preact';
+import { render } from "preact";
 import { useState, useEffect, useMemo } from "preact/hooks";
-import { LocationProvider, lazy, Router, Route } from 'preact-iso';
+import { LocationProvider, lazy, Router, Route } from "preact-iso";
 
 import { refreshJWT, AuthContext } from "./jwt";
-import Login from './pages/Login';
-
+import Login from "./pages/Login";
 
 const Directory = lazy(() => import("./pages/Directory"));
-import './index.css';
+import "./index.css";
 
 export function App() {
   const [jwt, setJWT] = useState(null);
@@ -16,21 +15,21 @@ export function App() {
     return { jwt, setJWT };
   }, [jwt]);
 
-	return (
-		<AuthContext.Provider value={auth}>
-		  <div id="app">
-			{jwt === null ? (
-			  <Login />
-			) : (
-			<LocationProvider>
-				<Router>
-					<Route default component={Directory} />
-				</Router>
-			</LocationProvider>
-			)}
-		  </div>
-		</AuthContext.Provider>
-	);
+  return (
+    <AuthContext.Provider value={auth}>
+      <div id="app">
+        {jwt === null ? (
+          <Login />
+        ) : (
+          <LocationProvider>
+            <Router>
+              <Route default component={Directory} />
+            </Router>
+          </LocationProvider>
+        )}
+      </div>
+    </AuthContext.Provider>
+  );
 }
 
-render(<App />, document.getElementById('app'));
+render(<App />, document.getElementById("app"));

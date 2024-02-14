@@ -31,7 +31,7 @@ const Download = ({ filePath }) => {
       `${window.location.protocol}//${window.location.hostname}${
         window.location.port == "" ? "" : `:${window.location.port}`
       }/api/stream${filePath}?${auth.toString()}`,
-      filePath.split("/").at(-1)
+      filePath.split("/").at(-1),
     );
   };
 

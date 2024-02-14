@@ -31,7 +31,7 @@ const UploadModal = ({ isOpen, close, dirPath, refresh, setRefresh }) => {
             Authorization: `Bearer ${jwt}`,
           },
           body: formData,
-        }
+        },
       );
 
       if (response.status !== 200) {

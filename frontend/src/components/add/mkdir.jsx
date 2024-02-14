@@ -26,7 +26,7 @@ const MkdirModal = ({ isOpen, close, dirPath, refresh, setRefresh }) => {
             Accept: "application/json",
             Authorization: `Bearer ${jwt}`,
           },
-        }
+        },
       );
 
       if (response.status !== 200) {

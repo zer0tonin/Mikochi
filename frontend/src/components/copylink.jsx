@@ -54,7 +54,7 @@ const CopyLink = ({ filePath }) => {
     await copyToClipboard(
       `${window.location.protocol}//${window.location.hostname}${
         window.location.port == "" ? "" : `:${window.location.port}`
-      }/api/stream${filePath}?${auth.toString()}`
+      }/api/stream${filePath}?${auth.toString()}`,
     );
     setShowToast(true);
     setTimeout(() => setShowToast(false), 2000);
