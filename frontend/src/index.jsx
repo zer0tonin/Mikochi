@@ -24,8 +24,6 @@ export function App() {
 			) : (
 			<LocationProvider>
 				<Router>
-					<Route path="/" component={Directory} />
-					<Route path="/:dirPath" component={Directory} />
 					<Route default component={Directory} />
 				</Router>
 			</LocationProvider>

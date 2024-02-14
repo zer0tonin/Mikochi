@@ -27,7 +27,7 @@ const formatFileSize = (bytes) => {
   return `${size} ${sizes[i]}`;
 };
 
-const Directory = ({ dirPath = "" }) => {
+const Directory = () => {
   const location = useLocation();
   const { jwt } = useContext(AuthContext);
   const [isRoot, setIsRoot] = useState(true);
@@ -37,17 +37,17 @@ const Directory = ({ dirPath = "" }) => {
   const [refresh, setRefresh] = useState(0); // super hacky way to trigger effects
 
   useEffect(() => {
-    if (dirPath != "" && !window.location.href.endsWith("/")) {
-      location.route(`/${dirPath}/`);
+    if (!location.path.endsWith("/")) {
+      location.route(`${location.path}/`);
     }
-    document.title = `Mikochi ${dirPath == "" ? "" : `- /${dirPath}/`}`;
+    document.title = `Mikochi - ${location.path}`;
     setSearchQuery("");
     if (compare == "none") {
       setCompare("name_asc");
     }
 
     const fetchData = async () => {
-      const response = await fetch(`/api/browse/${dirPath}`, {
+      const response = await fetch(`/api/browse${location.path}`, {
         headers: {
           Accept: "application/json",
           Authorization: `Bearer ${jwt}`,
@@ -61,7 +61,7 @@ const Directory = ({ dirPath = "" }) => {
 
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dirPath]);
+  }, [location]);
 
   // this two useEffect hooks look similar, but trying to combine them will get you into a race condition hell
   useEffect(() => {
@@ -72,7 +72,7 @@ const Directory = ({ dirPath = "" }) => {
       }
 
       const response = await fetch(
-        `/api/browse/${dirPath}?${params.toString()}`,
+        `/api/browse${window.location.path}?${params.toString()}`,
         {
           headers: {
             Accept: "application/json",
@@ -116,14 +116,14 @@ const Directory = ({ dirPath = "" }) => {
                   <Icon name="folder" />
                 </td>
                 <td>
-                  <DoubleDotPath currentDir={dirPath} />
+                  <DoubleDotPath currentDir={location.path} />
                 </td>
                 <td />
                 <td />
               </tr>
             )}
             {fileInfos.sort(sorting[compare]).map((fileInfo, i) => {
-              const filePath = `${dirPath == "" ? "" : `/${dirPath}`}/${
+              const filePath = `${location.path == "" ? "" : `/${location.path}`}/${
                 fileInfo.path
               }`;
               if (fileInfo.isDir) {
@@ -133,7 +133,7 @@ const Directory = ({ dirPath = "" }) => {
                       <Icon name="folder" />
                     </td>
                     <td>
-                      <Path fileInfo={fileInfo} currentDir={dirPath} />
+                      <Path fileInfo={fileInfo} currentDir={location.path} />
                     </td>
                     <td />
                     <td>
@@ -158,7 +158,7 @@ const Directory = ({ dirPath = "" }) => {
                     <Icon name="file" />
                   </td>
                   <td>
-                    <Path fileInfo={fileInfo} currentDir={dirPath} />
+                    <Path fileInfo={fileInfo} currentDir={location.path} />
                   </td>
                   <td>{formatFileSize(fileInfo.size)}</td>
                   <td>
@@ -180,7 +180,7 @@ const Directory = ({ dirPath = "" }) => {
             })}
           </tbody>
         </table>
-        <Add dirPath={dirPath} refresh={refresh} setRefresh={setRefresh} />
+        <Add dirPath={location.path} refresh={refresh} setRefresh={setRefresh} />
       </main>
     </>
   );

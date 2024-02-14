@@ -13,9 +13,9 @@ export const Path = ({ fileInfo, currentDir }) => {
     // browse
     if (fileInfo.isDir) {
       const target =
-        currentDir == ""
+        currentDir == "/"
           ? `/${fileInfo.path}/`
-          : `/${currentDir}/${fileInfo.path}/`;
+          : `${currentDir}/${fileInfo.path}/`;
       return <a href={target}>{fileInfo.path}</a>;
     }
     return <span>{fileInfo.path}</span>;
@@ -30,7 +30,7 @@ export const Path = ({ fileInfo, currentDir }) => {
             return <span key={i}>{val}</span>;
           }
           const target =
-            currentDir == ""
+            currentDir == "/"
               ? `${splitPath.slice(0, i + 1).join("/")}/`
               : `/${currentDir}/${splitPath.slice(0, i + 1).join("/")}/`;
           return (
@@ -50,5 +50,5 @@ export const Path = ({ fileInfo, currentDir }) => {
 export const DoubleDotPath = ({ currentDir }) => {
   const split = currentDir.split("/");
   const target = split.slice(0, split.length - 1).join("/");
-  return <a href={`/${target}`}>..</a>;
+  return <a href={target == "" ? "/" : `${target}`}>..</a>;
 };
