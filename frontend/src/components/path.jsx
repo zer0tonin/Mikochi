@@ -29,10 +29,7 @@ export const Path = ({ fileInfo, currentDir }) => {
           if (i == splitPath.length - 1 && !fileInfo.isDir) {
             return <span key={i}>{val}</span>;
           }
-          const target =
-            currentDir == "/"
-              ? `${splitPath.slice(0, i + 1).join("/")}/`
-              : `/${currentDir}/${splitPath.slice(0, i + 1).join("/")}/`;
+          const target = `${splitPath.slice(0, i + 1).join("/")}/`;
           return (
             <a key={i} href={target}>
               {val}
