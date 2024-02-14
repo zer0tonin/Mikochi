@@ -72,7 +72,7 @@ const Directory = () => {
       }
 
       const response = await fetch(
-        `/api/browse${window.location.path}?${params.toString()}`,
+        `/api/browse${location.path}?${params.toString()}`,
         {
           headers: {
             Accept: "application/json",
@@ -86,6 +86,9 @@ const Directory = () => {
       setFileInfos(json["fileInfos"]);
     };
 
+    if (refresh == 0 && searchQuery == "") {
+      return;
+    }
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, refresh]);
