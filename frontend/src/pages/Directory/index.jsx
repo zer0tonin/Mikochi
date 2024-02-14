@@ -79,7 +79,7 @@ const Directory = () => {
     if (location.path == "/") {
       document.title = `Mikochi`;
     } else {
-      document.title = `Mikochi - ${location.path}/`;
+      document.title = `Mikochi - ${decodeURI(location.path)}/`;
     }
 
     if (searchQuery != "") {
@@ -122,7 +122,7 @@ const Directory = () => {
             {fileInfos.sort(sorting[compare]).map((fileInfo, i) => {
               let filePath;
               if (searchQuery == "" && location.path != "/") {
-                filePath = `${location.path}/${fileInfo.path}`;
+                filePath = `${decodeURI(location.path)}/${fileInfo.path}`;
               } else {
                 filePath = fileInfo.path;
               }
