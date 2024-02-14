@@ -1,10 +1,5 @@
 import { h } from "preact";
 
-// This is overly complex and need to be refactored or rewrote in some way
-// The main issues comes from preact-router not handling relative links properly
-// So we need to rebuild the path from the root ("/")
-// Handling both search / browse at the same time is also challenging
-
 export const Path = ({ fileInfo, currentDir }) => {
   // a Path can represent multiple sub-directories during search
   const splitPath = fileInfo.path.split("/");

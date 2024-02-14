@@ -36,38 +36,7 @@ const Directory = () => {
   const [compare, setCompare] = useState("name_asc");
   const [refresh, setRefresh] = useState(0); // super hacky way to trigger effects
 
-  useEffect(() => {
-    if (!location.path.endsWith("/")) {
-      location.route(`${location.path}/`);
-    }
-    if (location.path == '/') {
-      document.title = `Mikochi`;
-    } else {
-      document.title = `Mikochi - ${location.path}/`;
-    }
-    setSearchQuery("");
-    if (compare == "none") {
-      setCompare("name_asc");
-    }
-
-    const fetchData = async () => {
-      const response = await fetch(`/api/browse${location.path}`, {
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${jwt}`,
-        },
-      });
-      const json = await response.json();
-
-      setIsRoot(json["isRoot"]);
-      setFileInfos(json["fileInfos"]);
-    };
-
-    fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.path]);
-
-  // this two useEffect hooks look similar, but trying to combine them will get you into a race condition hell
+  // we listen to the refresh event to properly handle both location changes and searches without race conditions
   useEffect(() => {
     const fetchData = async () => {
       const params = new URLSearchParams();
@@ -97,10 +66,38 @@ const Directory = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, refresh]);
 
+  useEffect(() => {
+    if (searchQuery != "") {
+      setRefresh(refresh + 1);
+      setCompare("none");
+    }
+  }, [searchQuery]);
+
+  useEffect(() => {
+    if (!location.path.endsWith("/")) {
+      location.route(`${location.path}/`);
+    }
+    if (location.path == '/') {
+      document.title = `Mikochi`;
+    } else {
+      document.title = `Mikochi - ${location.path}/`;
+    }
+
+    if (searchQuery != "") {
+      setSearchQuery("");
+      setCompare("name_asc");
+    }
+
+    setRefresh(refresh + 1);
+  }, [location.path])
+
+
+
   return (
     <>
       <Header
         searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
         setSearchQuery={(search) => {
           setSearchQuery(search);
           setCompare("none");
