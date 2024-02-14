@@ -40,7 +40,11 @@ const Directory = () => {
     if (!location.path.endsWith("/")) {
       location.route(`${location.path}/`);
     }
-    document.title = `Mikochi - ${location.path}`;
+    if (location.path == '/') {
+      document.title = `Mikochi`;
+    } else {
+      document.title = `Mikochi - ${location.path}/`;
+    }
     setSearchQuery("");
     if (compare == "none") {
       setCompare("name_asc");
@@ -61,7 +65,7 @@ const Directory = () => {
 
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location]);
+  }, [location.path]);
 
   // this two useEffect hooks look similar, but trying to combine them will get you into a race condition hell
   useEffect(() => {
@@ -100,6 +104,7 @@ const Directory = () => {
         setSearchQuery={(search) => {
           setSearchQuery(search);
           setCompare("none");
+          setRefresh(refresh+1);
         }}
       />
       <main>
@@ -126,9 +131,12 @@ const Directory = () => {
               </tr>
             )}
             {fileInfos.sort(sorting[compare]).map((fileInfo, i) => {
-              const filePath = `${location.path == "" ? "" : `/${location.path}`}/${
-                fileInfo.path
-              }`;
+              let filePath;
+              if (searchQuery == "" && location.path != '/') {
+                filePath = `${location.path}/${fileInfo.path}`;
+              } else {
+                filePath = fileInfo.path;
+              }
               if (fileInfo.isDir) {
                 return (
                   <tr key={i}>
