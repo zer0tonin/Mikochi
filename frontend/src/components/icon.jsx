@@ -1,4 +1,5 @@
 import { h } from "preact";
+import "./icon.css";
 
 const iconStyle = {
   display: "inline-block",

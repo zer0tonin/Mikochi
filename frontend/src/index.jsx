@@ -3,8 +3,9 @@ import { useState, useEffect, useMemo } from "preact/hooks";
 import { LocationProvider, lazy, Router, Route } from 'preact-iso';
 
 import { refreshJWT, AuthContext } from "./jwt";
+import Login from './pages/Login';
 
-const Login = lazy(() => import("./pages/Login"));
+
 const Directory = lazy(() => import("./pages/Directory"));
 import './index.css';
 
@@ -25,6 +26,7 @@ export function App() {
 				<Router>
 					<Route path="/" component={Directory} />
 					<Route path="/:dirPath" component={Directory} />
+					<Route default component={Directory} />
 				</Router>
 			</LocationProvider>
 			)}
