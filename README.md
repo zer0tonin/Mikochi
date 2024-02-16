@@ -56,16 +56,8 @@ Mikochi is configured using environment variables
 | USERNAME   | The username to login with         | root       |
 | PASSWORD   | The password to login with         | pass       |
 
-## Contributing
 
-I welcome any PRs aimed at improving or fixing existing features, especially on the following subjects:
-
-- making a non-hacky linux/arm/v7 docker build (npm seems to have trouble with this architecture)
-- making a smarter cache refresh
-- improving accessibility
-- s3/minio support
-
-### Launching the development environment
+## Launching the development environment
 
 The development environment and build pipeline rely on Docker/docker-compose.
 
