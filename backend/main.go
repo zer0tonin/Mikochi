@@ -7,6 +7,7 @@ import (
 	"github.com/zer0tonin/mikochi/auth"
 	"github.com/zer0tonin/mikochi/browser"
 
+	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 )
@@ -35,7 +36,11 @@ func main() {
 
 	// in production builds, this route serves the frontend files
 	// in the dev environment, this is handled by the frontend container
-	r.NoRoute(gin.WrapH(http.FileServer(gin.Dir("./static", false))))
+	r.Use(static.ServeRoot("/", "./static"))
+	r.NoRoute(func (c *gin.Context) {
+		// we let the client-side routing take over
+		c.File("./static/index.html")
+	})
 
 	api := r.Group("/api")
 
@@ -54,7 +59,7 @@ func main() {
 
 	// k8s ready/live check
 	r.GET("/ready", func(c *gin.Context) {
-		c.JSON(200, gin.H{"status": "ok"})
+		c.JSON(http.StatusOK, gin.H{"status": "ok"})
 	})
 
 	host := viper.GetString("HOST")
