@@ -64,7 +64,14 @@ func main() {
 
 	host := viper.GetString("HOST")
 	log.Print("Listening on " + host)
-	err := r.Run(host)
+
+	var err error
+	if viper.IsSet("CERT_CA") && viper.IsSet("CERT_KEY") {
+		err = r.RunTLS(host, viper.GetString("CERT_CA"), viper.GetString("CERT_KEY"))
+	} else {
+		err = r.Run(host)
+	}
+
 	if err != nil {
 		log.Panicf("Failed to launch web server: %s", err.Error())
 	}
