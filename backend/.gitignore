@@ -2,3 +2,5 @@ mikochi
 .DS_Store
 data
 tmp
+__debug_bin*
+debug.test*
