@@ -37,7 +37,7 @@ func main() {
 	// in production builds, this route serves the frontend files
 	// in the dev environment, this is handled by the frontend container
 	r.Use(static.ServeRoot("/", "./static"))
-	r.NoRoute(func (c *gin.Context) {
+	r.NoRoute(func(c *gin.Context) {
 		// we let the client-side routing take over
 		c.File("./static/index.html")
 	})

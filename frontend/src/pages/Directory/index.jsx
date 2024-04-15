@@ -92,10 +92,7 @@ const Directory = () => {
 
   return (
     <>
-      <Header
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-      />
+      <Header searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       <main>
         <table>
           <thead>
