@@ -5,7 +5,9 @@ It allows you to browse remote folders, upload files, delete, rename, download a
 
 It comes with a web interface powered by JavaScript/Preact, and an API built in Go/Gin.
 
-![Screenshot of the web interface](https://github.com/zer0tonin/Mikochi/blob/main/screenshot.jpg?raw=true)
+<div align="center">
+  <video src="screen_recording.mp4" width="400" />
+</div>
 
 ## Getting started
 
@@ -29,7 +31,7 @@ For Kubernetes users, Mikochi is installable using a [helm chart](https://artifa
 ```sh
 helm repo add zer0tonin https://zer0tonin.github.io/helm-charts/
 helm install mikochi zer0tonin/mikochi \
---version 1.4.5 --set mikochi.username=zer0tonin \
+--version 1.4.6 --set mikochi.username=zer0tonin \
 --set mikochi.password=my_super_password --set persistence.enabled=true
 ```
 
@@ -38,21 +40,23 @@ helm install mikochi zer0tonin/mikochi \
 Launch the app using a pre-compiled binary from the latest [release](https://github.com/zer0tonin/Mikochi/releases):
 
 ```sh
-wget -c https://github.com/zer0tonin/Mikochi/releases/download/1.4.5/mikochi-linux-amd64.tar.gz -O - | tar -xz
-HOST=127.0.0.1:8080 USERNAME=zer0tonin PASSWORD=horsebatterysomething ./mikochi
+wget -c https://github.com/zer0tonin/Mikochi/releases/download/1.4.6/mikochi-linux-amd64.tar.gz -O - | tar -xz
+HOST=127.0.0.1:8080 USERNAME=zer0tonin PASSWORD=horsebatterysomething ./app/mikochi
 ```
 
 ## Configuration
 
 Mikochi is configured using environment variables
 
-| Key        | Description                        | Default    |
-|----------- |------------------------------------|------------|
-| HOST       | The ip:port mikochi will listen on | 0.0.0.0:80 |
-| DATA_DIR   | The directory accessed by mikochi  | /data      |
-| JWT_SECRET | A secret string for jwt validation | [Random]   |
-| USERNAME   | The username to login with         | root       |
-| PASSWORD   | The password to login with         | pass       |
+| Key        | Description                                 | Default    |
+|----------- |---------------------------------------------|------------|
+| HOST       | The ip:port mikochi will listen on          | 0.0.0.0:80 |
+| DATA_DIR   | The directory accessed by mikochi           | /data      |
+| JWT_SECRET | A secret string for jwt validation          | [Random]   |
+| USERNAME   | The username to login with                  | root       |
+| PASSWORD   | The password to login with                  | pass       |
+| CERT_CA    | The path to a TLS certificate               | null       |
+| CERT_KEY   | The path to the key associated with CERT_CA | null       |
 
 
 ## Launching the development environment
