@@ -121,7 +121,7 @@ const Directory = () => {
               if (searchQuery == "" && location.path != "/") {
                 filePath = `${decodeURI(location.path)}/${fileInfo.path}`;
               } else {
-                filePath = fileInfo.path;
+                filePath = `/${fileInfo.path}`;
               }
               if (fileInfo.isDir) {
                 return (
