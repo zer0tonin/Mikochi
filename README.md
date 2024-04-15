@@ -5,9 +5,8 @@ It allows you to browse remote folders, upload files, delete, rename, download a
 
 It comes with a web interface powered by JavaScript/Preact, and an API built in Go/Gin.
 
-<div align="center">
-  <video src="screen_recording.mp4" width="400" />
-</div>
+https://github.com/zer0tonin/Mikochi/assets/7149690/f9a41673-c817-486f-b5fc-1c0ae01cd4e9
+
 
 ## Getting started
 
