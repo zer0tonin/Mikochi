@@ -7,6 +7,14 @@ It comes with a web interface powered by JavaScript/Preact, and an API built in 
 
 https://github.com/zer0tonin/Mikochi/assets/7149690/f9a41673-c817-486f-b5fc-1c0ae01cd4e9
 
+## Features
+
+* Browse files on you remote server
+* Fuzzy search
+* Upload new files and create folders
+* Rename and delete files
+* Download files and directories (in .tar.gz)
+* Stream files to VLC/MPV
 
 ## Getting started
 
@@ -68,5 +76,3 @@ make dev
 ```
 
 It will start a frontend container (listening on 5000), a backend container (listening on 4000) and an nginx to wire both (listening on 8080).
-
-Use `make build` to run a production build in a single container.
