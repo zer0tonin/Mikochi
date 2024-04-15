@@ -7,7 +7,8 @@ apt-get update
 apt-get install -y curl
 apt-get install -y jq
 
-tar -czvf "$zip_file" .
+cd /
+tar -czvf "$zip_file" /app
 
 upload_url=$(curl -X GET -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/$github_repo/releases/$RELEASE" | jq -r '.upload_url')
 
