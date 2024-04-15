@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { useContext, useState } from "preact/hooks";
+import { useContext, useEffect, useState } from "preact/hooks";
 
 import { AuthContext } from "../../jwt";
 import Icon from "../icon";
@@ -11,6 +11,10 @@ const RenameModal = ({ isOpen, close, filePath, refresh, setRefresh }) => {
   const { jwt } = useContext(AuthContext);
   const [error, setError] = useState("");
   const [path, setPath] = useState(filePath);
+
+  useEffect(() => {
+    setPath(filePath);
+  }, [filePath])
 
   if (!isOpen) {
     return null;
