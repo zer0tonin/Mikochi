@@ -11,9 +11,25 @@ import (
 	"github.com/spf13/viper"
 )
 
+type AuthWhitelist interface {
+	setWhitelist(jti, target string)
+}
+
+type AuthHandlers struct {
+	authWhitelist AuthWhitelist
+	username string
+	password string
+}
+
+func NewAuthHandlers(authWhitelist AuthWhitelist, username, password string) *AuthHandlers {
+	return &AuthHandlers{
+		authWhitelist: authWhitelist,
+	}
+}
+
 // POST /login
 // Login takes a username/password pair and returns a JWT if they match the corresponding env vars
-func Login(c *gin.Context) {
+func (a *AuthHandlers) Login(c *gin.Context) {
 	var credentials struct {
 		Username string `json:"username"`
 		Password string `json:"password"`
@@ -34,7 +50,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	if credentials.Username != viper.GetString("USERNAME") || credentials.Password != viper.GetString("PASSWORD") {
+	if credentials.Username != a.username || credentials.Password != a.password {
 		log.Printf("Failed login attempt for %s", credentials.Username)
 		rateLimiter.increaseRateLimit(credentials.Username)
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
@@ -60,7 +76,7 @@ func Login(c *gin.Context) {
 
 // GET /refresh
 // Refresh returns a new JWT token (should be called after an auth check)
-func Refresh(c *gin.Context) {
+func (a *AuthHandlers) Refresh(c *gin.Context) {
 	signedToken, err := generateAuthToken([]byte(viper.GetString("JWT_SECRET")))
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
@@ -76,12 +92,11 @@ func Refresh(c *gin.Context) {
 
 // GET /single-use
 // SingleUse returns a new single-use JWT token for use in streams
-func SingleUse(c *gin.Context) {
+func (a *AuthHandlers) SingleUse(c *gin.Context) {
 	jti := uuid.New().String()
 
-	tokenWhitelistMutex.Lock()
-	tokenWhitelist[jti] = c.Query("target")
-	tokenWhitelistMutex.Unlock()
+
+	a.authWhitelist.setWhitelist(jti, c.Query("target"))
 
 	claims := jwt.RegisteredClaims{
 		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24)),
