@@ -11,19 +11,17 @@ import (
 	"github.com/spf13/viper"
 )
 
-type AuthWhitelist interface {
-	setWhitelist(jti, target string)
-}
-
 type AuthHandlers struct {
-	authWhitelist AuthWhitelist
+	authMiddleware AuthMiddleware
 	username string
 	password string
 }
 
-func NewAuthHandlers(authWhitelist AuthWhitelist, username, password string) *AuthHandlers {
+func NewAuthHandlers(authMiddleware AuthMiddleware, username, password string) *AuthHandlers {
 	return &AuthHandlers{
-		authWhitelist: authWhitelist,
+		authMiddleware: authMiddleware,
+		username: username,
+		password: password,
 	}
 }
 
@@ -96,7 +94,7 @@ func (a *AuthHandlers) SingleUse(c *gin.Context) {
 	jti := uuid.New().String()
 
 
-	a.authWhitelist.setWhitelist(jti, c.Query("target"))
+	a.authMiddleware.setWhitelist(jti, c.Query("target"))
 
 	claims := jwt.RegisteredClaims{
 		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24)),

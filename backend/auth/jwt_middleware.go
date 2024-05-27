@@ -15,14 +15,6 @@ type JwtMiddleware struct {
 	tokenWhitelistMutex sync.Mutex
 }
 
-func NewAuthMiddleware(jwtSecret string) *JwtMiddleware {
-	return &JwtMiddleware{
-		jwtSecret: []byte(jwtSecret),
-		tokenWhitelist: map[string]string{},
-		tokenWhitelistMutex: sync.Mutex{},
-	}
-}
-
 // setWhitelist allows a single-use JWTs (for streams)
 // Each token is valid for one route and 24h
 func (j *JwtMiddleware) setWhitelist(jti, target string) {
@@ -31,8 +23,8 @@ func (j *JwtMiddleware) setWhitelist(jti, target string) {
 	j.tokenWhitelistMutex.Unlock()
 }
 
-// CheckJWT is a middleware that will return an error if the request doesn't contain a valid auth token
-func (j *JwtMiddleware) CheckJWT(c *gin.Context) {
+// CheckAuth is a middleware that will return an error if the request doesn't contain a valid auth token
+func (j *JwtMiddleware) CheckAuth(c *gin.Context) {
 	encodedToken, err := parseAuthHeader(c.GetHeader("Authorization"))
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
@@ -63,9 +55,9 @@ func (j *JwtMiddleware) CheckJWT(c *gin.Context) {
 	c.Next()
 }
 
-// CheckSingleUseJWT is a middleware that will return an error if the request
+// CheckStreamAuth is a middleware that will return an error if the request
 // doesn't contain a valid single-use auth token passed in the auth query param
-func (j *JwtMiddleware) CheckSingleUseJWT(c *gin.Context) {
+func (j *JwtMiddleware) CheckStreamAuth(c *gin.Context) {
 	encodedToken := c.Query("auth")
 
 	claims := jwt.RegisteredClaims{}
@@ -82,7 +74,7 @@ func (j *JwtMiddleware) CheckSingleUseJWT(c *gin.Context) {
 		return
 	}
 
-	if !token.Valid || !(tokenWhitelist[claims.ID] == c.Param("path")) {
+	if !token.Valid || !(j.tokenWhitelist[claims.ID] == c.Param("path")) {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 			"error": "Invalid or expired token",
 		})
