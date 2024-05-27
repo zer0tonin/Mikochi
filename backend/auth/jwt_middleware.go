@@ -7,17 +7,32 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/spf13/viper"
 )
 
-// Whitelist of single-use JWTs (for streams)
+type JwtMiddleware struct {
+	jwtSecret []byte
+	tokenWhitelist map[string]string
+	tokenWhitelistMutex sync.Mutex
+}
+
+func NewAuthMiddleware(jwtSecret string) *JwtMiddleware {
+	return &JwtMiddleware{
+		jwtSecret: []byte(jwtSecret),
+		tokenWhitelist: map[string]string{},
+		tokenWhitelistMutex: sync.Mutex{},
+	}
+}
+
+// setWhitelist allows a single-use JWTs (for streams)
 // Each token is valid for one route and 24h
-var tokenWhitelist = map[string]string{}
-var tokenWhitelistMutex = sync.Mutex{}
+func (j *JwtMiddleware) setWhitelist(jti, target string) {
+	j.tokenWhitelistMutex.Lock()
+	j.tokenWhitelist[jti] = target
+	j.tokenWhitelistMutex.Unlock()
+}
 
 // CheckJWT is a middleware that will return an error if the request doesn't contain a valid auth token
-func CheckJWT(c *gin.Context) {
-	jwtSecret := []byte(viper.GetString("JWT_SECRET"))
+func (j *JwtMiddleware) CheckJWT(c *gin.Context) {
 	encodedToken, err := parseAuthHeader(c.GetHeader("Authorization"))
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
@@ -27,10 +42,10 @@ func CheckJWT(c *gin.Context) {
 	}
 
 	token, err := jwt.Parse(encodedToken, func(token *jwt.Token) (interface{}, error) {
-		if len(jwtSecret) > 0 {
-			return jwtSecret, nil
+		if len(j.jwtSecret) > 0 {
+			return j.jwtSecret, nil
 		}
-		return jwtSecret, fmt.Errorf("jwt_secret not set")
+		return j.jwtSecret, fmt.Errorf("jwt_secret not set")
 	})
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
@@ -50,16 +65,15 @@ func CheckJWT(c *gin.Context) {
 
 // CheckSingleUseJWT is a middleware that will return an error if the request
 // doesn't contain a valid single-use auth token passed in the auth query param
-func CheckSingleUseJWT(c *gin.Context) {
-	jwtSecret := []byte(viper.GetString("JWT_SECRET"))
+func (j *JwtMiddleware) CheckSingleUseJWT(c *gin.Context) {
 	encodedToken := c.Query("auth")
 
 	claims := jwt.RegisteredClaims{}
 	token, err := jwt.ParseWithClaims(encodedToken, &claims, func(token *jwt.Token) (interface{}, error) {
-		if len(jwtSecret) > 0 {
-			return jwtSecret, nil
+		if len(j.jwtSecret) > 0 {
+			return j.jwtSecret, nil
 		}
-		return jwtSecret, fmt.Errorf("jwt_secret not set")
+		return j.jwtSecret, fmt.Errorf("jwt_secret not set")
 	})
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
