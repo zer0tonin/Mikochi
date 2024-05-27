@@ -19,9 +19,13 @@ func main() {
 	viper.SetDefault("PASSWORD", "pass")
 	viper.SetDefault("HOST", "0.0.0.0:8080")
 	viper.SetDefault("ENV", "production")
+	viper.SetDefault("NO_AUTH", "false")
 	viper.AutomaticEnv()
 
 	browser.ResetCache()
+
+	authMiddleware := auth.NewAuthMiddleware(viper.GetString("NO_AUTH") != "true", viper.GetString("JWT_SECRET"))
+	authHandlers := auth.NewAuthHandlers(authMiddleware, viper.GetString("USERNAME"), viper.GetString("PASSWORD"))
 
 	go browser.WatchDataDir()
 
@@ -45,17 +49,17 @@ func main() {
 	api := r.Group("/api")
 
 	// business logic
-	api.GET("/browse/*path", auth.CheckJWT, browser.BrowseFolder)
-	api.GET("/stream/*path", auth.CheckSingleUseJWT, browser.StreamFile)
-	api.PUT("/move/*path", auth.CheckJWT, browser.Move)
-	api.DELETE("/delete/*path", auth.CheckJWT, browser.Delete)
-	api.PUT("/upload/*path", auth.CheckJWT, browser.Upload)
-	api.PUT("/mkdir/*path", auth.CheckJWT, browser.Mkdir)
+	api.GET("/browse/*path", authMiddleware.CheckAuth, browser.BrowseFolder)
+	api.GET("/stream/*path", authMiddleware.CheckStreamAuth, browser.StreamFile)
+	api.PUT("/move/*path", authMiddleware.CheckAuth, browser.Move)
+	api.DELETE("/delete/*path", authMiddleware.CheckAuth, browser.Delete)
+	api.PUT("/upload/*path", authMiddleware.CheckAuth, browser.Upload)
+	api.PUT("/mkdir/*path", authMiddleware.CheckAuth, browser.Mkdir)
 
 	// authentication
-	api.GET("/refresh", auth.CheckJWT, auth.Refresh)
-	api.GET("/single-use", auth.CheckJWT, auth.SingleUse)
-	api.POST("/login", auth.Login)
+	api.GET("/refresh", authMiddleware.CheckAuth, authHandlers.Refresh)
+	api.GET("/single-use", authMiddleware.CheckAuth, authHandlers.SingleUse)
+	api.POST("/login", authHandlers.Login)
 
 	// k8s ready/live check
 	r.GET("/ready", func(c *gin.Context) {
