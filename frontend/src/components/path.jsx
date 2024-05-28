@@ -1,4 +1,6 @@
 import { h } from "preact";
+import {useLocation} from "preact-iso";
+import Icon from "./icon";
 
 export const Path = ({ fileInfo, currentDir }) => {
   // a Path can represent multiple sub-directories during search
@@ -39,8 +41,40 @@ export const Path = ({ fileInfo, currentDir }) => {
   );
 };
 
+export const FolderIcon = ({ currentDir, fileInfo }) => {
+  const location = useLocation()
+
+  const target =
+    currentDir == "/"
+      ? `${fileInfo.path.startsWith('/') ? '' : '/'}${fileInfo.path}/`
+      : `${currentDir}/${fileInfo.path}/`;
+  console.log(target)
+
+  return (
+    <Icon
+      name="folder"
+      onClick={() => location.route(target)}
+    />
+  );
+};
+
 export const DoubleDotPath = ({ currentDir }) => {
   const split = currentDir.split("/");
   const target = split.slice(0, split.length - 1).join("/");
-  return <a href={target == "" ? "/" : `${target}`}>..</a>;
+
+  return <a href={target == "" ? "/" : target}>..</a>;
 };
+
+export const DoubleDotFolderIcon = ({ currentDir }) => {
+  const location = useLocation()
+
+  const split = currentDir.split("/");
+  const target = split.slice(0, split.length - 1).join("/");
+
+  return (
+    <Icon
+      name="folder"
+      onClick={() => location.route(target == "" ? "/" : target)}
+    />
+  );
+}

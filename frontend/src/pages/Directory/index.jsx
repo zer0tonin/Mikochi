@@ -10,7 +10,7 @@ import Add from "../../components/add";
 import Icon from "../../components/icon";
 
 import Header from "../../components/header";
-import { DoubleDotPath, Path } from "../../components/path";
+import { DoubleDotFolderIcon, FolderIcon, DoubleDotPath, Path } from "../../components/path";
 import { NameHeader, SizeHeader, sorting } from "../../components/sorting";
 
 import { AuthContext } from "../../jwt";
@@ -107,7 +107,7 @@ const Directory = () => {
             {!isRoot && (
               <tr>
                 <td>
-                  <Icon name="folder" />
+                  <DoubleDotFolderIcon currentDir={location.path} />
                 </td>
                 <td>
                   <DoubleDotPath currentDir={location.path} />
@@ -127,7 +127,7 @@ const Directory = () => {
                 return (
                   <tr key={i}>
                     <td>
-                      <Icon name="folder" />
+                      <FolderIcon fileInfo={fileInfo} currentDir={location.path} />
                     </td>
                     <td>
                       <Path fileInfo={fileInfo} currentDir={location.path} />
