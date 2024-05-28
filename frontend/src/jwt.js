@@ -6,10 +6,8 @@ export const AuthContext = createContext(null);
 export const refreshJWT = (setJWT) => {
   const refresh = async () => {
     const storedToken = window.localStorage.getItem("jwt");
-    if (storedToken === null) {
-      setJWT(null);
-      return;
-    }
+
+    // we always check refresh, to handle NO_AUTH=true backends
 
     const response = await fetch(`/api/refresh`, {
       headers: {
