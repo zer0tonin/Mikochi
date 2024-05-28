@@ -12,15 +12,13 @@ type AuthMiddleware interface {
 	CheckStreamAuth(c *gin.Context)
 }
 
-
 func NewAuthMiddleware(withAuth bool, jwtSecret string) AuthMiddleware {
-	if (withAuth) {
+	if withAuth {
 		return &JwtMiddleware{
-			jwtSecret: []byte(jwtSecret),
-			tokenWhitelist: map[string]string{},
+			jwtSecret:           []byte(jwtSecret),
+			tokenWhitelist:      map[string]string{},
 			tokenWhitelistMutex: sync.Mutex{},
 		}
 	}
 	return &NoauthMiddleware{}
 }
-

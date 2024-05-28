@@ -1,5 +1,5 @@
 import { h } from "preact";
-import {useLocation} from "preact-iso";
+import { useLocation } from "preact-iso";
 import Icon from "./icon";
 
 export const Path = ({ fileInfo, currentDir }) => {
@@ -42,20 +42,15 @@ export const Path = ({ fileInfo, currentDir }) => {
 };
 
 export const FolderIcon = ({ currentDir, fileInfo }) => {
-  const location = useLocation()
+  const location = useLocation();
 
   const target =
     currentDir == "/"
-      ? `${fileInfo.path.startsWith('/') ? '' : '/'}${fileInfo.path}/`
+      ? `${fileInfo.path.startsWith("/") ? "" : "/"}${fileInfo.path}/`
       : `${currentDir}/${fileInfo.path}/`;
-  console.log(target)
+  console.log(target);
 
-  return (
-    <Icon
-      name="folder"
-      onClick={() => location.route(target)}
-    />
-  );
+  return <Icon name="folder" onClick={() => location.route(target)} />;
 };
 
 export const DoubleDotPath = ({ currentDir }) => {
@@ -66,7 +61,7 @@ export const DoubleDotPath = ({ currentDir }) => {
 };
 
 export const DoubleDotFolderIcon = ({ currentDir }) => {
-  const location = useLocation()
+  const location = useLocation();
 
   const split = currentDir.split("/");
   const target = split.slice(0, split.length - 1).join("/");
@@ -77,4 +72,4 @@ export const DoubleDotFolderIcon = ({ currentDir }) => {
       onClick={() => location.route(target == "" ? "/" : target)}
     />
   );
-}
+};

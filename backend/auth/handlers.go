@@ -13,15 +13,15 @@ import (
 
 type AuthHandlers struct {
 	authMiddleware AuthMiddleware
-	username string
-	password string
+	username       string
+	password       string
 }
 
 func NewAuthHandlers(authMiddleware AuthMiddleware, username, password string) *AuthHandlers {
 	return &AuthHandlers{
 		authMiddleware: authMiddleware,
-		username: username,
-		password: password,
+		username:       username,
+		password:       password,
 	}
 }
 
@@ -92,7 +92,6 @@ func (a *AuthHandlers) Refresh(c *gin.Context) {
 // SingleUse returns a new single-use JWT token for use in streams
 func (a *AuthHandlers) SingleUse(c *gin.Context) {
 	jti := uuid.New().String()
-
 
 	a.authMiddleware.setWhitelist(jti, c.Query("target"))
 

@@ -10,8 +10,8 @@ import (
 )
 
 type JwtMiddleware struct {
-	jwtSecret []byte
-	tokenWhitelist map[string]string
+	jwtSecret           []byte
+	tokenWhitelist      map[string]string
 	tokenWhitelistMutex sync.Mutex
 }
 

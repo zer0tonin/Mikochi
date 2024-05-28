@@ -14,7 +14,7 @@ const RenameModal = ({ isOpen, close, filePath, refresh, setRefresh }) => {
 
   useEffect(() => {
     setPath(filePath);
-  }, [filePath])
+  }, [filePath]);
 
   if (!isOpen) {
     return null;
