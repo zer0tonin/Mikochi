@@ -66,6 +66,8 @@ Mikochi is configured using environment variables
 | CERT_KEY   | The path to the key associated with CERT_CA | null       |
 | NO_AUTH    | If true, disables all authentication        | false      |
 
+Note: it is recommended to not manually set JWT_SECRET, as getting a new randomly generated secret everytime when mikochi starts let's you invalidate authentication tokens by restarting the process.
+
 
 ## Launching the development environment
 
