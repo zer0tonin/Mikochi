@@ -68,7 +68,7 @@ const Directory = () => {
     }
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery, refresh]);
+  }, [refresh]);
 
   useEffect(() => {
     if (searchQuery != "") {
