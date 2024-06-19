@@ -15,11 +15,7 @@ export const Path = ({ fileInfo, currentDir }) => {
         currentDir == "/"
           ? `/${fileInfo.path}/`
           : `${currentDir}/${fileInfo.path}/`;
-      return (
-        <a href="#" onClick={() => location.route(target)}>
-          {fileInfo.path}
-        </a>
-      );
+      return <a onClick={() => location.route(target)}>{fileInfo.path}</a>;
     }
     return <span>{fileInfo.path}</span>;
   }
@@ -34,7 +30,7 @@ export const Path = ({ fileInfo, currentDir }) => {
           }
           const target = `${splitPath.slice(0, i + 1).join("/")}/`;
           return (
-            <a href="#" key={i} onClick={() => location.route(target)}>
+            <a key={i} onClick={() => location.route(target)}>
               {val}
             </a>
           );
@@ -54,7 +50,6 @@ export const FolderIcon = ({ currentDir, fileInfo }) => {
     currentDir == "/"
       ? `${fileInfo.path.startsWith("/") ? "" : "/"}${fileInfo.path}/`
       : `${currentDir}/${fileInfo.path}/`;
-  console.log(target);
 
   return <Icon name="folder" onClick={() => location.route(target)} />;
 };
@@ -64,11 +59,7 @@ export const DoubleDotPath = ({ currentDir }) => {
   const split = currentDir.split("/");
   const target = split.slice(0, split.length - 1).join("/");
 
-  return (
-    <a href="#" onClick={() => location.route(target == "" ? "/" : target)}>
-      ..
-    </a>
-  );
+  return <a onClick={() => location.route(target == "" ? "/" : target)}>..</a>;
 };
 
 export const DoubleDotFolderIcon = ({ currentDir }) => {

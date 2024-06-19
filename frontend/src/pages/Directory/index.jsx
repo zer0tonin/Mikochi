@@ -81,8 +81,8 @@ const Directory = () => {
   }, [searchQuery]);
 
   useEffect(() => {
-    if (!location.path.endsWith("/")) {
-      location.route(`${location.path}/`);
+    if (!location.url.endsWith("/")) {
+      location.route(`${location.path}/`, true);
     }
     if (location.path == "/") {
       document.title = `Mikochi`;

@@ -45,6 +45,8 @@ body {
 
 a {
   color: #d4cb92;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 table {
