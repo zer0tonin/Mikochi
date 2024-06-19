@@ -77,6 +77,7 @@ const Directory = () => {
     } else if (compare === "none") {
       setCompare("name_asc");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery]);
 
   useEffect(() => {
@@ -95,6 +96,7 @@ const Directory = () => {
     }
 
     setRefresh(refresh + 1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.path]);
 
   return (

@@ -15,7 +15,11 @@ export const Path = ({ fileInfo, currentDir }) => {
         currentDir == "/"
           ? `/${fileInfo.path}/`
           : `${currentDir}/${fileInfo.path}/`;
-      return <a href="#" onClick={() => location.route(target)}>{fileInfo.path}</a>;
+      return (
+        <a href="#" onClick={() => location.route(target)}>
+          {fileInfo.path}
+        </a>
+      );
     }
     return <span>{fileInfo.path}</span>;
   }
@@ -60,7 +64,11 @@ export const DoubleDotPath = ({ currentDir }) => {
   const split = currentDir.split("/");
   const target = split.slice(0, split.length - 1).join("/");
 
-  return <a href="#" onClick={() => location.route(target == "" ? "/" : target)}>..</a>;
+  return (
+    <a href="#" onClick={() => location.route(target == "" ? "/" : target)}>
+      ..
+    </a>
+  );
 };
 
 export const DoubleDotFolderIcon = ({ currentDir }) => {

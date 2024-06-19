@@ -2,7 +2,7 @@ import { h } from "preact";
 import "./style.css";
 
 import Search from "../search";
-import {useLocation} from "preact-iso";
+import { useLocation } from "preact-iso";
 
 const Header = ({ searchQuery, setSearchQuery }) => {
   const location = useLocation();
