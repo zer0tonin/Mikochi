@@ -71,9 +71,11 @@ const Directory = () => {
   }, [refresh]);
 
   useEffect(() => {
+    setRefresh(refresh + 1);
     if (searchQuery != "") {
-      setRefresh(refresh + 1);
       setCompare("none");
+    } else if (compare === "none") {
+      setCompare("name_asc");
     }
   }, [searchQuery]);
 

@@ -3,6 +3,8 @@ import { useLocation } from "preact-iso";
 import Icon from "./icon";
 
 export const Path = ({ fileInfo, currentDir }) => {
+  const location = useLocation();
+
   // a Path can represent multiple sub-directories during search
   const splitPath = fileInfo.path.split("/");
 
@@ -13,7 +15,7 @@ export const Path = ({ fileInfo, currentDir }) => {
         currentDir == "/"
           ? `/${fileInfo.path}/`
           : `${currentDir}/${fileInfo.path}/`;
-      return <a href={target}>{fileInfo.path}</a>;
+      return <a href="#" onClick={() => location.route(target)}>{fileInfo.path}</a>;
     }
     return <span>{fileInfo.path}</span>;
   }
@@ -28,7 +30,7 @@ export const Path = ({ fileInfo, currentDir }) => {
           }
           const target = `${splitPath.slice(0, i + 1).join("/")}/`;
           return (
-            <a key={i} href={target}>
+            <a href="#" key={i} onClick={() => location.route(target)}>
               {val}
             </a>
           );
@@ -54,10 +56,11 @@ export const FolderIcon = ({ currentDir, fileInfo }) => {
 };
 
 export const DoubleDotPath = ({ currentDir }) => {
+  const location = useLocation();
   const split = currentDir.split("/");
   const target = split.slice(0, split.length - 1).join("/");
 
-  return <a href={target == "" ? "/" : target}>..</a>;
+  return <a href="#" onClick={() => location.route(target == "" ? "/" : target)}>..</a>;
 };
 
 export const DoubleDotFolderIcon = ({ currentDir }) => {
