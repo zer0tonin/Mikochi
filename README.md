@@ -5,7 +5,9 @@ It allows you to browse remote folders, upload files, delete, rename, download a
 
 It comes with a web interface powered by JavaScript/Preact, and an API built in Go/Gin.
 
-https://github.com/zer0tonin/Mikochi/assets/7149690/f9a41673-c817-486f-b5fc-1c0ae01cd4e9
+
+https://github.com/zer0tonin/Mikochi/assets/7149690/28d16a04-415a-4005-b1d3-abb2f5ee6a86
+
 
 ## Features
 
