@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from "preact/hooks";
 import "./style.css";
 
 import { AuthContext } from "../../jwt";
+import handleError from "../../error";
 
 const Login = () => {
   const { setJWT } = useContext(AuthContext);
@@ -27,7 +28,7 @@ const Login = () => {
       });
       const json = await response.json();
       if (response.status !== 200) {
-        setError(json["err"]);
+        setError(await handleError(response));
         return;
       }
       window.localStorage.setItem("jwt", json["token"]);

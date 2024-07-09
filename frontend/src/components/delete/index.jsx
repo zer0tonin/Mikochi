@@ -5,6 +5,7 @@ import { AuthContext } from "../../jwt";
 import Icon from "../icon";
 import Modal, { ModalContent } from "../modal";
 import "./style.css";
+import handleError from "../../error";
 
 const DeleteModal = ({ isOpen, close, filePath, refresh, setRefresh }) => {
   const { jwt } = useContext(AuthContext);
@@ -27,7 +28,7 @@ const DeleteModal = ({ isOpen, close, filePath, refresh, setRefresh }) => {
       });
 
       if (response.status !== 200) {
-        setError(response.json()["err"]);
+        setError(await handleError(response));
         return;
       }
       setError("");

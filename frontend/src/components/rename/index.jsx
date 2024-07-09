@@ -6,6 +6,7 @@ import Icon from "../icon";
 import "./style.css";
 
 import Modal, { ModalContent, ModalHeader } from "../modal";
+import handleError from "../../error";
 
 const RenameModal = ({ isOpen, close, filePath, refresh, setRefresh }) => {
   const { jwt } = useContext(AuthContext);
@@ -34,7 +35,7 @@ const RenameModal = ({ isOpen, close, filePath, refresh, setRefresh }) => {
       });
 
       if (response.status !== 200) {
-        setError(response.json()["err"]);
+        setError(await handleError(response));
         return;
       }
       setError("");

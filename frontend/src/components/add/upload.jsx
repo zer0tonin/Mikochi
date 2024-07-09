@@ -5,6 +5,7 @@ import { AuthContext } from "../../jwt";
 import Icon, { BigIcon } from "../icon";
 import Modal, { ModalContent, ModalHeader } from "../modal";
 import "./style.css";
+import handleError from "../../error";
 
 const UploadModal = ({ isOpen, close, dirPath, refresh, setRefresh }) => {
   const { jwt } = useContext(AuthContext);
@@ -35,7 +36,7 @@ const UploadModal = ({ isOpen, close, dirPath, refresh, setRefresh }) => {
       );
 
       if (response.status !== 200) {
-        setError(response.json()["err"]);
+        setError(await handleError(response));
         return;
       }
       setError("");
