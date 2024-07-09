@@ -5,12 +5,13 @@
 mikochi:
   username: "root"
   password: "pass"
+  gzip: false
 
 image:
   repository: zer0tonin/mikochi
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "1.5.1"
+  tag: "1.6.0"
 
 imagePullSecrets: []
 nameOverride: ""
