@@ -7,13 +7,26 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"sort"
+	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/lithammer/fuzzysearch/fuzzy"
 )
+
+type BrowserHandlers struct {
+	fileCache *FileCache
+}
+
+func NewBrowserHandlers(fileCache *FileCache) *BrowserHandlers {
+	return &BrowserHandlers{
+		fileCache: fileCache,
+	}
+}
 
 // GET /stream
 // StreamFile streams the content of the requested file
-func StreamFile(c *gin.Context) {
+func (b *BrowserHandlers) StreamFile(c *gin.Context) {
 	path := c.Param("path")
 	pathInDataDir := getAbsolutePath(path)
 
@@ -39,16 +52,16 @@ func StreamFile(c *gin.Context) {
 
 // GET /browse
 // BrowseFolder returns the content of a directory and/or search results
-func BrowseFolder(c *gin.Context) {
+func (b *BrowserHandlers) BrowseFolder(c *gin.Context) {
 	path := filepath.Clean(c.Param("path"))
 	search := c.Query("search")
 
 	var results []FileDescription
 	if search == "" {
-		results = browseDir(path)
+		results = b.browseDir(path)
 	} else {
 		search = filepath.Clean(search)
-		results = searchInDir(path, search)
+		results = b.searchInDir(path, search)
 	}
 
 	c.JSON(http.StatusOK, gin.H{
@@ -57,9 +70,41 @@ func BrowseFolder(c *gin.Context) {
 	})
 }
 
+// browseDir returns the content of a directory
+func (b *BrowserHandlers) browseDir(dir string) []FileDescription {
+	results := []FileDescription{}
+	for file, fileInfo := range b.fileCache.Cache {
+		if fileInDir(file, dir) {
+			results = append(results, fileInfoToFileDescription(fileInfo, fileInfo.Name()))
+		}
+	}
+	return results
+}
+
+// searchInDir returns the results of a search query inside a given directory
+func (b *BrowserHandlers) searchInDir(dir, search string) []FileDescription {
+	children := []string{}
+	for file := range b.fileCache.Cache {
+		if strings.HasPrefix(file, dir) {
+			children = append(children, file)
+		}
+	}
+
+	matches := fuzzy.RankFindNormalizedFold(search, children)
+	sort.Sort(matches)
+
+	results := []FileDescription{}
+	for _, match := range matches {
+		fileInfo := fileInfoToFileDescription(b.fileCache.Cache[match.Target], match.Target)
+		results = append(results, fileInfo)
+	}
+	return results
+}
+
+
 // PUT /move
 // Move is used to move a file or change its name
-func Move(c *gin.Context) {
+func (b *BrowserHandlers) Move(c *gin.Context) {
 	var command struct {
 		NewPath string `json:"newPath"`
 	}
@@ -71,6 +116,9 @@ func Move(c *gin.Context) {
 		})
 		return
 	}
+
+	// we make a synchronous reset cache to avoid querying /browse on stale data
+	defer b.fileCache.Reset()
 
 	path := getAbsolutePath(c.Param("path"))
 	newPath := getAbsolutePath(command.NewPath)
@@ -84,8 +132,6 @@ func Move(c *gin.Context) {
 		return
 	}
 
-	// we make a synchronous reset cache to avoid querying /browse on stale data
-	ResetCache()
 
 	c.JSON(http.StatusOK, gin.H{
 		"status": "ok",
@@ -94,7 +140,10 @@ func Move(c *gin.Context) {
 
 // DELETE /delete
 // Delete deletes a file from the filesystem
-func Delete(c *gin.Context) {
+func (b *BrowserHandlers) Delete(c *gin.Context) {
+	// we make a synchronous reset cache to avoid querying /browse on stale data
+	defer b.fileCache.Reset()
+
 	path := getAbsolutePath(c.Param("path"))
 
 	err := os.RemoveAll(path)
@@ -106,9 +155,6 @@ func Delete(c *gin.Context) {
 		return
 	}
 
-	// we make a synchronous reset cache to avoid querying /browse on stale data
-	ResetCache()
-
 	c.JSON(http.StatusOK, gin.H{
 		"status": "ok",
 	})
@@ -116,7 +162,7 @@ func Delete(c *gin.Context) {
 
 // PUT /upload
 // Upload writes data received in multi-part to the disk
-func Upload(c *gin.Context) {
+func (b *BrowserHandlers) Upload(c *gin.Context) {
 	file, err := c.FormFile("file")
 	if err != nil {
 		log.Printf("Err: %s", err.Error())
@@ -125,6 +171,9 @@ func Upload(c *gin.Context) {
 		})
 		return
 	}
+
+	// we make a synchronous reset cache to avoid querying /browse on stale data
+	defer b.fileCache.Reset()
 
 	pathInDataDir := getAbsolutePath(c.Param("path"))
 	dst, err := os.Create(pathInDataDir)
@@ -157,9 +206,6 @@ func Upload(c *gin.Context) {
 		return
 	}
 
-	// we make a synchronous reset cache to avoid querying /browse on stale data
-	ResetCache()
-
 	c.JSON(http.StatusOK, gin.H{
 		"status": "ok",
 	})
@@ -167,7 +213,10 @@ func Upload(c *gin.Context) {
 
 // PUT /mkdir
 // Mkdir creates a new (empty) directory
-func Mkdir(c *gin.Context) {
+func (b *BrowserHandlers) Mkdir(c *gin.Context) {
+	// we make a synchronous reset cache to avoid querying /browse on stale data
+	defer b.fileCache.Reset()
+
 	pathInDataDir := getAbsolutePath(c.Param("path"))
 	err := os.Mkdir(pathInDataDir, 0755)
 	if err != nil {
@@ -177,9 +226,6 @@ func Mkdir(c *gin.Context) {
 		})
 		return
 	}
-
-	// we make a synchronous reset cache to avoid querying /browse on stale data
-	ResetCache()
 
 	c.JSON(http.StatusOK, gin.H{
 		"status": "ok",

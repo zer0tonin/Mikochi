@@ -7,10 +7,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
-	"sort"
-	"strings"
 
-	"github.com/lithammer/fuzzysearch/fuzzy"
 	"github.com/spf13/viper"
 )
 
@@ -37,37 +34,6 @@ func getAbsolutePath(path string) string {
 // fileInDir returns if a file is contained in a directory (and not a sub-directory)
 func fileInDir(file, dir string) bool {
 	return filepath.Dir(file) == dir
-}
-
-// browseDir returns the content of a directory
-func browseDir(dir string) []FileDescription {
-	results := []FileDescription{}
-	for file, fileInfo := range fileCache {
-		if fileInDir(file, dir) {
-			results = append(results, fileInfoToFileDescription(fileInfo, fileInfo.Name()))
-		}
-	}
-	return results
-}
-
-// searchInDir returns the results of a search query inside a given directory
-func searchInDir(dir, search string) []FileDescription {
-	children := []string{}
-	for file := range fileCache {
-		if strings.HasPrefix(file, dir) {
-			children = append(children, file)
-		}
-	}
-
-	matches := fuzzy.RankFindNormalizedFold(search, children)
-	sort.Sort(matches)
-
-	results := []FileDescription{}
-	for _, match := range matches {
-		fileInfo := fileInfoToFileDescription(fileCache[match.Target], match.Target)
-		results = append(results, fileInfo)
-	}
-	return results
 }
 
 func isDir(filepath string) (bool, error) {

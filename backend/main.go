@@ -24,12 +24,14 @@ func main() {
 	viper.SetDefault("GZIP", "false")
 	viper.AutomaticEnv()
 
-	browser.ResetCache()
-
 	authMiddleware := auth.NewAuthMiddleware(viper.GetString("NO_AUTH") != "true", viper.GetString("JWT_SECRET"))
 	authHandlers := auth.NewAuthHandlers(authMiddleware, viper.GetString("USERNAME"), viper.GetString("PASSWORD"))
 
-	go browser.WatchDataDir()
+	cache := browser.NewFileCache()
+	cache.Reset()
+	go cache.WatchDataDir()
+
+	browserHandlers := browser.NewBrowserHandlers(cache)
 
 	if viper.GetString("ENV") == "production" {
 		gin.SetMode(gin.ReleaseMode)
@@ -54,12 +56,12 @@ func main() {
 	api := r.Group("/api")
 
 	// business logic
-	api.GET("/browse/*path", authMiddleware.CheckAuth, browser.BrowseFolder)
-	api.GET("/stream/*path", authMiddleware.CheckStreamAuth, browser.StreamFile)
-	api.PUT("/move/*path", authMiddleware.CheckAuth, browser.Move)
-	api.DELETE("/delete/*path", authMiddleware.CheckAuth, browser.Delete)
-	api.PUT("/upload/*path", authMiddleware.CheckAuth, browser.Upload)
-	api.PUT("/mkdir/*path", authMiddleware.CheckAuth, browser.Mkdir)
+	api.GET("/browse/*path", authMiddleware.CheckAuth, browserHandlers.BrowseFolder)
+	api.GET("/stream/*path", authMiddleware.CheckStreamAuth, browserHandlers.StreamFile)
+	api.PUT("/move/*path", authMiddleware.CheckAuth, browserHandlers.Move)
+	api.DELETE("/delete/*path", authMiddleware.CheckAuth, browserHandlers.Delete)
+	api.PUT("/upload/*path", authMiddleware.CheckAuth, browserHandlers.Upload)
+	api.PUT("/mkdir/*path", authMiddleware.CheckAuth, browserHandlers.Mkdir)
 
 	// authentication
 	api.GET("/refresh", authMiddleware.CheckAuth, authHandlers.Refresh)
