@@ -2,23 +2,21 @@ import { h } from "preact";
 import { useLocation } from "preact-iso";
 import Icon from "./icon";
 
-export const Path = ({ fileInfo, currentDir }) => {
+export const Path = ({ fileInfo, currentDir, isSearch }) => {
   const location = useLocation();
+
+
+  if (!isSearch) {
+    const fileName = currentDir === "/" ? fileInfo.path.slice(currentDir.length) : fileInfo.path.slice(currentDir.length + 1);
+    // browse
+    if (fileInfo.isDir) {
+      return <a onClick={() => location.route(fileInfo.path)}>{fileName}</a>;
+    }
+    return <span>{fileName}</span>;
+  }
 
   // a Path can represent multiple sub-directories during search
   const splitPath = fileInfo.path.split("/");
-
-  if (splitPath.length == 1) {
-    // browse
-    if (fileInfo.isDir) {
-      const target =
-        currentDir == "/"
-          ? `/${fileInfo.path}/`
-          : `${currentDir}/${fileInfo.path}/`;
-      return <a onClick={() => location.route(target)}>{fileInfo.path}</a>;
-    }
-    return <span>{fileInfo.path}</span>;
-  }
 
   // search
   return (
