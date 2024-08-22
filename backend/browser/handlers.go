@@ -77,7 +77,7 @@ func (b *BrowserHandlers) browseDir(dir string) []FileDescription {
 	results := []FileDescription{}
 	for file, fileInfo := range b.fileCache.Iterate() {
 		if fileInDir(file, dir) {
-			results = append(results, fileInfoToFileDescription(fileInfo, fileInfo.Name()))
+			results = append(results, fileInfoToFileDescription(fileInfo, file))
 		}
 	}
 	return results
