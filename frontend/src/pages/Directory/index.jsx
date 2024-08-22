@@ -133,7 +133,6 @@ const Directory = () => {
                     <td>
                       <FolderIcon
                         fileInfo={fileInfo}
-                        currentDir={location.path}
                       />
                     </td>
                     <td>
