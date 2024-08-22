@@ -30,7 +30,12 @@ func NewFileCache(dataDir string, pathConverter *PathConverter) *FileCache {
 
 // resets the cache
 func (f *FileCache) Reset() {
-	// FIXME: use Once instead of mutex
+	ok := f.mutex.TryLock()
+	if !ok {
+		return
+	}
+	defer f.mutex.Unlock()
+
 	log.Printf("Caching %s", f.dataDir)
 	defer func() {
 		if r := recover(); r != nil {
@@ -42,9 +47,7 @@ func (f *FileCache) Reset() {
 	f.cacheFolder(newFileCache, "/")
 
 	// just doing this at once should avoid excessive lock/unlock
-	f.mutex.Lock()
 	f.cache = newFileCache
-	f.mutex.Unlock()
 	log.Print("Refreshed cache")
 }
 
