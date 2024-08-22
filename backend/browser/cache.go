@@ -11,12 +11,20 @@ import (
 	"github.com/spf13/viper"
 )
 
-// fileCache is a global cache of FileInfos from the watched data directory
-var fileCache = map[string]fs.FileInfo{}
-var fileCacheMutex = sync.Mutex{}
+type FileCache struct {
+	Cache map[string]fs.FileInfo
+	Mutex sync.Mutex
+}
+
+func NewFileCache() *FileCache {
+	return &FileCache{
+		Cache: map[string]fs.FileInfo{},
+		Mutex: sync.Mutex{},
+	}
+}
 
 // resets the cache
-func ResetCache() {
+func (f *FileCache) Reset() {
 	log.Printf("Caching %s", viper.GetString("DATA_DIR"))
 	defer func() {
 		if r := recover(); r != nil {
@@ -28,9 +36,9 @@ func ResetCache() {
 	cacheFolder(newFileCache, "/")
 
 	// just doing this at once should avoid excessive lock/unlock
-	fileCacheMutex.Lock()
-	fileCache = newFileCache
-	fileCacheMutex.Unlock()
+	f.Mutex.Lock()
+	f.Cache = newFileCache
+	f.Mutex.Unlock()
 	log.Print("Refreshed cached")
 }
 
@@ -60,7 +68,7 @@ func cacheFolder(cache map[string]fs.FileInfo, path string) {
 }
 
 // refreshes the cache on data dir changes
-func WatchDataDir() {
+func (f *FileCache) WatchDataDir() {
 	c := make(chan notify.EventInfo, 1)
 
 	// watcg the create, remove, rename events on the data dir and sub directories
@@ -72,6 +80,6 @@ func WatchDataDir() {
 	for ei := range c {
 		log.Printf("Event %d on file %s", ei.Event(), ei.Path())
 		// kinda brutal solution, could be improved
-		ResetCache()
+		f.Reset()
 	}
 }
