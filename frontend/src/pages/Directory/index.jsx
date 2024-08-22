@@ -126,12 +126,7 @@ const Directory = () => {
               </tr>
             )}
             {fileInfos.sort(sorting[compare]).map((fileInfo, i) => {
-              let filePath;
-              if (searchQuery == "" && location.path != "/") {
-                filePath = `${decodeURI(location.path)}/${fileInfo.path}`;
-              } else {
-                filePath = `/${fileInfo.path}`;
-              }
+              let filePath = fileInfo.path;
               if (fileInfo.isDir) {
                 return (
                   <tr key={i}>
@@ -142,7 +137,11 @@ const Directory = () => {
                       />
                     </td>
                     <td>
-                      <Path fileInfo={fileInfo} currentDir={location.path} />
+                      <Path
+                        fileInfo={fileInfo}
+                        currentDir={location.path}
+                        isSearch={searchQuery !== ""}
+                      />
                     </td>
                     <td />
                     <td>
@@ -167,7 +166,11 @@ const Directory = () => {
                     <Icon name="file" />
                   </td>
                   <td>
-                    <Path fileInfo={fileInfo} currentDir={location.path} />
+                    <Path
+                      fileInfo={fileInfo}
+                      currentDir={location.path}
+                      isSearch={searchQuery !== ""}
+                    />
                   </td>
                   <td>{formatFileSize(fileInfo.size)}</td>
                   <td>
