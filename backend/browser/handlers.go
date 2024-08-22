@@ -15,13 +15,13 @@ import (
 )
 
 type BrowserHandlers struct {
-	fileCache *FileCache
+	fileCache     *FileCache
 	pathConverter *PathConverter
 }
 
 func NewBrowserHandlers(fileCache *FileCache, pathConverter *PathConverter) *BrowserHandlers {
 	return &BrowserHandlers{
-		fileCache: fileCache,
+		fileCache:     fileCache,
 		pathConverter: pathConverter,
 	}
 }
@@ -107,7 +107,6 @@ func (b *BrowserHandlers) searchInDir(dir, search string) []FileDescription {
 	return results
 }
 
-
 // PUT /move
 // Move is used to move a file or change its name
 func (b *BrowserHandlers) Move(c *gin.Context) {
@@ -137,7 +136,6 @@ func (b *BrowserHandlers) Move(c *gin.Context) {
 		})
 		return
 	}
-
 
 	c.JSON(http.StatusOK, gin.H{
 		"status": "ok",

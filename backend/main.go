@@ -7,8 +7,8 @@ import (
 	"github.com/zer0tonin/mikochi/auth"
 	"github.com/zer0tonin/mikochi/browser"
 
-	"github.com/gin-contrib/static"
 	"github.com/gin-contrib/gzip"
+	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 )

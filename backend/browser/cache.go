@@ -13,17 +13,17 @@ import (
 )
 
 type FileCache struct {
-	cache map[string]fs.FileInfo
-	mutex sync.Mutex
-	dataDir string
+	cache         map[string]fs.FileInfo
+	mutex         sync.Mutex
+	dataDir       string
 	pathConverter *PathConverter
 }
 
 func NewFileCache(dataDir string, pathConverter *PathConverter) *FileCache {
 	return &FileCache{
-		cache: map[string]fs.FileInfo{},
-		mutex: sync.Mutex{},
-		dataDir: dataDir,
+		cache:         map[string]fs.FileInfo{},
+		mutex:         sync.Mutex{},
+		dataDir:       dataDir,
 		pathConverter: pathConverter,
 	}
 }
