@@ -2,7 +2,9 @@ package browser
 
 import (
 	"io/fs"
+	"iter"
 	"log"
+	"maps"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -11,7 +13,7 @@ import (
 )
 
 type FileCache struct {
-	Cache map[string]fs.FileInfo // TODO: encapsulate that
+	cache map[string]fs.FileInfo
 	mutex sync.Mutex
 	dataDir string
 	pathConverter *PathConverter
@@ -19,7 +21,7 @@ type FileCache struct {
 
 func NewFileCache(dataDir string, pathConverter *PathConverter) *FileCache {
 	return &FileCache{
-		Cache: map[string]fs.FileInfo{},
+		cache: map[string]fs.FileInfo{},
 		mutex: sync.Mutex{},
 		dataDir: dataDir,
 		pathConverter: pathConverter,
@@ -28,6 +30,7 @@ func NewFileCache(dataDir string, pathConverter *PathConverter) *FileCache {
 
 // resets the cache
 func (f *FileCache) Reset() {
+	// FIXME: use Once instead of mutex
 	log.Printf("Caching %s", f.dataDir)
 	defer func() {
 		if r := recover(); r != nil {
@@ -40,9 +43,9 @@ func (f *FileCache) Reset() {
 
 	// just doing this at once should avoid excessive lock/unlock
 	f.mutex.Lock()
-	f.Cache = newFileCache
+	f.cache = newFileCache
 	f.mutex.Unlock()
-	log.Print("Refreshed cached")
+	log.Print("Refreshed cache")
 }
 
 // recursively initalizes the cache
@@ -74,7 +77,7 @@ func (f *FileCache) cacheFolder(cache map[string]fs.FileInfo, path string) {
 func (f *FileCache) WatchDataDir() {
 	c := make(chan notify.EventInfo, 1)
 
-	// watcg the create, remove, rename events on the data dir and sub directories
+	// watch the create, remove, rename events on the data dir and sub directories
 	if err := notify.Watch(f.dataDir+"/...", c, notify.Create, notify.Remove, notify.Rename); err != nil {
 		panic(err)
 	}
@@ -85,4 +88,13 @@ func (f *FileCache) WatchDataDir() {
 		// kinda brutal solution, could be improved
 		f.Reset()
 	}
+}
+
+func (f *FileCache) Iterate() iter.Seq2[string, fs.FileInfo] {
+	return maps.All(f.cache)
+}
+
+func (f *FileCache) Get(key string) (fs.FileInfo, bool) {
+	res, ok := f.cache[key]
+	return res, ok
 }

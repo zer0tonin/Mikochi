@@ -75,7 +75,7 @@ func (b *BrowserHandlers) BrowseFolder(c *gin.Context) {
 // browseDir returns the content of a directory
 func (b *BrowserHandlers) browseDir(dir string) []FileDescription {
 	results := []FileDescription{}
-	for file, fileInfo := range b.fileCache.Cache {
+	for file, fileInfo := range b.fileCache.Iterate() {
 		if fileInDir(file, dir) {
 			results = append(results, fileInfoToFileDescription(fileInfo, fileInfo.Name()))
 		}
@@ -86,7 +86,7 @@ func (b *BrowserHandlers) browseDir(dir string) []FileDescription {
 // searchInDir returns the results of a search query inside a given directory
 func (b *BrowserHandlers) searchInDir(dir, search string) []FileDescription {
 	children := []string{}
-	for file := range b.fileCache.Cache {
+	for file := range b.fileCache.Iterate() {
 		if strings.HasPrefix(file, dir) {
 			children = append(children, file)
 		}
@@ -97,8 +97,12 @@ func (b *BrowserHandlers) searchInDir(dir, search string) []FileDescription {
 
 	results := []FileDescription{}
 	for _, match := range matches {
-		fileInfo := fileInfoToFileDescription(b.fileCache.Cache[match.Target], match.Target)
-		results = append(results, fileInfo)
+		fileInfo, ok := b.fileCache.Get(match.Target)
+		if !ok {
+			continue
+		}
+		fileDescription := fileInfoToFileDescription(fileInfo, match.Target)
+		results = append(results, fileDescription)
 	}
 	return results
 }
