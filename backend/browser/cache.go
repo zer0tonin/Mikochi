@@ -8,24 +8,27 @@ import (
 	"sync"
 
 	"github.com/rjeczalik/notify"
-	"github.com/spf13/viper"
 )
 
 type FileCache struct {
-	Cache map[string]fs.FileInfo
-	Mutex sync.Mutex
+	Cache map[string]fs.FileInfo // TODO: encapsulate that
+	mutex sync.Mutex
+	dataDir string
+	pathConverter *PathConverter
 }
 
-func NewFileCache() *FileCache {
+func NewFileCache(dataDir string, pathConverter *PathConverter) *FileCache {
 	return &FileCache{
 		Cache: map[string]fs.FileInfo{},
-		Mutex: sync.Mutex{},
+		mutex: sync.Mutex{},
+		dataDir: dataDir,
+		pathConverter: pathConverter,
 	}
 }
 
 // resets the cache
 func (f *FileCache) Reset() {
-	log.Printf("Caching %s", viper.GetString("DATA_DIR"))
+	log.Printf("Caching %s", f.dataDir)
 	defer func() {
 		if r := recover(); r != nil {
 			log.Print("Failed to refresh cache")
@@ -33,19 +36,19 @@ func (f *FileCache) Reset() {
 	}()
 
 	newFileCache := map[string]fs.FileInfo{}
-	cacheFolder(newFileCache, "/")
+	f.cacheFolder(newFileCache, "/")
 
 	// just doing this at once should avoid excessive lock/unlock
-	f.Mutex.Lock()
+	f.mutex.Lock()
 	f.Cache = newFileCache
-	f.Mutex.Unlock()
+	f.mutex.Unlock()
 	log.Print("Refreshed cached")
 }
 
 // recursively initalizes the cache
 // we do not use filepath.Walk to avoid a mess with relative / absolute paths
-func cacheFolder(cache map[string]fs.FileInfo, path string) {
-	rootPath := getAbsolutePath(path)
+func (f *FileCache) cacheFolder(cache map[string]fs.FileInfo, path string) {
+	rootPath := f.pathConverter.GetAbsolutePath(path)
 	err := filepath.WalkDir(
 		rootPath,
 		func(path string, dirEntry fs.DirEntry, err error) error {
@@ -72,7 +75,7 @@ func (f *FileCache) WatchDataDir() {
 	c := make(chan notify.EventInfo, 1)
 
 	// watcg the create, remove, rename events on the data dir and sub directories
-	if err := notify.Watch(viper.GetString("DATA_DIR")+"/...", c, notify.Create, notify.Remove, notify.Rename); err != nil {
+	if err := notify.Watch(f.dataDir+"/...", c, notify.Create, notify.Remove, notify.Rename); err != nil {
 		panic(err)
 	}
 	defer notify.Stop(c)

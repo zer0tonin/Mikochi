@@ -16,11 +16,13 @@ import (
 
 type BrowserHandlers struct {
 	fileCache *FileCache
+	pathConverter *PathConverter
 }
 
-func NewBrowserHandlers(fileCache *FileCache) *BrowserHandlers {
+func NewBrowserHandlers(fileCache *FileCache, pathConverter *PathConverter) *BrowserHandlers {
 	return &BrowserHandlers{
 		fileCache: fileCache,
+		pathConverter: pathConverter,
 	}
 }
 
@@ -28,7 +30,7 @@ func NewBrowserHandlers(fileCache *FileCache) *BrowserHandlers {
 // StreamFile streams the content of the requested file
 func (b *BrowserHandlers) StreamFile(c *gin.Context) {
 	path := c.Param("path")
-	pathInDataDir := getAbsolutePath(path)
+	pathInDataDir := b.pathConverter.GetAbsolutePath(path)
 
 	dir, err := isDir(pathInDataDir)
 	if err != nil {
@@ -120,8 +122,8 @@ func (b *BrowserHandlers) Move(c *gin.Context) {
 	// we make a synchronous reset cache to avoid querying /browse on stale data
 	defer b.fileCache.Reset()
 
-	path := getAbsolutePath(c.Param("path"))
-	newPath := getAbsolutePath(command.NewPath)
+	path := b.pathConverter.GetAbsolutePath(c.Param("path"))
+	newPath := b.pathConverter.GetAbsolutePath(command.NewPath)
 
 	err = os.Rename(path, newPath)
 	if err != nil {
@@ -144,7 +146,7 @@ func (b *BrowserHandlers) Delete(c *gin.Context) {
 	// we make a synchronous reset cache to avoid querying /browse on stale data
 	defer b.fileCache.Reset()
 
-	path := getAbsolutePath(c.Param("path"))
+	path := b.pathConverter.GetAbsolutePath(c.Param("path"))
 
 	err := os.RemoveAll(path)
 	if err != nil {
@@ -175,7 +177,7 @@ func (b *BrowserHandlers) Upload(c *gin.Context) {
 	// we make a synchronous reset cache to avoid querying /browse on stale data
 	defer b.fileCache.Reset()
 
-	pathInDataDir := getAbsolutePath(c.Param("path"))
+	pathInDataDir := b.pathConverter.GetAbsolutePath(c.Param("path"))
 	dst, err := os.Create(pathInDataDir)
 	if err != nil {
 		log.Printf("Err: %s", err.Error())
@@ -217,7 +219,7 @@ func (b *BrowserHandlers) Mkdir(c *gin.Context) {
 	// we make a synchronous reset cache to avoid querying /browse on stale data
 	defer b.fileCache.Reset()
 
-	pathInDataDir := getAbsolutePath(c.Param("path"))
+	pathInDataDir := b.pathConverter.GetAbsolutePath(c.Param("path"))
 	err := os.Mkdir(pathInDataDir, 0755)
 	if err != nil {
 		log.Printf("Err: %s", err.Error())
