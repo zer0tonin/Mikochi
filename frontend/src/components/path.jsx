@@ -41,15 +41,10 @@ export const Path = ({ fileInfo, currentDir, isSearch }) => {
   );
 };
 
-export const FolderIcon = ({ currentDir, fileInfo }) => {
+export const FolderIcon = ({ fileInfo }) => {
   const location = useLocation();
 
-  const target =
-    currentDir == "/"
-      ? `${fileInfo.path.startsWith("/") ? "" : "/"}${fileInfo.path}/`
-      : `${currentDir}/${fileInfo.path}/`;
-
-  return <Icon name="folder" onClick={() => location.route(target)} />;
+  return <Icon name="folder" onClick={() => location.route(fileInfo.path)} />;
 };
 
 export const DoubleDotPath = ({ currentDir }) => {
