@@ -25,13 +25,20 @@ func main() {
 	viper.AutomaticEnv()
 
 	authMiddleware := auth.NewAuthMiddleware(viper.GetString("NO_AUTH") != "true", viper.GetString("JWT_SECRET"))
-	authHandlers := auth.NewAuthHandlers(authMiddleware, viper.GetString("USERNAME"), viper.GetString("PASSWORD"))
+	authHandlers := auth.NewAuthHandlers(
+		authMiddleware,
+		viper.GetString("USERNAME"),
+		viper.GetString("PASSWORD"),
+		[]byte(viper.GetString("JWT_SECRET")),
+	)
 
-	cache := browser.NewFileCache()
+	pathConverter := browser.NewPathConverter(viper.GetString("DATA_DIR"))
+
+	cache := browser.NewFileCache(viper.GetString("DATA_DIR"), pathConverter)
 	cache.Reset()
 	go cache.WatchDataDir()
 
-	browserHandlers := browser.NewBrowserHandlers(cache)
+	browserHandlers := browser.NewBrowserHandlers(cache, pathConverter)
 
 	if viper.GetString("ENV") == "production" {
 		gin.SetMode(gin.ReleaseMode)
