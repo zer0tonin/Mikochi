@@ -1,8 +1,3 @@
-.table {
-  width: 100%;
-  text-align: left;
-}
-
 a {
   color: #d4cb92;
 }
@@ -11,13 +6,19 @@ table {
   width: 100%;
   margin: auto;
   table-layout: fixed;
+  border-collapse: collapse;
 }
 
 table > thead {
   color: #80a4ed;
 }
 
+th {
+  padding: 1em;
+}
+
 td {
+  padding: 1em;
   word-wrap: break-word;
   vertical-align: baseline;
 }
@@ -54,4 +55,8 @@ th:last-of-type {
   th:last-of-type {
     width: 4em;
   }
+}
+
+tr:hover td {
+  background-color: #002b36;
 }
