@@ -8,8 +8,8 @@ export const Path = ({ fileInfo, currentDir, isSearch }) => {
   if (!isSearch) {
     const fileName =
       currentDir === "/"
-        ? fileInfo.path.slice(currentDir.length)
-        : fileInfo.path.slice(currentDir.length + 1);
+        ? fileInfo.path.slice(decodeURI(currentDir).length)
+        : fileInfo.path.slice(decodeURI(currentDir).length + 1);
     // browse
     if (fileInfo.isDir) {
       return <a onClick={() => location.route(fileInfo.path)}>{fileName}</a>;
