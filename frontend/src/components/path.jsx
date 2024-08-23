@@ -5,9 +5,11 @@ import Icon from "./icon";
 export const Path = ({ fileInfo, currentDir, isSearch }) => {
   const location = useLocation();
 
-
   if (!isSearch) {
-    const fileName = currentDir === "/" ? fileInfo.path.slice(currentDir.length) : fileInfo.path.slice(currentDir.length + 1);
+    const fileName =
+      currentDir === "/"
+        ? fileInfo.path.slice(currentDir.length)
+        : fileInfo.path.slice(currentDir.length + 1);
     // browse
     if (fileInfo.isDir) {
       return <a onClick={() => location.route(fileInfo.path)}>{fileName}</a>;

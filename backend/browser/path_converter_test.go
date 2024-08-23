@@ -5,28 +5,28 @@ import (
 )
 
 func TestGetAbsolutePath(t *testing.T) {
-	tests := []struct{
-		name string
-		dataDir string
-		path string
+	tests := []struct {
+		name     string
+		dataDir  string
+		path     string
 		expected string
 	}{
 		{
-			name: "Empty path",
-			dataDir: "/data",
-			path: "",
+			name:     "Empty path",
+			dataDir:  "/data",
+			path:     "",
 			expected: "/data",
 		},
 		{
-			name: "Two sub dirs",
-			dataDir: "/data",
-			path: "/sub/nested",
+			name:     "Two sub dirs",
+			dataDir:  "/data",
+			path:     "/sub/nested",
 			expected: "/data/sub/nested",
 		},
 		{
-			name: "Unclean path",
-			dataDir: "/data",
-			path: "/sub/nested/..",
+			name:     "Unclean path",
+			dataDir:  "/data",
+			path:     "/sub/nested/..",
 			expected: "/data/sub",
 		},
 	}
