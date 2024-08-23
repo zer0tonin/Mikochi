@@ -131,9 +131,7 @@ const Directory = () => {
                 return (
                   <tr key={i}>
                     <td>
-                      <FolderIcon
-                        fileInfo={fileInfo}
-                      />
+                      <FolderIcon fileInfo={fileInfo} />
                     </td>
                     <td>
                       <Path

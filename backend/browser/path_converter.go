@@ -12,7 +12,6 @@ func NewPathConverter(dataDir string) *PathConverter {
 	}
 }
 
-// TODO: test
 func (p *PathConverter) GetAbsolutePath(path string) string {
 	cleanedPath := filepath.Clean(path)
 	if cleanedPath == "." || cleanedPath == ".." {
