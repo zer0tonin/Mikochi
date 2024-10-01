@@ -6,10 +6,14 @@ import Icon from "../icon";
 import Modal, { ModalContent } from "../modal";
 import "./style.css";
 import handleError from "../../error";
+import { actions } from "../../../states";
+import { useStateValue } from "../../../states/provider";
 
 const DeleteModal = ({ isOpen, close, filePath, refresh, setRefresh }) => {
   const { jwt } = useContext(AuthContext);
   const [error, setError] = useState("");
+
+  const { dispatch } = useStateValue();
 
   if (!isOpen) {
     return null;
@@ -34,6 +38,10 @@ const DeleteModal = ({ isOpen, close, filePath, refresh, setRefresh }) => {
       setError("");
       setRefresh(refresh + 1);
       close();
+      dispatch({
+        type: actions.SHOW_OPERATION_TOAST,
+        data: 'File deleted Successfully'
+      });
     };
     sendDelete();
   };

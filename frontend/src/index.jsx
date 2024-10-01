@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 
 const Directory = lazy(() => import("./pages/Directory"));
 import "./index.css";
+import { Provider } from "../states/provider";
 
 export function App() {
   const [jwt, setJWT] = useState(null);
@@ -17,17 +18,19 @@ export function App() {
 
   return (
     <AuthContext.Provider value={auth}>
-      <div id="app">
-        {jwt === null ? (
-          <Login />
-        ) : (
-          <LocationProvider>
-            <Router>
-              <Route default component={Directory} />
-            </Router>
-          </LocationProvider>
-        )}
-      </div>
+      <Provider>
+        <div id="app">
+          {jwt === null ? (
+            <Login />
+          ) : (
+            <LocationProvider>
+              <Router>
+                <Route default component={Directory} />
+              </Router>
+            </LocationProvider>
+          )}
+        </div>
+      </Provider>
     </AuthContext.Provider>
   );
 }

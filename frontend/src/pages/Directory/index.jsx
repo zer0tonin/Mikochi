@@ -21,6 +21,9 @@ import { NameHeader, SizeHeader, sorting } from "../../components/sorting";
 import { AuthContext } from "../../jwt";
 
 import "./style.css";
+import { useStateValue } from "../../../states/provider";
+import Toast from "../../components/toast";
+import { actions } from "../../../states";
 
 const formatFileSize = (bytes) => {
   if (bytes === 0) return "0 bytes";
@@ -98,6 +101,19 @@ const Directory = () => {
     setRefresh(refresh + 1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.path]);
+
+  const { state, dispatch } = useStateValue();
+
+  useEffect(() => {
+    if (state.toastMessage) {
+      setTimeout(() => {
+        dispatch({
+          type: actions.SHOW_OPERATION_TOAST,
+          data: ''
+        })
+      }, 2000)
+    }
+  }, [state.toastMessage])
 
   return (
     <>
@@ -194,6 +210,7 @@ const Directory = () => {
           refresh={refresh}
           setRefresh={setRefresh}
         />
+        <Toast isVisible={state.toastMessage} text={state.toastMessage} />
       </main>
     </>
   );

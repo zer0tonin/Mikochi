@@ -6,11 +6,15 @@ import Icon, { BigIcon } from "../icon";
 import Modal, { ModalContent, ModalHeader } from "../modal";
 import "./style.css";
 import handleError from "../../error";
+import { useStateValue } from "../../../states/provider";
+import { actions } from "../../../states";
 
 const UploadModal = ({ isOpen, close, dirPath, refresh, setRefresh }) => {
   const { jwt } = useContext(AuthContext);
   const [selectedFile, setSelectedFile] = useState(null);
   const [error, setError] = useState("");
+
+  const { dispatch } = useStateValue();
 
   if (!isOpen) {
     return null;
@@ -43,6 +47,10 @@ const UploadModal = ({ isOpen, close, dirPath, refresh, setRefresh }) => {
       setSelectedFile(null);
       setRefresh(refresh + 1);
       close();
+      dispatch({
+        type: actions.SHOW_OPERATION_TOAST,
+        data: 'File uploaded successfully'
+      });
     };
 
     e.preventDefault();

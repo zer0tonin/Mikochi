@@ -7,11 +7,15 @@ import "./style.css";
 
 import Modal, { ModalContent, ModalHeader } from "../modal";
 import handleError from "../../error";
+import { useStateValue } from "../../../states/provider";
+import { actions } from "../../../states";
 
 const RenameModal = ({ isOpen, close, filePath, refresh, setRefresh }) => {
   const { jwt } = useContext(AuthContext);
   const [error, setError] = useState("");
   const [path, setPath] = useState(filePath);
+
+  const { dispatch } = useStateValue();
 
   useEffect(() => {
     setPath(filePath);
@@ -41,6 +45,10 @@ const RenameModal = ({ isOpen, close, filePath, refresh, setRefresh }) => {
       setError("");
       setRefresh(refresh + 1);
       close();
+      dispatch({
+        type: actions.SHOW_OPERATION_TOAST,
+        data: 'File Renamed Successfully'
+      });
     };
     putMove();
   };
