@@ -47,7 +47,7 @@ const UploadModal = ({ isOpen, close, dirPath, refresh, setRefresh, setSuccess }
       setSuccess(true);
       setTimeout(() => {
         setSuccess(false);
-      }, 2000)
+      }, 2000);
     };
 
     e.preventDefault();
