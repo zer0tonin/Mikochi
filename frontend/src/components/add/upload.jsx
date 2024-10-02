@@ -6,8 +6,9 @@ import Icon, { BigIcon } from "../icon";
 import Modal, { ModalContent, ModalHeader } from "../modal";
 import "./style.css";
 import handleError from "../../error";
+import Toast from "../toast";
 
-const UploadModal = ({ isOpen, close, dirPath, refresh, setRefresh }) => {
+const UploadModal = ({ isOpen, close, dirPath, refresh, setRefresh, setSuccess }) => {
   const { jwt } = useContext(AuthContext);
   const [selectedFile, setSelectedFile] = useState(null);
   const [error, setError] = useState("");
@@ -43,6 +44,10 @@ const UploadModal = ({ isOpen, close, dirPath, refresh, setRefresh }) => {
       setSelectedFile(null);
       setRefresh(refresh + 1);
       close();
+      setSuccess(true);
+      setTimeout(() => {
+        setSuccess(false);
+      }, 2000)
     };
 
     e.preventDefault();
@@ -81,6 +86,7 @@ const UploadModal = ({ isOpen, close, dirPath, refresh, setRefresh }) => {
 
 const Upload = ({ dirPath, refresh, setRefresh }) => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [success, setSuccess] = useState(false);
   return (
     <>
       <div class="floatingUpload">
@@ -96,7 +102,9 @@ const Upload = ({ dirPath, refresh, setRefresh }) => {
         dirPath={dirPath}
         refresh={refresh}
         setRefresh={setRefresh}
+        setSuccess={setSuccess}
       />
+      {success && <Toast text='File Uploaded Successfully' isVisible={success} />}
     </>
   );
 };
