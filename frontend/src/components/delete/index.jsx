@@ -38,7 +38,7 @@ const DeleteModal = ({ isOpen, close, filePath, refresh, setRefresh, setSuccess 
       setSuccess(true);
       setTimeout(() => {
         setSuccess(false);
-      }, 2000)
+      }, 2000);
     };
     sendDelete();
   };
