@@ -6,8 +6,9 @@ import Icon from "../icon";
 import Modal, { ModalContent } from "../modal";
 import "./style.css";
 import handleError from "../../error";
+import Toast from "../toast";
 
-const DeleteModal = ({ isOpen, close, filePath, refresh, setRefresh }) => {
+const DeleteModal = ({ isOpen, close, filePath, refresh, setRefresh, setSuccess }) => {
   const { jwt } = useContext(AuthContext);
   const [error, setError] = useState("");
 
@@ -34,6 +35,10 @@ const DeleteModal = ({ isOpen, close, filePath, refresh, setRefresh }) => {
       setError("");
       setRefresh(refresh + 1);
       close();
+      setSuccess(true);
+      setTimeout(() => {
+        setSuccess(false);
+      }, 2000)
     };
     sendDelete();
   };
@@ -59,6 +64,7 @@ const DeleteModal = ({ isOpen, close, filePath, refresh, setRefresh }) => {
 
 const Delete = ({ filePath, refresh, setRefresh }) => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   return (
     <>
@@ -69,7 +75,9 @@ const Delete = ({ filePath, refresh, setRefresh }) => {
         filePath={filePath}
         refresh={refresh}
         setRefresh={setRefresh}
+        setSuccess={setSuccess}
       />
+      {success && <Toast text='File Deleted Successfully' isVisible={success} />}
     </>
   );
 };
