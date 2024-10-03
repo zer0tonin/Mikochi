@@ -6,8 +6,9 @@ import { BigIcon } from "../icon";
 import Modal, { ModalContent, ModalHeader } from "../modal";
 import "./style.css";
 import handleError from "../../error";
+import Toast from "../toast";
 
-const MkdirModal = ({ isOpen, close, dirPath, refresh, setRefresh }) => {
+const MkdirModal = ({ isOpen, close, dirPath, refresh, setRefresh, setSuccess }) => {
   const { jwt } = useContext(AuthContext);
   const [error, setError] = useState("");
   const [name, setName] = useState("");
@@ -38,6 +39,10 @@ const MkdirModal = ({ isOpen, close, dirPath, refresh, setRefresh }) => {
       setName("");
       setRefresh(refresh + 1);
       close();
+      setSuccess(true);
+      setTimeout(() => {
+        setSuccess(false);
+      }, 2000);
     };
     putMkdir();
   };
@@ -65,6 +70,8 @@ const MkdirModal = ({ isOpen, close, dirPath, refresh, setRefresh }) => {
 
 const Mkdir = ({ dirPath, refresh, setRefresh }) => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [success, setSuccess] = useState(false);
+
   return (
     <>
       <div class="floatingMkdir">
@@ -80,7 +87,9 @@ const Mkdir = ({ dirPath, refresh, setRefresh }) => {
         dirPath={dirPath}
         refresh={refresh}
         setRefresh={setRefresh}
+        setSuccess={setSuccess}
       />
+      {success && <Toast text='Directory Created Successfully' isVisible={success} />}
     </>
   );
 };
