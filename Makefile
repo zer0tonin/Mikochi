@@ -1,5 +1,5 @@
 down:
-	ls backend | grep __debug_bin | gxargs -I {} rm backend/{}
+	ls backend | grep __debug_bin | xargs -I {} rm backend/{}
 	docker-compose down --rmi=local --volumes
 
 run: down
