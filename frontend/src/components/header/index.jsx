@@ -2,6 +2,7 @@ import { h } from "preact";
 import "./style.css";
 
 import Search from "../search";
+import Logout from "../logout";
 import { useLocation } from "preact-iso";
 
 const Header = ({ searchQuery, setSearchQuery }) => {
@@ -19,6 +20,7 @@ const Header = ({ searchQuery, setSearchQuery }) => {
           Mikochi
         </a>
         <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+        <Logout />
       </nav>
     </header>
   );
