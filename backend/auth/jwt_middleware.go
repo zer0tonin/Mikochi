@@ -85,13 +85,16 @@ func (j *JwtMiddleware) CheckAuth(c *gin.Context) {
         return
     }
 
-    // Check if the token is invalidated
+    // Check if the token is invalidated and set the jti in the context
     if claims, ok := token.Claims.(jwt.MapClaims); ok {
-        if jti, ok := claims["jti"].(string); ok && j.IsTokenInvalidated(jti) {
-            c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
-                "error": "Token has been invalidated",
-            })
-            return
+        if jti, ok := claims["jti"].(string); ok {
+            if(j.IsTokenInvalidated(jti)) {
+                c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
+                    "error": "Token has been invalidated",
+                })
+                return
+            }
+            c.Set("jti", jti)
         }
     }
 
