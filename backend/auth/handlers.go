@@ -125,33 +125,23 @@ func (a *AuthHandlers) SingleUse(c *gin.Context) {
 // POST /logout
 // Logout invalidates the current JWT token
 func (h *AuthHandlers) Logout(c *gin.Context) {
-    authHeader := c.GetHeader("Authorization")
-    if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer ") {
-        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid authorization header"})
-        return
-    }
-
-    tokenString := strings.TrimPrefix(authHeader, "Bearer ")
-    log.Printf("Token: %s\n", tokenString)
-
-    if tokenString == "" {
+    // Receive the jti from the context
+    jti,exists := c.Get("jti")
+    if !exists {
         c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid token"})
         return
     }
 
-    claims := &jwt.RegisteredClaims{}
-    token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
-        return h.jwtSecret, nil
-    })
-    if err != nil || !token.Valid {
-        c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid token"})
+    // Log the extracted jti
+    log.Printf("Extracted jti: %s\n", jti)
+
+    // Add the jti to the invalidated tokens list
+    err := h.jwtMiddelware.AddInvalidatedToken(jti.(string))
+
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to invalidate token"})
         return
     }
 
-    // Log the entire claims object for debugging
-    log.Printf("Extracted claims: %+v\n", claims)
-
-    log.Printf("Extracted jti: %s\n", claims.ID) // Log the extracted jti
-    h.jwtMiddleware.AddInvalidatedToken(claims.ID)
-    c.JSON(http.StatusOK, gin.H{"message": "Logged out successfully", "invalidated_token": claims.ID})
+    c.JSON(http.StatusOK, gin.H{"message": "Logged out successfully", "invalidated_token": jti})
 }
