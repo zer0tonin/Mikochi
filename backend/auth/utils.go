@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 )
 
 func parseAuthHeader(header string) (string, error) {
@@ -20,13 +21,20 @@ func parseAuthHeader(header string) (string, error) {
 
 // generateAuthToken makes a new signed JWT token valid ~1 month
 func generateAuthToken(secret []byte) (string, error) {
+	jti := uuid.New().String() // Generate a unique jti
 	claims := jwt.RegisteredClaims{
 		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 730)),
 		Issuer:    "Mikochi",
 		IssuedAt:  jwt.NewNumericDate(time.Now()),
+		ID:        jti, // Add the jti claim
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString(secret)
+	signedToken, err := token.SignedString(secret)
+    if err != nil {
+        return "", err
+    }
+
+    return signedToken, nil
 }
 
 // GenerateRandomSecret creates a 256 bytes array used as a jwt secret when no env var is set
