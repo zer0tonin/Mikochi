@@ -2,11 +2,9 @@ import { h } from "preact";
 import React, { useContext } from "react";
 import { AuthContext } from "../../jwt";
 
-import { useLocation } from "preact-iso";
 import "./style.css";
 
 const Logout = () => {
-  const location = useLocation();
   const { jwt } = useContext(AuthContext);
 
   const handleLogout = async () => {
@@ -23,7 +21,7 @@ const Logout = () => {
         },
       });
 
-      location.route("/");
+      window.location.href = "/";
     } catch (error) {
       console.error("Error logging out:", error);
     } finally {

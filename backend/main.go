@@ -25,13 +25,13 @@ func main() {
     viper.AutomaticEnv()
 
     authMiddleware := auth.NewAuthMiddleware(viper.GetString("NO_AUTH") != "true", viper.GetString("JWT_SECRET"))
-    jwtMiddleware := auth.NewJwtMiddleware([]byte(viper.GetString("JWT_SECRET"))) // Create jwtMiddleware instance
+    jwtMiddleware := auth.NewJwtMiddleware([]byte(viper.GetString("JWT_SECRET")))
     authHandlers := auth.NewAuthHandlers(
         authMiddleware,
         viper.GetString("USERNAME"),
         viper.GetString("PASSWORD"),
         []byte(viper.GetString("JWT_SECRET")),
-        jwtMiddleware, // Pass jwtMiddleware instance
+        jwtMiddleware,
     )
 
     pathConverter := browser.NewPathConverter(viper.GetString("DATA_DIR"))
@@ -76,7 +76,7 @@ func main() {
     api.GET("/refresh", authMiddleware.CheckAuth, authHandlers.Refresh)
     api.GET("/single-use", authMiddleware.CheckAuth, authHandlers.SingleUse)
     api.POST("/login", authHandlers.Login)
-    api.POST("/logout", authHandlers.Logout) // Add logout route
+    api.POST("/logout", authMiddleware.CheckAuth, authHandlers.Logout)
 
     // k8s ready/live check
     r.GET("/ready", func(c *gin.Context) {

@@ -1,13 +1,13 @@
 package auth
 
 import (
-    "log"
-    "fmt"
-    "net/http"
-    "sync"
+	"fmt"
+	"log"
+	"net/http"
+	"sync"
 
-    "github.com/gin-gonic/gin"
-    "github.com/golang-jwt/jwt/v5"
+	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 type JwtMiddleware struct {
@@ -35,16 +35,14 @@ func (j *JwtMiddleware) AddInvalidatedToken(jti string) {
     for jti := range j.invalidatedTokens {
         log.Printf("Token ID: %s", jti)
     }
-	log.Printf("Token invalidated: %s\n", jti) // Log the invalidated token ID
+    log.Printf("Token invalidated: %s\n", jti) // Log the invalidated token ID
 }
 
 // IsTokenInvalidated checks if a token ID is in the invalidated tokens list
 func (j *JwtMiddleware) IsTokenInvalidated(jti string) bool {
-    j.invalidatedTokensMutex.RLock()
-    defer j.invalidatedTokensMutex.RUnlock()
     _, exists := j.invalidatedTokens[jti]
     log.Printf("Checking if token is invalidated: %s, exists: %v", jti, exists)
-    return !exists
+    return exists
 }
 
 // setWhitelist allows a single-use JWTs (for streams)

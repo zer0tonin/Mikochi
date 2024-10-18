@@ -1,14 +1,13 @@
 package auth
 
 import (
-    "log"
-    "strings"
-    "net/http"
-    "time"
+	"log"
+	"net/http"
+	"time"
 
-    "github.com/gin-gonic/gin"
-    "github.com/golang-jwt/jwt/v5"
-    "github.com/google/uuid"
+	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 )
 
 type AuthHandlers struct {
@@ -136,12 +135,7 @@ func (h *AuthHandlers) Logout(c *gin.Context) {
     log.Printf("Extracted jti: %s\n", jti)
 
     // Add the jti to the invalidated tokens list
-    err := h.jwtMiddelware.AddInvalidatedToken(jti.(string))
-
-    if err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to invalidate token"})
-        return
-    }
+    h.jwtMiddleware.AddInvalidatedToken(jti.(string))
 
     c.JSON(http.StatusOK, gin.H{"message": "Logged out successfully", "invalidated_token": jti})
 }
