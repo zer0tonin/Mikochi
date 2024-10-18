@@ -30,11 +30,11 @@ func generateAuthToken(secret []byte) (string, error) {
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	signedToken, err := token.SignedString(secret)
-    if err != nil {
-        return "", err
-    }
+	if err != nil {
+		return "", err
+	}
 
-    return signedToken, nil
+	return signedToken, nil
 }
 
 // GenerateRandomSecret creates a 256 bytes array used as a jwt secret when no env var is set
