@@ -15,16 +15,14 @@ type AuthHandlers struct {
 	username       string
 	password       string
 	jwtSecret      []byte
-	jwtMiddleware  *JwtMiddleware // Add jwtMiddleware field
 }
 
-func NewAuthHandlers(authMiddleware AuthMiddleware, username, password string, jwtSecret []byte, jwtMiddleware *JwtMiddleware) *AuthHandlers {
+func NewAuthHandlers(authMiddleware AuthMiddleware, username, password string, jwtSecret []byte) *AuthHandlers {
 	return &AuthHandlers{
 		authMiddleware: authMiddleware,
 		username:       username,
 		password:       password,
 		jwtSecret:      jwtSecret,
-		jwtMiddleware:  jwtMiddleware, // Initialize jwtMiddleware
 	}
 }
 
@@ -123,18 +121,11 @@ func (a *AuthHandlers) SingleUse(c *gin.Context) {
 // POST /logout
 // Logout invalidates the current JWT token
 func (h *AuthHandlers) Logout(c *gin.Context) {
-	// Receive the jti from the context
-	jti, exists := c.Get("jti")
-	if !exists {
+	err := h.authMiddleware.InvalidateToken(c)
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid token"})
 		return
 	}
 
-	// Log the extracted jti
-	log.Printf("Extracted jti: %s\n", jti)
-
-	// Add the jti to the invalidated tokens list
-	h.jwtMiddleware.AddInvalidatedToken(jti.(string))
-
-	c.JSON(http.StatusOK, gin.H{"message": "Logged out successfully", "invalidated_token": jti})
+	c.JSON(http.StatusOK, gin.H{"message": "Logged out successfully"})
 }

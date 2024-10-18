@@ -28,20 +28,26 @@ func NewJwtMiddleware(secret []byte) *JwtMiddleware {
 }
 
 // AddInvalidatedToken adds a token ID to the invalidated tokens list
-func (j *JwtMiddleware) AddInvalidatedToken(jti string) {
+func (j *JwtMiddleware) InvalidateToken(c *gin.Context) error {
+	jti, exists := c.Get("jti")
+	if !exists {
+		return fmt.Errorf("No JIT in context")
+	}
+	jtiStr, ok := jti.(string)
+	if !ok {
+		return fmt.Errorf("JIT is not a string")
+	}
+
 	j.invalidatedTokensMutex.Lock()
 	defer j.invalidatedTokensMutex.Unlock()
-	j.invalidatedTokens[jti] = struct{}{}
-	for jti := range j.invalidatedTokens {
-		log.Printf("Token ID: %s", jti)
-	}
-	log.Printf("Token invalidated: %s\n", jti) // Log the invalidated token ID
+	j.invalidatedTokens[jtiStr] = struct{}{}
+	log.Printf("Token invalidated: %s\n", jti)
+	return nil
 }
 
 // IsTokenInvalidated checks if a token ID is in the invalidated tokens list
 func (j *JwtMiddleware) IsTokenInvalidated(jti string) bool {
 	_, exists := j.invalidatedTokens[jti]
-	log.Printf("Checking if token is invalidated: %s, exists: %v", jti, exists)
 	return exists
 }
 

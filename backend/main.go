@@ -25,13 +25,11 @@ func main() {
 	viper.AutomaticEnv()
 
 	authMiddleware := auth.NewAuthMiddleware(viper.GetString("NO_AUTH") != "true", viper.GetString("JWT_SECRET"))
-	jwtMiddleware := auth.NewJwtMiddleware([]byte(viper.GetString("JWT_SECRET")))
 	authHandlers := auth.NewAuthHandlers(
 		authMiddleware,
 		viper.GetString("USERNAME"),
 		viper.GetString("PASSWORD"),
 		[]byte(viper.GetString("JWT_SECRET")),
-		jwtMiddleware,
 	)
 
 	pathConverter := browser.NewPathConverter(viper.GetString("DATA_DIR"))
