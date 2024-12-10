@@ -55,17 +55,18 @@ HOST=127.0.0.1:8080 USERNAME=zer0tonin PASSWORD=horsebatterysomething ./app/miko
 
 Mikochi is configured using environment variables
 
-| Key        | Description                                 | Default    |
-|----------- |---------------------------------------------|------------|
-| HOST       | The ip:port mikochi will listen on          | 0.0.0.0:80 |
-| DATA_DIR   | The directory accessed by mikochi           | /data      |
-| JWT_SECRET | A secret string for jwt validation          | [Random]   |
-| USERNAME   | The username to login with                  | root       |
-| PASSWORD   | The password to login with                  | pass       |
-| CERT_CA    | The path to a TLS certificate               | null       |
-| CERT_KEY   | The path to the key associated with CERT_CA | null       |
-| NO_AUTH    | If true, disables all authentication        | false      |
-| GZIP       | If true, enables gzip compression           | false      |
+| Key            | Description                                 | Default    |
+|----------------|---------------------------------------------|------------|
+| HOST           | The ip:port mikochi will listen on          | 0.0.0.0:80 |
+| DATA_DIR       | The directory accessed by mikochi           | /data      |
+| JWT_SECRET     | A secret string for jwt validation          | [Random]   |
+| USERNAME       | The username to login with                  | root       |
+| PASSWORD       | The password to login with                  | pass       |
+| CERT_CA        | The path to a TLS certificate               | null       |
+| CERT_KEY       | The path to the key associated with CERT_CA | null       |
+| NO_AUTH        | If true, disables all authentication        | false      |
+| GZIP           | If true, enables gzip compression           | false      |
+| FRONTEND_FILES | The location of the frontend static files   | ./static   |
 
 Note: it is recommended to not manually set JWT_SECRET, as getting a new randomly generated secret everytime when mikochi starts let's you invalidate authentication tokens by restarting the process.
 
