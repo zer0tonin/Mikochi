@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/zer0tonin/mikochi/auth"
 	"github.com/zer0tonin/mikochi/browser"
@@ -22,6 +23,7 @@ func main() {
 	viper.SetDefault("ENV", "production")
 	viper.SetDefault("NO_AUTH", "false")
 	viper.SetDefault("GZIP", "false")
+	viper.SetDefault("FRONTEND_FILES", "./static")
 	viper.AutomaticEnv()
 
 	authMiddleware := auth.NewAuthMiddleware(viper.GetString("NO_AUTH") != "true", viper.GetString("JWT_SECRET"))
@@ -54,10 +56,15 @@ func main() {
 
 	// in production builds, this route serves the frontend files
 	// in the dev environment, this is handled by the frontend container
-	r.Use(static.ServeRoot("/", "./static"))
+	staticLocation := viper.GetString("FRONTEND_FILES")
+	r.Use(static.ServeRoot("/", staticLocation))
 	r.NoRoute(func(c *gin.Context) {
 		// we let the client-side routing take over
-		c.File("./static/index.html")
+		if strings.HasSuffix(staticLocation, "/") {
+			c.File(staticLocation + "index.html")
+		} else {
+			c.File(staticLocation + "/index.html")
+		}
 	})
 
 	api := r.Group("/api")
