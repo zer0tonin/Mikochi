@@ -8,7 +8,14 @@ import "./style.css";
 import handleError from "../../error";
 import Toast from "../toast";
 
-const MkdirModal = ({ isOpen, close, dirPath, refresh, setRefresh, setSuccess }) => {
+const MkdirModal = ({
+  isOpen,
+  close,
+  dirPath,
+  refresh,
+  setRefresh,
+  setSuccess,
+}) => {
   const { jwt } = useContext(AuthContext);
   const [error, setError] = useState("");
   const [name, setName] = useState("");
@@ -89,7 +96,9 @@ const Mkdir = ({ dirPath, refresh, setRefresh }) => {
         setRefresh={setRefresh}
         setSuccess={setSuccess}
       />
-      {success && <Toast text='Directory Created Successfully' isVisible={success} />}
+      {success && (
+        <Toast text="Directory Created Successfully" isVisible={success} />
+      )}
     </>
   );
 };

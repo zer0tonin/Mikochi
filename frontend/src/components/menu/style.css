@@ -6,7 +6,7 @@
   position: absolute;
   background-color: #001d24;
   min-width: 8em;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
   border-radius: 0.5em;
 }

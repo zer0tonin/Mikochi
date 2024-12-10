@@ -1,6 +1,6 @@
 import { h } from "preact";
-import {useContext} from "preact/hooks";
-import {AuthContext} from "../../jwt";
+import { useContext } from "preact/hooks";
+import { AuthContext } from "../../jwt";
 
 const LogOut = () => {
   const { jwt } = useContext(AuthContext);
@@ -26,7 +26,7 @@ const LogOut = () => {
     }
   };
 
-  return <li onClick={onLogOut}>Log out</li>
-}
+  return <li onClick={onLogOut}>Log out</li>;
+};
 
 export default LogOut;

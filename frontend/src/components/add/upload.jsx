@@ -8,7 +8,14 @@ import "./style.css";
 import handleError from "../../error";
 import Toast from "../toast";
 
-const UploadModal = ({ isOpen, close, dirPath, refresh, setRefresh, setSuccess }) => {
+const UploadModal = ({
+  isOpen,
+  close,
+  dirPath,
+  refresh,
+  setRefresh,
+  setSuccess,
+}) => {
   const { jwt } = useContext(AuthContext);
   const [selectedFile, setSelectedFile] = useState(null);
   const [error, setError] = useState("");
@@ -104,7 +111,9 @@ const Upload = ({ dirPath, refresh, setRefresh }) => {
         setRefresh={setRefresh}
         setSuccess={setSuccess}
       />
-      {success && <Toast text='File Uploaded Successfully' isVisible={success} />}
+      {success && (
+        <Toast text="File Uploaded Successfully" isVisible={success} />
+      )}
     </>
   );
 };

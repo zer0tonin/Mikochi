@@ -9,7 +9,14 @@ import Modal, { ModalContent, ModalHeader } from "../modal";
 import handleError from "../../error";
 import Toast from "../toast";
 
-const RenameModal = ({ isOpen, close, filePath, refresh, setRefresh, setSuccess }) => {
+const RenameModal = ({
+  isOpen,
+  close,
+  filePath,
+  refresh,
+  setRefresh,
+  setSuccess,
+}) => {
   const { jwt } = useContext(AuthContext);
   const [error, setError] = useState("");
   const [path, setPath] = useState(filePath);
@@ -86,7 +93,9 @@ const Rename = ({ filePath, refresh, setRefresh }) => {
         setRefresh={setRefresh}
         setSuccess={setSuccess}
       />
-      {success && <Toast text='File Renamed Successfully' isVisible={success} />}
+      {success && (
+        <Toast text="File Renamed Successfully" isVisible={success} />
+      )}
     </>
   );
 };

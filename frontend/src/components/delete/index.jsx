@@ -8,7 +8,14 @@ import "./style.css";
 import handleError from "../../error";
 import Toast from "../toast";
 
-const DeleteModal = ({ isOpen, close, filePath, refresh, setRefresh, setSuccess }) => {
+const DeleteModal = ({
+  isOpen,
+  close,
+  filePath,
+  refresh,
+  setRefresh,
+  setSuccess,
+}) => {
   const { jwt } = useContext(AuthContext);
   const [error, setError] = useState("");
 
@@ -77,7 +84,9 @@ const Delete = ({ filePath, refresh, setRefresh }) => {
         setRefresh={setRefresh}
         setSuccess={setSuccess}
       />
-      {success && <Toast text='File Deleted Successfully' isVisible={success} />}
+      {success && (
+        <Toast text="File Deleted Successfully" isVisible={success} />
+      )}
     </>
   );
 };
