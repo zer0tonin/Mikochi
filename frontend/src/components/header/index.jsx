@@ -2,7 +2,7 @@ import { h } from "preact";
 import "./style.css";
 
 import Search from "../search";
-import Logout from "../logout";
+import Menu from "../menu";
 import { useLocation } from "preact-iso";
 
 const Header = ({ searchQuery, setSearchQuery }) => {
@@ -15,12 +15,12 @@ const Header = ({ searchQuery, setSearchQuery }) => {
   return (
     <header class="header">
       <nav role="navigation" aria-label="main navigation">
+        <Menu onHomeClick={onHomeClick} />
         <a onClick={onHomeClick}>
           <img src="/logo.png" width="56" height="56" />
           Mikochi
         </a>
         <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-        <Logout />
       </nav>
     </header>
   );

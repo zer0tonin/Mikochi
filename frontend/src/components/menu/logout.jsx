@@ -1,13 +1,10 @@
 import { h } from "preact";
-import { useContext } from "preact/hooks";
-import { AuthContext } from "../../jwt";
+import {useContext} from "preact/hooks";
+import {AuthContext} from "../../jwt";
 
-import "./style.css";
-
-const Logout = () => {
+const LogOut = () => {
   const { jwt } = useContext(AuthContext);
-
-  const handleLogout = async () => {
+  const onLogOut = async () => {
     try {
       if (!jwt) {
         console.error("No token found in context");
@@ -29,13 +26,7 @@ const Logout = () => {
     }
   };
 
-  return (
-    <>
-      <button class="logout" onClick={handleLogout}>
-        Log out
-      </button>
-    </>
-  );
-};
+  return <li onClick={onLogOut}>Log out</li>
+}
 
-export default Logout;
+export default LogOut;
