@@ -48,6 +48,14 @@ th:last-of-type {
 }
 
 @media (max-width: 639px) {
+  th {
+    padding: 0px;
+  }
+
+  td:nth-of-type(3) {
+    width: 8em;
+  }
+
   th:last-of-type {
     width: 4em;
   }
