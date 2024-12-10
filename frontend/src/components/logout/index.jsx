@@ -1,5 +1,5 @@
 import { h } from "preact";
-import React, { useContext } from "react";
+import { useContext } from "preact/hooks";
 import { AuthContext } from "../../jwt";
 
 import "./style.css";
