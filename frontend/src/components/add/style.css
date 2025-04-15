@@ -61,3 +61,20 @@
   border-radius: 3px;
   margin-top: 1em;
 }
+
+.progress-bar-container {
+  width: 100%;
+  min-width: 15em;
+  background-color: #002b36;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 20px;
+  background-color: #ff6b6c;
+  text-align: center;
+  color: #e6e1c5;
+  line-height: 20px;
+  transition: width 0.3s ease;
+}
