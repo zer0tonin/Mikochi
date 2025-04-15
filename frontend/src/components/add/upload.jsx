@@ -5,7 +5,7 @@ import { AuthContext } from "../../jwt";
 import Icon, { BigIcon } from "../icon";
 import Modal, { ModalContent, ModalHeader } from "../modal";
 import "./style.css";
-import handleError from "../../error";
+import handleError, { getHttpErrorDescription } from "../../error";
 import Toast from "../toast";
 
 const UploadModal = ({
@@ -25,40 +25,41 @@ const UploadModal = ({
   }
 
   const onSubmit = (e) => {
-    const upload = async () => {
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-
-      const response = await fetch(
-        dirPath != ""
-          ? `/api/upload/${dirPath}/${selectedFile.name}`
-          : `/api/upload/${selectedFile.name}`,
-        {
-          method: "PUT",
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${jwt}`,
-          },
-          body: formData,
-        },
-      );
-
-      if (response.status !== 200) {
-        setError(await handleError(response));
-        return;
-      }
-      setError("");
-      setSelectedFile(null);
-      setRefresh(refresh + 1);
-      close();
-      setSuccess(true);
-      setTimeout(() => {
-        setSuccess(false);
-      }, 2000);
-    };
-
     e.preventDefault();
-    upload();
+
+    // We use XHR instead of fetch because it provides a simpler way to check upload progress
+    var xhr = new XMLHttpRequest();
+    xhr.open(
+      'PUT',
+      dirPath != ""
+        ? `/api/upload/${dirPath}/${selectedFile.name}`
+        : `/api/upload/${selectedFile.name}`,
+    )
+    xhr.setRequestHeader("Accept", "application/json")
+    xhr.setRequestHeader("Authorization", `Bearer ${jwt}`)
+
+    xhr.onload = () => {
+      if (xhr.status !== 200) {
+        setError(getHttpErrorDescription(xhr.status));
+      } else {
+        setError("");
+        setSelectedFile(null);
+        setRefresh(refresh + 1);
+        close();
+        setSuccess(true);
+        setTimeout(() => {
+          setSuccess(false);
+        }, 2000);
+      }
+    }
+    xhr.onerror = () => {
+      setError(getHttpErrorDescription(xhr.status));
+    }
+
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+
+    xhr.send(formData);
   };
 
   return (
