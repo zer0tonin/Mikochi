@@ -5,8 +5,9 @@ import { AuthContext } from "../../jwt";
 import Icon, { BigIcon } from "../icon";
 import Modal, { ModalContent, ModalHeader } from "../modal";
 import "./style.css";
-import handleError, { getHttpErrorDescription } from "../../error";
+import { getHttpErrorDescription } from "../../error";
 import Toast from "../toast";
+import ProgressBar from "./progress";
 
 const UploadModal = ({
   isOpen,
@@ -18,6 +19,8 @@ const UploadModal = ({
 }) => {
   const { jwt } = useContext(AuthContext);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [error, setError] = useState("");
 
   if (!isOpen) {
@@ -39,6 +42,7 @@ const UploadModal = ({
     xhr.setRequestHeader("Authorization", `Bearer ${jwt}`)
 
     xhr.onload = () => {
+      setUploading(false);
       if (xhr.status !== 200) {
         setError(getHttpErrorDescription(xhr.status));
       } else {
@@ -52,41 +56,54 @@ const UploadModal = ({
         }, 2000);
       }
     }
+
     xhr.onerror = () => {
+      setUploading(false);
       setError(getHttpErrorDescription(xhr.status));
+    }
+
+    xhr.upload.onprogress = (event) => {
+      if (event.lengthComputable) {
+        setProgress((event.loaded / event.total) * 100)
+      }
     }
 
     const formData = new FormData();
     formData.append("file", selectedFile);
-
     xhr.send(formData);
+
+    setUploading(true);
   };
 
   return (
     <Modal isOpen={isOpen} close={close}>
       <ModalHeader close={close}>File upload</ModalHeader>
       <ModalContent>
-        <form onSubmit={onSubmit}>
-          <label class="fileUpload">
-            <Icon name="file-add" />
-            <input
-              type="file"
-              class="hiddenInput"
-              onChange={(e) => setSelectedFile(e.target.files[0])}
-              aria-label="Select a file"
-            />
-            &nbsp;
-            {selectedFile != null ? (
-              <span>{selectedFile.name}</span>
-            ) : (
-              <span>File</span>
-            )}
-          </label>
-          <button type="submit" class="submit">
-            Upload
-          </button>
-          {error !== "" && <div class="error">{error}</div>}
-        </form>
+        { uploading ?
+          <ProgressBar progress={progress} />
+          : (
+          <form onSubmit={onSubmit}>
+            <label class="fileUpload">
+              <Icon name="file-add" />
+              <input
+                type="file"
+                class="hiddenInput"
+                onChange={(e) => setSelectedFile(e.target.files[0])}
+                aria-label="Select a file"
+              />
+              &nbsp;
+              {selectedFile != null ? (
+                <span>{selectedFile.name}</span>
+              ) : (
+                <span>File</span>
+              )}
+            </label>
+            <button type="submit" class="submit">
+              Upload
+            </button>
+            {error !== "" && <div class="error">{error}</div>}
+          </form>
+        )}
       </ModalContent>
     </Modal>
   );
