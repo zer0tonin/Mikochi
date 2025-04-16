@@ -20,7 +20,8 @@ const UploadModal = ({
   const { jwt } = useContext(AuthContext);
   const [selectedFiles, setSelectedFiles] = useState(null);
   const [uploading, setUploading] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const [uploaded, setUploaded] = useState(0);
+  const [uploadSize, setUploadSize] = useState(0)
   const [error, setError] = useState("");
 
   if (!isOpen) {
@@ -55,9 +56,15 @@ const UploadModal = ({
           reject(getHttpErrorDescription(xhr.status));
         }
 
+        xhr.upload.onloadstart = (event) => {
+          if (event.lengthComputable)  {
+            setUploadSize(uploadSize + event.total)
+          }
+        }
+
         xhr.upload.onprogress = (event) => {
           if (event.lengthComputable) {
-            setProgress((event.loaded / event.total) * 100)
+            setUploaded(uploaded + event.loaded)
           }
         }
 
@@ -73,8 +80,6 @@ const UploadModal = ({
       .then(() => {
         setError("");
         setSelectedFiles(null);
-        setUploading(false);
-        setProgress(0);
 
         setRefresh(refresh + 1);
         setSuccess(true);
@@ -85,9 +90,13 @@ const UploadModal = ({
       })
       .catch((err) => {
         setError(err);
+      })
+      .finally(() => {
         setUploading(false);
-        setProgress(0);
-      });
+        setUploaded(0);
+        setUploadSize(0);
+      })
+    ;
   };
 
   return (
@@ -95,7 +104,7 @@ const UploadModal = ({
       <ModalHeader close={close}>File upload</ModalHeader>
       <ModalContent>
         { uploading ?
-          <ProgressBar progress={progress} />
+          <ProgressBar done={uploaded} toDo={uploadSize} />
           : (
           <form onSubmit={onSubmit}>
             <label class="fileUpload">
