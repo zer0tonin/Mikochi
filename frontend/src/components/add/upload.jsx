@@ -31,52 +31,63 @@ const UploadModal = ({
     e.preventDefault();
 
     const upload = (file) => {
-      // We use XHR instead of fetch because it provides a simpler way to check upload progress
-      var xhr = new XMLHttpRequest();
-      xhr.open(
-        'PUT',
-        dirPath != ""
-          ? `/api/upload/${dirPath}/${file.name}`
-          : `/api/upload/${file.name}`,
-      )
-      xhr.setRequestHeader("Accept", "application/json")
-      xhr.setRequestHeader("Authorization", `Bearer ${jwt}`)
+      return new Promise((resolve, reject) => {
+        // We use XHR instead of fetch because it provides a simpler way to check upload progress
+        var xhr = new XMLHttpRequest();
+        xhr.open(
+          'PUT',
+          dirPath != ""
+            ? `/api/upload/${dirPath}/${file.name}`
+            : `/api/upload/${file.name}`,
+        )
+        xhr.setRequestHeader("Accept", "application/json")
+        xhr.setRequestHeader("Authorization", `Bearer ${jwt}`)
 
-      xhr.onload = () => {
-        setUploading(false);
-        if (xhr.status !== 200) {
-          setError(getHttpErrorDescription(xhr.status));
-        } else {
-          setError("");
-          setSelectedFiles(null);
-          setRefresh(refresh + 1);
-          close();
-          setSuccess(true);
-          setTimeout(() => {
-            setSuccess(false);
-          }, 2000);
+        xhr.onload = () => {
+          if (xhr.status !== 200) {
+            reject(getHttpErrorDescription(xhr.status));
+          } else {
+            resolve();
+          }
         }
-      }
 
-      xhr.onerror = () => {
-        setUploading(false);
-        setError(getHttpErrorDescription(xhr.status));
-      }
-
-      xhr.upload.onprogress = (event) => {
-        if (event.lengthComputable) {
-          setProgress((event.loaded / event.total) * 100)
+        xhr.onerror = () => {
+          reject(getHttpErrorDescription(xhr.status));
         }
-      }
 
-      const formData = new FormData();
-      formData.append("file", file);
-      xhr.send(formData);
+        xhr.upload.onprogress = (event) => {
+          if (event.lengthComputable) {
+            setProgress((event.loaded / event.total) * 100)
+          }
+        }
 
-      setUploading(true);
+        const formData = new FormData();
+        formData.append("file", file);
+        xhr.send(formData);
+
+        setUploading(true);
+      })
     }
 
-    selectedFiles.map(upload)
+    Promise.all(selectedFiles.map(upload))
+      .then(() => {
+        setError("");
+        setSelectedFiles(null);
+        setUploading(false);
+        setProgress(0);
+
+        setRefresh(refresh + 1);
+        setSuccess(true);
+        setTimeout(() => {
+          setSuccess(false);
+        }, 2000);
+        close();
+      })
+      .catch((err) => {
+        setError(err);
+        setUploading(false);
+        setProgress(0);
+      });
   };
 
   return (
