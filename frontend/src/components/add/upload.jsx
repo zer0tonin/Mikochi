@@ -18,7 +18,7 @@ const UploadModal = ({
   setSuccess,
 }) => {
   const { jwt } = useContext(AuthContext);
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFiles, setSelectedFiles] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState("");
@@ -30,49 +30,52 @@ const UploadModal = ({
   const onSubmit = (e) => {
     e.preventDefault();
 
-    // We use XHR instead of fetch because it provides a simpler way to check upload progress
-    var xhr = new XMLHttpRequest();
-    xhr.open(
-      'PUT',
-      dirPath != ""
-        ? `/api/upload/${dirPath}/${selectedFile.name}`
-        : `/api/upload/${selectedFile.name}`,
-    )
-    xhr.setRequestHeader("Accept", "application/json")
-    xhr.setRequestHeader("Authorization", `Bearer ${jwt}`)
+    const upload = (filename) => {
+      // We use XHR instead of fetch because it provides a simpler way to check upload progress
+      var xhr = new XMLHttpRequest();
+      xhr.open(
+        'PUT',
+        dirPath != ""
+          ? `/api/upload/${dirPath}/${filename}`
+          : `/api/upload/${filename}`,
+      )
+      xhr.setRequestHeader("Accept", "application/json")
+      xhr.setRequestHeader("Authorization", `Bearer ${jwt}`)
 
-    xhr.onload = () => {
-      setUploading(false);
-      if (xhr.status !== 200) {
+      xhr.onload = () => {
+        setUploading(false);
+        if (xhr.status !== 200) {
+          setError(getHttpErrorDescription(xhr.status));
+        } else {
+          setError("");
+          setSelectedFiles(null);
+          setRefresh(refresh + 1);
+          close();
+          setSuccess(true);
+          setTimeout(() => {
+            setSuccess(false);
+          }, 2000);
+        }
+      }
+
+      xhr.onerror = () => {
+        setUploading(false);
         setError(getHttpErrorDescription(xhr.status));
-      } else {
-        setError("");
-        setSelectedFile(null);
-        setRefresh(refresh + 1);
-        close();
-        setSuccess(true);
-        setTimeout(() => {
-          setSuccess(false);
-        }, 2000);
       }
-    }
 
-    xhr.onerror = () => {
-      setUploading(false);
-      setError(getHttpErrorDescription(xhr.status));
-    }
-
-    xhr.upload.onprogress = (event) => {
-      if (event.lengthComputable) {
-        setProgress((event.loaded / event.total) * 100)
+      xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable) {
+          setProgress((event.loaded / event.total) * 100)
+        }
       }
+
+      const formData = new FormData();
+      formData.append("file", filename);
+      xhr.send(formData);
+
+      setUploading(true);
     }
 
-    const formData = new FormData();
-    formData.append("file", selectedFile);
-    xhr.send(formData);
-
-    setUploading(true);
   };
 
   return (
@@ -84,18 +87,27 @@ const UploadModal = ({
           : (
           <form onSubmit={onSubmit}>
             <label class="fileUpload">
-              <Icon name="file-add" />
               <input
                 type="file"
                 class="hiddenInput"
-                onChange={(e) => setSelectedFile(e.target.files[0])}
+                onChange={(e) => setSelectedFiles(Array.from(e.target.files))}
                 aria-label="Select a file"
+                multiple
               />
-              &nbsp;
-              {selectedFile != null ? (
-                <span>{selectedFile.name}</span>
+              {selectedFiles != null ? (
+                selectedFiles.map((f) => (
+                  <div>
+                    <Icon name="file-add" />
+                    &nbsp;
+                    <span>{f.name}</span>
+                  </div>
+                ))
               ) : (
-                <span>File</span>
+                <>
+                  <Icon name="file-add" />
+                  &nbsp;
+                  <span>File</span>
+                </>
               )}
             </label>
             <button type="submit" class="submit">
