@@ -57,7 +57,7 @@ const DeleteModal = ({
         <Icon name="close" onClick={close} title="Close" />
       </div>
       <ModalContent>
-        <button type="submit" onClick={onSubmit} class="submit">
+        <button type="submit" onClick={onSubmit} class="delete-submit">
           Delete
         </button>
         <button type="cancel" onClick={close} class="cancel">
