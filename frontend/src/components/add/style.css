@@ -51,6 +51,12 @@
   margin-left: 1em;
 }
 
+.submit:disabled {
+  background-color: #002b36;
+  color: #e6e1c5;
+  border-radius: 3px;
+}
+
 .error {
   display: flex;
   justify-content: center;
