@@ -76,6 +76,8 @@ const UploadModal = ({
       setUploading(true);
     }
 
+    console.log("Clicked");
+
   };
 
   return (
@@ -110,7 +112,7 @@ const UploadModal = ({
                 </>
               )}
             </label>
-            <button type="submit" class="submit">
+            <button type="submit" class="submit" disabled={selectedFiles == null}>
               Upload
             </button>
             {error !== "" && <div class="error">{error}</div>}
