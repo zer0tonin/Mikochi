@@ -30,14 +30,14 @@ const UploadModal = ({
   const onSubmit = (e) => {
     e.preventDefault();
 
-    const upload = (filename) => {
+    const upload = (file) => {
       // We use XHR instead of fetch because it provides a simpler way to check upload progress
       var xhr = new XMLHttpRequest();
       xhr.open(
         'PUT',
         dirPath != ""
-          ? `/api/upload/${dirPath}/${filename}`
-          : `/api/upload/${filename}`,
+          ? `/api/upload/${dirPath}/${file.name}`
+          : `/api/upload/${file.name}`,
       )
       xhr.setRequestHeader("Accept", "application/json")
       xhr.setRequestHeader("Authorization", `Bearer ${jwt}`)
@@ -70,14 +70,13 @@ const UploadModal = ({
       }
 
       const formData = new FormData();
-      formData.append("file", filename);
+      formData.append("file", file);
       xhr.send(formData);
 
       setUploading(true);
     }
 
-    console.log("Clicked");
-
+    selectedFiles.map(upload)
   };
 
   return (
