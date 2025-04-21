@@ -30,10 +30,7 @@ func NewFileCache(dataDir string, pathConverter *PathConverter) *FileCache {
 
 // resets the cache
 func (f *FileCache) Reset() {
-	ok := f.mutex.TryLock()
-	if !ok {
-		return
-	}
+	f.mutex.Lock()
 	defer f.mutex.Unlock()
 
 	log.Printf("Caching %s", f.dataDir)
