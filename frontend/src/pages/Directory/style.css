@@ -52,8 +52,12 @@ th:last-of-type {
     padding: 0px;
   }
 
+  th:nth-of-type(3) {
+    width: 5em;
+  }
+
   td:nth-of-type(3) {
-    width: 8em;
+    width: 5em;
   }
 
   th:last-of-type {
