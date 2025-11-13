@@ -6,7 +6,7 @@ import LogOut from "./logout";
 import { mkdirOpen } from "../add/mkdir";
 import { uploadOpen } from "../add/upload";
 
-const Menu = ({ onHomeClick }) => {
+const DropDownMenu = ({ children, iconName }) => {
   const [visible, setVisible] = useState(false);
   const menuRef = useRef(null);
 
@@ -30,16 +30,24 @@ const Menu = ({ onHomeClick }) => {
 
   return (
     <span ref={menuRef} class="menu" onClick={() => setVisible(!visible)}>
-      <Icon name="menu" />
+      <Icon name={iconName} />
       {visible && (
         <ul class="dropdown-content">
-          <li onClick={onHomeClick}>Home</li>
-          <li onClick={() => (mkdirOpen.value = true)}>New directory</li>
-          <li onClick={() => (uploadOpen.value = true)}>Upload</li>
-          <LogOut />
+          {children}
         </ul>
       )}
     </span>
+  );
+};
+
+const Menu = ({ onHomeClick }) => {
+  return (
+    <DropDownMenu iconName={"menu"}>
+      <li onClick={onHomeClick}>Home</li>
+      <li onClick={() => (mkdirOpen.value = true)}>New directory</li>
+      <li onClick={() => (uploadOpen.value = true)}>Upload</li>
+      <LogOut />
+    </DropDownMenu>
   );
 };
 
