@@ -1,8 +1,8 @@
 import { h } from "preact";
 import { useContext } from "preact/hooks";
+import {AuthContext} from "../../jwt";
+import Icon from "../icon";
 
-import { AuthContext } from "../jwt";
-import Icon from "./icon";
 
 const downloadFile = (request, fileName) => {
   const link = document.createElement("a");

@@ -2,10 +2,6 @@ import { h } from "preact";
 import { useState, useEffect, useContext } from "preact/hooks";
 import { useLocation } from "preact-iso";
 
-import CopyLink from "../../components/copylink";
-import Download from "../../components/download";
-import Rename from "../../components/rename";
-import Delete from "../../components/delete";
 import Add from "../../components/add";
 import Icon from "../../components/icon";
 
