@@ -1,12 +1,14 @@
 import { h } from "preact";
 import { useContext, useState } from "preact/hooks";
+import {signal} from "@preact/signals";
 
 import { AuthContext } from "../../jwt";
-import { BigIcon } from "../icon";
 import Modal, { ModalContent, ModalHeader } from "../modal";
 import "./style.css";
 import handleError from "../../error";
 import Toast from "../toast";
+
+export const mkdirOpen = signal(false);
 
 const MkdirModal = ({
   isOpen,
@@ -76,14 +78,13 @@ const MkdirModal = ({
 };
 
 const Mkdir = ({ dirPath, refresh, setRefresh }) => {
-  const [modalOpen, setModalOpen] = useState(false);
   const [success, setSuccess] = useState(false); //into signal
 
   return (
     <>
       <MkdirModal
-        isOpen={modalOpen}
-        close={() => setModalOpen(false)}
+        isOpen={mkdirOpen.value}
+        close={() => mkdirOpen.value = false}
         dirPath={dirPath}
         refresh={refresh}
         setRefresh={setRefresh}
