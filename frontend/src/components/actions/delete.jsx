@@ -69,7 +69,7 @@ const DeleteModal = ({
   );
 };
 
-const Delete = ({ filePath, refresh, setRefresh }) => {
+export const DeleteIcon = ({ filePath, refresh, setRefresh }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -91,4 +91,24 @@ const Delete = ({ filePath, refresh, setRefresh }) => {
   );
 };
 
-export default Delete;
+export const DeleteListItem = ({ filePath, refresh, setRefresh }) => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  return (
+    <>
+      <li onClick={() => setModalOpen(true)}>Delete</li>
+      <DeleteModal
+        isOpen={modalOpen}
+        close={() => setModalOpen(false)}
+        filePath={filePath}
+        refresh={refresh}
+        setRefresh={setRefresh}
+        setSuccess={setSuccess}
+      />
+      {success && (
+        <Toast text="File Deleted Successfully" isVisible={success} />
+      )}
+    </>
+  );
+};

@@ -1,7 +1,7 @@
 import { h } from "preact";
 import Download from "./download";
-import Rename from "./rename";
-import Delete from "./delete";
+import {RenameIcon, RenameListItem} from "./rename";
+import {DeleteIcon, DeleteListItem} from "./delete";
 import CopyLink from "./copylink";
 import {useEffect, useRef, useState} from "preact/hooks";
 import Icon from "../icon";
@@ -30,7 +30,7 @@ const DropDownMenu = ({ children }) => {
 
   return (
     <span ref={menuRef} class="actions-menu" onClick={() => setVisible(!visible)}>
-      <Icon name={"more-vertical-alt"} />
+      <Icon name="more-vertical-alt" title="actions" />
       {visible && (
         <ul class="actions-dropdown-content">
           {children}
@@ -44,22 +44,34 @@ export const DirActions = ({filePath, refresh, setRefresh}) => {
   if (window.innerWidth < 768) {
     return (
       <DropDownMenu>
-        <li>Download</li>
-        <li>Rename</li>
-        <li>Delete</li>
+        <Download filePath={`${filePath}/`}>
+          <li>Download</li>
+        </Download>
+        <RenameListItem
+          filePath={filePath}
+          refresh={refresh}
+          setRefresh={setRefresh}
+        />
+        <DeleteListItem
+          filePath={filePath}
+          refresh={refresh}
+          setRefresh={setRefresh}
+        />
       </DropDownMenu>
     );
   }
 
   return (
     <>
-      <Download filePath={`${filePath}/`} />
-      <Rename
+      <Download filePath={`${filePath}/`}>
+        <Icon name="arrow-down-o" title="Download" />
+      </Download>
+      <RenameIcon
         filePath={filePath}
         refresh={refresh}
         setRefresh={setRefresh}
       />
-      <Delete
+      <DeleteIcon
         filePath={filePath}
         refresh={refresh}
         setRefresh={setRefresh}
@@ -71,14 +83,16 @@ export const DirActions = ({filePath, refresh, setRefresh}) => {
 export const FileActions = ({filePath, refresh, setRefresh}) => {
   return (
     <>
-      <Download filePath={filePath} />
+      <Download filePath={`${filePath}/`}>
+        <Icon name="arrow-down-o" title="Download" />
+      </Download>
       <CopyLink filePath={filePath} />
-      <Rename
+      <RenameIcon
         filePath={filePath}
         refresh={refresh}
         setRefresh={setRefresh}
       />
-      <Delete
+      <DeleteIcon
         filePath={filePath}
         refresh={refresh}
         setRefresh={setRefresh}

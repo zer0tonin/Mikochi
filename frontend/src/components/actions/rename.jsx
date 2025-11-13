@@ -78,7 +78,7 @@ const RenameModal = ({
   );
 };
 
-const Rename = ({ filePath, refresh, setRefresh }) => {
+export const RenameIcon = ({ filePath, refresh, setRefresh }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -100,4 +100,24 @@ const Rename = ({ filePath, refresh, setRefresh }) => {
   );
 };
 
-export default Rename;
+export const RenameListItem = ({ filePath, refresh, setRefresh }) => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  return (
+    <>
+      <li onClick={() => setModalOpen(true)}>Rename</li>
+      <RenameModal
+        isOpen={modalOpen}
+        close={() => setModalOpen(false)}
+        filePath={filePath}
+        refresh={refresh}
+        setRefresh={setRefresh}
+        setSuccess={setSuccess}
+      />
+      {success && (
+        <Toast text="File Renamed Successfully" isVisible={success} />
+      )}
+    </>
+  );
+};
