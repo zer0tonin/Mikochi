@@ -143,17 +143,10 @@ const UploadModal = ({
 };
 
 const Upload = ({ dirPath, refresh, setRefresh }) => {
-  const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false); //into signal
   const [success, setSuccess] = useState(false);
   return (
     <>
-      <div class="floatingUpload">
-        <BigIcon
-          name="software-upload"
-          onClick={() => setModalOpen(true)}
-          title="Upload"
-        />
-      </div>
       <UploadModal
         isOpen={modalOpen}
         close={() => setModalOpen(false)}

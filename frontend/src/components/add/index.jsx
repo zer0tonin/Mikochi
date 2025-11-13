@@ -2,18 +2,40 @@ import { h } from "preact";
 import { useState } from "preact/hooks";
 
 import "./style.css";
-import Upload from "./upload";
-import Mkdir from "./mkdir";
 import { BigIcon } from "../icon";
 
-const Add = ({ dirPath, refresh, setRefresh }) => {
+const Mkdir = () => {
+  return (
+    <div class="floatingMkdir">
+      <BigIcon
+        name="folder-add"
+        onClick={() => setModalOpen(true)}
+        title="Create directory"
+      />
+    </div>
+  );
+};
+
+const Upload = () => {
+  return (
+    <div class="floatingUpload">
+      <BigIcon
+        name="software-upload"
+        onClick={() => setModalOpen(true)}
+        title="Upload"
+      />
+    </div>
+  );
+};
+
+const Add = () => {
   const [extend, setExtend] = useState(false);
 
   if (extend) {
     return (
       <div class="floating">
-        <Upload dirPath={dirPath} refresh={refresh} setRefresh={setRefresh} />
-        <Mkdir dirPath={dirPath} refresh={refresh} setRefresh={setRefresh} />
+        <Upload/>
+        <Mkdir/>
         <BigIcon
           name="close-o"
           onClick={() => setExtend(false)}

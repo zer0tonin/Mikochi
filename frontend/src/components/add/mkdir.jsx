@@ -77,17 +77,10 @@ const MkdirModal = ({
 
 const Mkdir = ({ dirPath, refresh, setRefresh }) => {
   const [modalOpen, setModalOpen] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [success, setSuccess] = useState(false); //into signal
 
   return (
     <>
-      <div class="floatingMkdir">
-        <BigIcon
-          name="folder-add"
-          onClick={() => setModalOpen(true)}
-          title="Create directory"
-        />
-      </div>
       <MkdirModal
         isOpen={modalOpen}
         close={() => setModalOpen(false)}
