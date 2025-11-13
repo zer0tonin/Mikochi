@@ -191,8 +191,7 @@ const Directory = () => {
             })}
           </tbody>
         </table>
-        <Add
-        />
+        <Add/>
         <Upload
           dirPath={location.path}
           refresh={refresh}

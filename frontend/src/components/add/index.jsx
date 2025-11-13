@@ -3,13 +3,15 @@ import { useState } from "preact/hooks";
 
 import "./style.css";
 import { BigIcon } from "../icon";
+import {uploadOpen} from "./upload";
+import {mkdirOpen} from "./mkdir";
 
 const Mkdir = () => {
   return (
     <div class="floatingMkdir">
       <BigIcon
         name="folder-add"
-        onClick={() => setModalOpen(true)}
+        onClick={() => mkdirOpen.value = true}
         title="Create directory"
       />
     </div>
@@ -21,7 +23,7 @@ const Upload = () => {
     <div class="floatingUpload">
       <BigIcon
         name="software-upload"
-        onClick={() => setModalOpen(true)}
+        onClick={() => uploadOpen.value = true}
         title="Upload"
       />
     </div>

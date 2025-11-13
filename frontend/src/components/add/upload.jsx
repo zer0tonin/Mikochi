@@ -1,13 +1,16 @@
 import { h } from "preact";
 import { useContext, useState } from "preact/hooks";
+import {signal} from "@preact/signals";
 
 import { AuthContext } from "../../jwt";
-import Icon, { BigIcon } from "../icon";
+import Icon from "../icon";
 import Modal, { ModalContent, ModalHeader } from "../modal";
 import "./style.css";
 import { getHttpErrorDescription } from "../../error";
 import Toast from "../toast";
 import ProgressBar from "./progress";
+
+export const uploadOpen = signal(false);
 
 const UploadModal = ({
   isOpen,
@@ -143,13 +146,12 @@ const UploadModal = ({
 };
 
 const Upload = ({ dirPath, refresh, setRefresh }) => {
-  const [modalOpen, setModalOpen] = useState(false); //into signal
   const [success, setSuccess] = useState(false);
   return (
     <>
       <UploadModal
-        isOpen={modalOpen}
-        close={() => setModalOpen(false)}
+        isOpen={uploadOpen.value}
+        close={() => uploadOpen.value = false}
         dirPath={dirPath}
         refresh={refresh}
         setRefresh={setRefresh}
