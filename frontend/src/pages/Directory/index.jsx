@@ -23,6 +23,7 @@ import { AuthContext } from "../../jwt";
 import "./style.css";
 import Upload from "../../components/add/upload";
 import Mkdir from "../../components/add/mkdir";
+import {DirActions, FileActions} from "../../components/actions";
 
 const formatFileSize = (bytes) => {
   if (bytes === 0) return "0 bytes";
@@ -144,13 +145,7 @@ const Directory = () => {
                     </td>
                     <td />
                     <td>
-                      <Download filePath={`${filePath}/`} />
-                      <Rename
-                        filePath={filePath}
-                        refresh={refresh}
-                        setRefresh={setRefresh}
-                      />
-                      <Delete
+                      <DirActions 
                         filePath={filePath}
                         refresh={refresh}
                         setRefresh={setRefresh}
@@ -173,14 +168,7 @@ const Directory = () => {
                   </td>
                   <td>{formatFileSize(fileInfo.size)}</td>
                   <td>
-                    <Download filePath={filePath} />
-                    <CopyLink filePath={filePath} />
-                    <Rename
-                      filePath={filePath}
-                      refresh={refresh}
-                      setRefresh={setRefresh}
-                    />
-                    <Delete
+                    <FileActions
                       filePath={filePath}
                       refresh={refresh}
                       setRefresh={setRefresh}
@@ -191,7 +179,7 @@ const Directory = () => {
             })}
           </tbody>
         </table>
-        <Add/>
+        <Add />
         <Upload
           dirPath={location.path}
           refresh={refresh}
