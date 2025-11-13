@@ -4,6 +4,12 @@
   right: 10%;
 }
 
+@media (max-width: 768px) {
+  .floating {
+    display: none;
+  }
+}
+
 .floatingUpload {
   position: relative;
   bottom: 2em;
