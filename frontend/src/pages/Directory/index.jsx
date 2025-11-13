@@ -21,6 +21,8 @@ import { NameHeader, SizeHeader, sorting } from "../../components/sorting";
 import { AuthContext } from "../../jwt";
 
 import "./style.css";
+import Upload from "../../components/add/upload";
+import Mkdir from "../../components/add/mkdir";
 
 const formatFileSize = (bytes) => {
   if (bytes === 0) return "0 bytes";
@@ -190,6 +192,13 @@ const Directory = () => {
           </tbody>
         </table>
         <Add
+        />
+        <Upload
+          dirPath={location.path}
+          refresh={refresh}
+          setRefresh={setRefresh}
+        />
+        <Mkdir
           dirPath={location.path}
           refresh={refresh}
           setRefresh={setRefresh}
