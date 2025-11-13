@@ -1,9 +1,9 @@
 import { h } from "preact";
 import Download from "./download";
-import {RenameIcon, RenameListItem} from "./rename";
-import {DeleteIcon, DeleteListItem} from "./delete";
+import { RenameIcon, RenameListItem } from "./rename";
+import { DeleteIcon, DeleteListItem } from "./delete";
 import CopyLink from "./copylink";
-import {useEffect, useRef, useState} from "preact/hooks";
+import { useEffect, useRef, useState } from "preact/hooks";
 import Icon from "../icon";
 
 const DropDownMenu = ({ children }) => {
@@ -29,18 +29,18 @@ const DropDownMenu = ({ children }) => {
   }, [visible]);
 
   return (
-    <span ref={menuRef} class="actions-menu" onClick={() => setVisible(!visible)}>
+    <span
+      ref={menuRef}
+      class="actions-menu"
+      onClick={() => setVisible(!visible)}
+    >
       <Icon name="more-vertical-alt" title="actions" />
-      {visible && (
-        <ul class="actions-dropdown-content">
-          {children}
-        </ul>
-      )}
+      {visible && <ul class="actions-dropdown-content">{children}</ul>}
     </span>
   );
 };
 
-export const DirActions = ({filePath, refresh, setRefresh}) => {
+export const DirActions = ({ filePath, refresh, setRefresh }) => {
   if (window.innerWidth < 768) {
     return (
       <DropDownMenu>
@@ -78,9 +78,9 @@ export const DirActions = ({filePath, refresh, setRefresh}) => {
       />
     </>
   );
-}
+};
 
-export const FileActions = ({filePath, refresh, setRefresh}) => {
+export const FileActions = ({ filePath, refresh, setRefresh }) => {
   return (
     <>
       <Download filePath={`${filePath}/`}>
@@ -99,4 +99,4 @@ export const FileActions = ({filePath, refresh, setRefresh}) => {
       />
     </>
   );
-}
+};

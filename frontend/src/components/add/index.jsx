@@ -5,7 +5,7 @@ import "./style.css";
 import { BigIcon } from "../icon";
 import { uploadOpen } from "./upload";
 import { mkdirOpen } from "./mkdir";
-import {a} from "../../../dist/assets/index-BBmHDNJj";
+import { a } from "../../../dist/assets/index-BBmHDNJj";
 
 const Mkdir = () => {
   return (
