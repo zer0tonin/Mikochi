@@ -5,6 +5,10 @@ import Delete from "./delete";
 import CopyLink from "./copylink";
 
 export const DirActions = ({filePath, refresh, setRefresh}) => {
+  if (window.innerWidth < 768) {
+    console.log("here");
+  }
+
   return (
     <>
       <Download filePath={`${filePath}/`} />
