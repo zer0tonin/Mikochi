@@ -31,11 +31,7 @@ const DropDownMenu = ({ children }) => {
   return (
     <span ref={menuRef} class="menu" onClick={() => setVisible(!visible)}>
       <Icon name={"menu"} />
-      {visible && (
-        <ul class="dropdown-content">
-          {children}
-        </ul>
-      )}
+      {visible && <ul class="dropdown-content">{children}</ul>}
     </span>
   );
 };

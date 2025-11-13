@@ -19,7 +19,7 @@ import { AuthContext } from "../../jwt";
 import "./style.css";
 import Upload from "../../components/add/upload";
 import Mkdir from "../../components/add/mkdir";
-import {DirActions, FileActions} from "../../components/actions";
+import { DirActions, FileActions } from "../../components/actions";
 
 const formatFileSize = (bytes) => {
   if (bytes === 0) return "0 bytes";
@@ -144,7 +144,7 @@ const Directory = () => {
                     </td>
                     <td />
                     <td>
-                      <DirActions 
+                      <DirActions
                         filePath={filePath}
                         refresh={refresh}
                         setRefresh={setRefresh}

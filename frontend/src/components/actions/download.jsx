@@ -1,7 +1,6 @@
 import { h } from "preact";
 import { useContext } from "preact/hooks";
-import {AuthContext} from "../../jwt";
-
+import { AuthContext } from "../../jwt";
 
 const downloadFile = (request, fileName) => {
   const link = document.createElement("a");
@@ -35,7 +34,11 @@ const Download = ({ filePath, children }) => {
   };
 
   return (
-    <a href="#" onClick={downloadWithAuth} style={{ color: "#E6E1C5", textDecoration: "none" }}>
+    <a
+      href="#"
+      onClick={downloadWithAuth}
+      style={{ color: "#E6E1C5", textDecoration: "none" }}
+    >
       {children}
     </a>
   );

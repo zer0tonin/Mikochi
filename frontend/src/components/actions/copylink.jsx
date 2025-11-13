@@ -1,8 +1,7 @@
 import { h } from "preact";
 import { useContext, useState } from "preact/hooks";
 
-
-import {AuthContext} from "../../jwt";
+import { AuthContext } from "../../jwt";
 import Icon from "../icon";
 import Toast from "../toast";
 
