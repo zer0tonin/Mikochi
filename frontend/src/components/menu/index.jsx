@@ -3,6 +3,8 @@ import "./style.css";
 import { useState } from "preact/hooks";
 import Icon from "../icon";
 import LogOut from "./logout";
+import {mkdirOpen} from "../add/mkdir";
+import {uploadOpen} from "../add/upload";
 
 const Menu = ({ onHomeClick }) => {
   const [visible, setVisible] = useState(false);
@@ -12,6 +14,8 @@ const Menu = ({ onHomeClick }) => {
       {visible && (
         <ul class="dropdown-content">
           <li onClick={onHomeClick}>Home</li>
+          <li onClick={() => mkdirOpen.value = true}>New directory</li>
+          <li onClick={() => uploadOpen.value = true}>Upload</li>
           <LogOut />
         </ul>
       )}
