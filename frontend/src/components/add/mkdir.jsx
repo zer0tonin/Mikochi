@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { useContext, useState } from "preact/hooks";
-import {signal} from "@preact/signals";
+import { signal } from "@preact/signals";
 
 import { AuthContext } from "../../jwt";
 import Modal, { ModalContent, ModalHeader } from "../modal";
@@ -84,7 +84,7 @@ const Mkdir = ({ dirPath, refresh, setRefresh }) => {
     <>
       <MkdirModal
         isOpen={mkdirOpen.value}
-        close={() => mkdirOpen.value = false}
+        close={() => (mkdirOpen.value = false)}
         dirPath={dirPath}
         refresh={refresh}
         setRefresh={setRefresh}

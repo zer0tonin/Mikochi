@@ -1,6 +1,6 @@
 import { h } from "preact";
 import { useContext, useState } from "preact/hooks";
-import {signal} from "@preact/signals";
+import { signal } from "@preact/signals";
 
 import { AuthContext } from "../../jwt";
 import Icon from "../icon";
@@ -24,7 +24,7 @@ const UploadModal = ({
   const [selectedFiles, setSelectedFiles] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [uploaded, setUploaded] = useState(0);
-  const [uploadSize, setUploadSize] = useState(0)
+  const [uploadSize, setUploadSize] = useState(0);
   const [error, setError] = useState("");
 
   if (!isOpen) {
@@ -39,13 +39,13 @@ const UploadModal = ({
         // We use XHR instead of fetch because it provides a simpler way to check upload progress
         var xhr = new XMLHttpRequest();
         xhr.open(
-          'PUT',
+          "PUT",
           dirPath != ""
             ? `/api/upload/${dirPath}/${file.name}`
             : `/api/upload/${file.name}`,
-        )
-        xhr.setRequestHeader("Accept", "application/json")
-        xhr.setRequestHeader("Authorization", `Bearer ${jwt}`)
+        );
+        xhr.setRequestHeader("Accept", "application/json");
+        xhr.setRequestHeader("Authorization", `Bearer ${jwt}`);
 
         xhr.onload = () => {
           if (xhr.status !== 200) {
@@ -53,31 +53,31 @@ const UploadModal = ({
           } else {
             resolve();
           }
-        }
+        };
 
         xhr.onerror = () => {
           reject(getHttpErrorDescription(xhr.status));
-        }
+        };
 
         xhr.upload.onloadstart = (event) => {
-          if (event.lengthComputable)  {
-            setUploadSize(uploadSize + event.total)
+          if (event.lengthComputable) {
+            setUploadSize(uploadSize + event.total);
           }
-        }
+        };
 
         xhr.upload.onprogress = (event) => {
           if (event.lengthComputable) {
-            setUploaded(uploaded + event.loaded)
+            setUploaded(uploaded + event.loaded);
           }
-        }
+        };
 
         const formData = new FormData();
         formData.append("file", file);
         xhr.send(formData);
 
         setUploading(true);
-      })
-    }
+      });
+    };
 
     Promise.all(selectedFiles.map(upload))
       .then(() => {
@@ -98,17 +98,16 @@ const UploadModal = ({
         setUploading(false);
         setUploaded(0);
         setUploadSize(0);
-      })
-    ;
+      });
   };
 
   return (
     <Modal isOpen={isOpen} close={close}>
       <ModalHeader close={close}>File upload</ModalHeader>
       <ModalContent>
-        { uploading ?
+        {uploading ? (
           <ProgressBar done={uploaded} toDo={uploadSize} />
-          : (
+        ) : (
           <form onSubmit={onSubmit}>
             <label class="fileUpload">
               <input
@@ -134,7 +133,11 @@ const UploadModal = ({
                 </>
               )}
             </label>
-            <button type="submit" class="submit" disabled={selectedFiles == null}>
+            <button
+              type="submit"
+              class="submit"
+              disabled={selectedFiles == null}
+            >
               Upload
             </button>
             {error !== "" && <div class="error">{error}</div>}
@@ -151,7 +154,7 @@ const Upload = ({ dirPath, refresh, setRefresh }) => {
     <>
       <UploadModal
         isOpen={uploadOpen.value}
-        close={() => uploadOpen.value = false}
+        close={() => (uploadOpen.value = false)}
         dirPath={dirPath}
         refresh={refresh}
         setRefresh={setRefresh}
