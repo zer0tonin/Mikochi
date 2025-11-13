@@ -30,6 +30,9 @@ const formatFileSize = (bytes) => {
   return `${size} ${sizes[i]}`;
 };
 
+// TODO: replace the whole refresh/setRefresh mess by a signal
+// TODO: split directory into main page thing and a FilesTable components
+
 const Directory = () => {
   const location = useLocation();
   const { jwt } = useContext(AuthContext);

@@ -100,6 +100,8 @@ export const RenameIcon = ({ filePath, refresh, setRefresh }) => {
   );
 };
 
+//FIXME: this doesn't work, because when we setModalOpen(true), we also close the menu, thus popping off the RenameModal from the tree
+// we should probably refactor this with signals (like upload)
 export const RenameListItem = ({ filePath, refresh, setRefresh }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [success, setSuccess] = useState(false);
