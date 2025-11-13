@@ -69,3 +69,25 @@
   border-radius: 3px;
   margin-left: 1em;
 }
+
+.actions-menu:hover {
+  cursor: pointer;
+}
+
+.actions-dropdown-content {
+  position: absolute;
+  background-color: #001d24;
+  min-width: 8em;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  border-radius: 0.5em;
+  right: 0;
+  left: auto;
+  max-width: 70%;
+}
+
+.actions-dropdown-content li {
+  padding: 1em 1.5em;
+  text-decoration: none;
+  display: block;
+}
