@@ -8,17 +8,11 @@ import "./style.css";
 import handleError from "../../error";
 import Toast from "../toast";
 import { signal } from "@preact/signals";
+import { refresh } from "../../pages/Directory";
 
 export const deleteFilePath = signal(null);
 
-const DeleteModal = ({
-  isOpen,
-  close,
-  filePath,
-  refresh,
-  setRefresh,
-  setSuccess,
-}) => {
+const DeleteModal = ({ isOpen, close, filePath, setSuccess }) => {
   const { jwt } = useContext(AuthContext);
   const [error, setError] = useState("");
 
@@ -43,7 +37,7 @@ const DeleteModal = ({
         return;
       }
       setError("");
-      setRefresh(refresh + 1);
+      refresh.value = refresh.value + 1;
       close();
       setSuccess(true);
       setTimeout(() => {
@@ -72,7 +66,7 @@ const DeleteModal = ({
   );
 };
 
-const Delete = ({ refresh, setRefresh }) => {
+const Delete = () => {
   const [success, setSuccess] = useState(false);
 
   return (
@@ -81,8 +75,6 @@ const Delete = ({ refresh, setRefresh }) => {
         isOpen={deleteFilePath.value != null}
         close={() => (deleteFilePath.value = null)}
         filePath={deleteFilePath.value}
-        refresh={refresh}
-        setRefresh={setRefresh}
         setSuccess={setSuccess}
       />
       {success && (

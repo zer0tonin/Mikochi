@@ -22,6 +22,9 @@ import Mkdir from "../../components/add/mkdir";
 import { DirActions, FileActions } from "../../components/actions";
 import Rename from "../../components/actions/rename";
 import Delete from "../../components/actions/delete";
+import { signal } from "@preact/signals";
+
+export const refresh = signal(0);
 
 const formatFileSize = (bytes) => {
   if (bytes === 0) return "0 bytes";
@@ -32,7 +35,6 @@ const formatFileSize = (bytes) => {
   return `${size} ${sizes[i]}`;
 };
 
-// TODO: replace the whole refresh/setRefresh mess by a signal
 // TODO: split directory into main page thing and a FilesTable components
 
 const Directory = () => {
@@ -42,7 +44,6 @@ const Directory = () => {
   const [fileInfos, setFileInfos] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [compare, setCompare] = useState("name_asc");
-  const [refresh, setRefresh] = useState(0); // super hacky way to trigger effects
 
   // we listen to the refresh event to properly handle both location changes and searches without race conditions
   useEffect(() => {
@@ -67,15 +68,15 @@ const Directory = () => {
       setFileInfos(json["fileInfos"]);
     };
 
-    if (refresh == 0 && searchQuery == "") {
+    if (refresh.value == 0 && searchQuery == "") {
       return;
     }
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refresh]);
+  }, [refresh.value]);
 
   useEffect(() => {
-    setRefresh(refresh + 1);
+    refresh.value = refresh.value + 1;
     if (searchQuery != "") {
       setCompare("none");
     } else if (compare === "none") {
@@ -99,7 +100,7 @@ const Directory = () => {
       setCompare("name_asc");
     }
 
-    setRefresh(refresh + 1);
+    refresh.value = refresh.value + 1;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.path]);
 
@@ -173,18 +174,10 @@ const Directory = () => {
           </tbody>
         </table>
         <Add />
-        <Upload
-          dirPath={location.path}
-          refresh={refresh}
-          setRefresh={setRefresh}
-        />
-        <Mkdir
-          dirPath={location.path}
-          refresh={refresh}
-          setRefresh={setRefresh}
-        />
-        <Rename refresh={refresh} setRefresh={setRefresh} />
-        <Delete refresh={refresh} setRefresh={setRefresh} />
+        <Upload dirPath={location.path} />
+        <Mkdir dirPath={location.path} />
+        <Rename />
+        <Delete />
       </main>
     </>
   );

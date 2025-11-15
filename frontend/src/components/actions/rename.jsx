@@ -8,17 +8,11 @@ import Modal, { ModalContent, ModalHeader } from "../modal";
 import handleError from "../../error";
 import Toast from "../toast";
 import { signal } from "@preact/signals";
+import { refresh } from "../../pages/Directory";
 
 export const renameFilePath = signal(null);
 
-const RenameModal = ({
-  isOpen,
-  close,
-  filePath,
-  refresh,
-  setRefresh,
-  setSuccess,
-}) => {
+const RenameModal = ({ isOpen, close, filePath, setSuccess }) => {
   const { jwt } = useContext(AuthContext);
   const [error, setError] = useState("");
   const [path, setPath] = useState(filePath);
@@ -49,7 +43,7 @@ const RenameModal = ({
         return;
       }
       setError("");
-      setRefresh(refresh + 1);
+      refresh.value = refresh.value + 1;
       close();
       setSuccess(true);
       setTimeout(() => {
@@ -80,7 +74,7 @@ const RenameModal = ({
   );
 };
 
-const Rename = ({ refresh, setRefresh }) => {
+const Rename = () => {
   const [success, setSuccess] = useState(false);
 
   return (
@@ -89,8 +83,6 @@ const Rename = ({ refresh, setRefresh }) => {
         isOpen={renameFilePath.value != null}
         close={() => (renameFilePath.value = null)}
         filePath={renameFilePath.value}
-        refresh={refresh}
-        setRefresh={setRefresh}
         setSuccess={setSuccess}
       />
       {success && (

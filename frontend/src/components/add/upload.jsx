@@ -9,17 +9,11 @@ import "./style.css";
 import { getHttpErrorDescription } from "../../error";
 import Toast from "../toast";
 import ProgressBar from "./progress";
+import { refresh } from "../../pages/Directory";
 
 export const uploadOpen = signal(false);
 
-const UploadModal = ({
-  isOpen,
-  close,
-  dirPath,
-  refresh,
-  setRefresh,
-  setSuccess,
-}) => {
+const UploadModal = ({ isOpen, close, dirPath, setSuccess }) => {
   const { jwt } = useContext(AuthContext);
   const [selectedFiles, setSelectedFiles] = useState(null);
   const [uploading, setUploading] = useState(false);
@@ -84,7 +78,7 @@ const UploadModal = ({
         setError("");
         setSelectedFiles(null);
 
-        setRefresh(refresh + 1);
+        refresh.value = refresh.value + 1;
         setSuccess(true);
         setTimeout(() => {
           setSuccess(false);
@@ -148,7 +142,7 @@ const UploadModal = ({
   );
 };
 
-const Upload = ({ dirPath, refresh, setRefresh }) => {
+const Upload = ({ dirPath }) => {
   const [success, setSuccess] = useState(false);
   return (
     <>
@@ -156,8 +150,6 @@ const Upload = ({ dirPath, refresh, setRefresh }) => {
         isOpen={uploadOpen.value}
         close={() => (uploadOpen.value = false)}
         dirPath={dirPath}
-        refresh={refresh}
-        setRefresh={setRefresh}
         setSuccess={setSuccess}
       />
       {success && (

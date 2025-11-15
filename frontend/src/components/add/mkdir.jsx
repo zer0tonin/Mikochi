@@ -7,17 +7,11 @@ import Modal, { ModalContent, ModalHeader } from "../modal";
 import "./style.css";
 import handleError from "../../error";
 import Toast from "../toast";
+import { refresh } from "../../pages/Directory";
 
 export const mkdirOpen = signal(false);
 
-const MkdirModal = ({
-  isOpen,
-  close,
-  dirPath,
-  refresh,
-  setRefresh,
-  setSuccess,
-}) => {
+const MkdirModal = ({ isOpen, close, dirPath, setSuccess }) => {
   const { jwt } = useContext(AuthContext);
   const [error, setError] = useState("");
   const [name, setName] = useState("");
@@ -46,7 +40,7 @@ const MkdirModal = ({
       }
       setError("");
       setName("");
-      setRefresh(refresh + 1);
+      refresh.value = refresh.value + 1;
       close();
       setSuccess(true);
       setTimeout(() => {
@@ -77,7 +71,7 @@ const MkdirModal = ({
   );
 };
 
-const Mkdir = ({ dirPath, refresh, setRefresh }) => {
+const Mkdir = ({ dirPath }) => {
   const [success, setSuccess] = useState(false);
 
   return (
@@ -86,8 +80,6 @@ const Mkdir = ({ dirPath, refresh, setRefresh }) => {
         isOpen={mkdirOpen.value}
         close={() => (mkdirOpen.value = false)}
         dirPath={dirPath}
-        refresh={refresh}
-        setRefresh={setRefresh}
         setSuccess={setSuccess}
       />
       {success && (
