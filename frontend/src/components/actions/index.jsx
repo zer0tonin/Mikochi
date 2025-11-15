@@ -69,7 +69,7 @@ export const FileActions = ({ filePath }) => {
   if (window.innerWidth < 768) {
     return (
       <DropDownMenu>
-        <Download filePath={`${filePath}/`}>
+        <Download filePath={filePath}>
           <li>Download</li>
         </Download>
         <CopyLink filePath={filePath}>
@@ -83,7 +83,7 @@ export const FileActions = ({ filePath }) => {
 
   return (
     <>
-      <Download filePath={`${filePath}/`}>
+      <Download filePath={filePath}>
         <Icon name="arrow-down-o" title="Download" />
       </Download>
       <CopyLink filePath={filePath}>
