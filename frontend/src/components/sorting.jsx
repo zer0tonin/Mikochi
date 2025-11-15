@@ -50,19 +50,19 @@ export const SizeHeader = ({ compare, setCompare }) => {
 
 export const sorting = {
   name_asc: (a, b) => {
-    if (a.path > b.path) {
+    if (a.path.toLowerCase() > b.path.toLowerCase()) {
       return 1;
     }
-    if (a.path == b.path) {
+    if (a.path.toLowerCase() == b.path.toLowerCase()) {
       return 0;
     }
     return -1;
   },
   name_desc: (a, b) => {
-    if (a.path < b.path) {
+    if (a.path.toLowerCase() < b.path.toLowerCase()) {
       return 1;
     }
-    if (a.path == b.path) {
+    if (a.path.toLowerCase() == b.path.toLowerCase()) {
       return 0;
     }
     return -1;
