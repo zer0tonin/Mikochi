@@ -1,11 +1,12 @@
 import { h } from "preact";
 import Download from "./download";
-import { RenameIcon, RenameListItem } from "./rename";
-import { DeleteIcon, DeleteListItem } from "./delete";
+import { renameFilePath } from "./rename";
+import { deleteFilePath } from "./delete";
 import CopyLink from "./copylink";
 import { useEffect, useRef, useState } from "preact/hooks";
 import Icon from "../icon";
 
+// DropDownMenu is slightly duplicated from the one found in menus because we need a different CSS
 const DropDownMenu = ({ children }) => {
   const [visible, setVisible] = useState(false);
   const menuRef = useRef(null);
@@ -40,23 +41,15 @@ const DropDownMenu = ({ children }) => {
   );
 };
 
-export const DirActions = ({ filePath, refresh, setRefresh }) => {
+export const DirActions = ({ filePath }) => {
   if (window.innerWidth < 768) {
     return (
       <DropDownMenu>
         <Download filePath={`${filePath}/`}>
           <li>Download</li>
         </Download>
-        <RenameListItem
-          filePath={filePath}
-          refresh={refresh}
-          setRefresh={setRefresh}
-        />
-        <DeleteListItem
-          filePath={filePath}
-          refresh={refresh}
-          setRefresh={setRefresh}
-        />
+        <li onClick={() => renameFilePath.value = filePath}>Rename</li>
+        <li onClick={() => deleteFilePath.value = filePath}>Delete</li>
       </DropDownMenu>
     );
   }
@@ -66,37 +59,38 @@ export const DirActions = ({ filePath, refresh, setRefresh }) => {
       <Download filePath={`${filePath}/`}>
         <Icon name="arrow-down-o" title="Download" />
       </Download>
-      <RenameIcon
-        filePath={filePath}
-        refresh={refresh}
-        setRefresh={setRefresh}
-      />
-      <DeleteIcon
-        filePath={filePath}
-        refresh={refresh}
-        setRefresh={setRefresh}
-      />
+      <Icon name="rename" onClick={() => renameFilePath.value = filePath} title="Rename" />
+      <Icon name="remove" onClick={() => deleteFilePath.value = filePath} title="Delete" />
     </>
   );
 };
 
-export const FileActions = ({ filePath, refresh, setRefresh }) => {
+export const FileActions = ({ filePath }) => {
+  if (window.innerWidth < 768) {
+    return (
+      <DropDownMenu>
+        <Download filePath={`${filePath}/`}>
+          <li>Download</li>
+        </Download>
+        <CopyLink filePath={filePath}>
+          <li>Copy stream link</li>
+        </CopyLink>
+        <li onClick={() => renameFilePath.value = filePath}>Rename</li>
+        <li onClick={() => deleteFilePath.value = filePath}>Delete</li>
+      </DropDownMenu>
+    );
+  }
+
   return (
     <>
       <Download filePath={`${filePath}/`}>
         <Icon name="arrow-down-o" title="Download" />
       </Download>
-      <CopyLink filePath={filePath} />
-      <RenameIcon
-        filePath={filePath}
-        refresh={refresh}
-        setRefresh={setRefresh}
-      />
-      <DeleteIcon
-        filePath={filePath}
-        refresh={refresh}
-        setRefresh={setRefresh}
-      />
+      <CopyLink filePath={filePath}>
+        <Icon name="copy" title="Copy stream link to clipboard"/>
+      </CopyLink>
+      <Icon name="rename" onClick={() => renameFilePath.value = filePath} title="Rename" />
+      <Icon name="remove" onClick={() => deleteFilePath.value = filePath} title="Delete" />
     </>
   );
 };

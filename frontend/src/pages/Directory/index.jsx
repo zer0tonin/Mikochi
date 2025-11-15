@@ -20,6 +20,8 @@ import "./style.css";
 import Upload from "../../components/add/upload";
 import Mkdir from "../../components/add/mkdir";
 import { DirActions, FileActions } from "../../components/actions";
+import Rename from "../../components/actions/rename";
+import Delete from "../../components/actions/delete";
 
 const formatFileSize = (bytes) => {
   if (bytes === 0) return "0 bytes";
@@ -146,8 +148,6 @@ const Directory = () => {
                     <td>
                       <DirActions
                         filePath={filePath}
-                        refresh={refresh}
-                        setRefresh={setRefresh}
                       />
                     </td>
                   </tr>
@@ -169,8 +169,6 @@ const Directory = () => {
                   <td>
                     <FileActions
                       filePath={filePath}
-                      refresh={refresh}
-                      setRefresh={setRefresh}
                     />
                   </td>
                 </tr>
@@ -186,6 +184,14 @@ const Directory = () => {
         />
         <Mkdir
           dirPath={location.path}
+          refresh={refresh}
+          setRefresh={setRefresh}
+        />
+        <Rename
+          refresh={refresh}
+          setRefresh={setRefresh}
+        />
+        <Delete
           refresh={refresh}
           setRefresh={setRefresh}
         />
