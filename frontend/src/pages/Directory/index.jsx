@@ -146,9 +146,7 @@ const Directory = () => {
                     </td>
                     <td />
                     <td>
-                      <DirActions
-                        filePath={filePath}
-                      />
+                      <DirActions filePath={filePath} />
                     </td>
                   </tr>
                 );
@@ -167,9 +165,7 @@ const Directory = () => {
                   </td>
                   <td>{formatFileSize(fileInfo.size)}</td>
                   <td>
-                    <FileActions
-                      filePath={filePath}
-                    />
+                    <FileActions filePath={filePath} />
                   </td>
                 </tr>
               );
@@ -187,14 +183,8 @@ const Directory = () => {
           refresh={refresh}
           setRefresh={setRefresh}
         />
-        <Rename
-          refresh={refresh}
-          setRefresh={setRefresh}
-        />
-        <Delete
-          refresh={refresh}
-          setRefresh={setRefresh}
-        />
+        <Rename refresh={refresh} setRefresh={setRefresh} />
+        <Delete refresh={refresh} setRefresh={setRefresh} />
       </main>
     </>
   );
