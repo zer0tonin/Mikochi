@@ -37,7 +37,7 @@ const UploadModal = ({
     const upload = (file) => {
       return new Promise((resolve, reject) => {
         // We use XHR instead of fetch because it provides a simpler way to check upload progress
-        var xhr = new XMLHttpRequest();
+        const xhr = new XMLHttpRequest();
         xhr.open(
           "PUT",
           dirPath != ""
@@ -118,8 +118,8 @@ const UploadModal = ({
                 multiple
               />
               {selectedFiles != null ? (
-                selectedFiles.map((f) => (
-                  <div>
+                selectedFiles.map((f, index) => (
+                  <div key={`${f.name}-${index}`}>
                     <Icon name="file-add" />
                     &nbsp;
                     <span>{f.name}</span>
