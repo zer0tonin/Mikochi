@@ -7,7 +7,7 @@ import Modal, { ModalContent } from "../modal";
 import "./style.css";
 import handleError from "../../error";
 import Toast from "../toast";
-import {signal} from "@preact/signals";
+import { signal } from "@preact/signals";
 
 export const deleteFilePath = signal(null);
 
@@ -79,7 +79,7 @@ const Delete = ({ refresh, setRefresh }) => {
     <>
       <DeleteModal
         isOpen={deleteFilePath.value != null}
-        close={() => deleteFilePath.value = null}
+        close={() => (deleteFilePath.value = null)}
         filePath={deleteFilePath.value}
         refresh={refresh}
         setRefresh={setRefresh}

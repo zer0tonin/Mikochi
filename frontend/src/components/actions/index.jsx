@@ -48,8 +48,8 @@ export const DirActions = ({ filePath }) => {
         <Download filePath={`${filePath}/`}>
           <li>Download</li>
         </Download>
-        <li onClick={() => renameFilePath.value = filePath}>Rename</li>
-        <li onClick={() => deleteFilePath.value = filePath}>Delete</li>
+        <li onClick={() => (renameFilePath.value = filePath)}>Rename</li>
+        <li onClick={() => (deleteFilePath.value = filePath)}>Delete</li>
       </DropDownMenu>
     );
   }
@@ -59,8 +59,16 @@ export const DirActions = ({ filePath }) => {
       <Download filePath={`${filePath}/`}>
         <Icon name="arrow-down-o" title="Download" />
       </Download>
-      <Icon name="rename" onClick={() => renameFilePath.value = filePath} title="Rename" />
-      <Icon name="remove" onClick={() => deleteFilePath.value = filePath} title="Delete" />
+      <Icon
+        name="rename"
+        onClick={() => (renameFilePath.value = filePath)}
+        title="Rename"
+      />
+      <Icon
+        name="remove"
+        onClick={() => (deleteFilePath.value = filePath)}
+        title="Delete"
+      />
     </>
   );
 };
@@ -75,8 +83,8 @@ export const FileActions = ({ filePath }) => {
         <CopyLink filePath={filePath}>
           <li>Copy stream link</li>
         </CopyLink>
-        <li onClick={() => renameFilePath.value = filePath}>Rename</li>
-        <li onClick={() => deleteFilePath.value = filePath}>Delete</li>
+        <li onClick={() => (renameFilePath.value = filePath)}>Rename</li>
+        <li onClick={() => (deleteFilePath.value = filePath)}>Delete</li>
       </DropDownMenu>
     );
   }
@@ -87,10 +95,18 @@ export const FileActions = ({ filePath }) => {
         <Icon name="arrow-down-o" title="Download" />
       </Download>
       <CopyLink filePath={filePath}>
-        <Icon name="copy" title="Copy stream link to clipboard"/>
+        <Icon name="copy" title="Copy stream link to clipboard" />
       </CopyLink>
-      <Icon name="rename" onClick={() => renameFilePath.value = filePath} title="Rename" />
-      <Icon name="remove" onClick={() => deleteFilePath.value = filePath} title="Delete" />
+      <Icon
+        name="rename"
+        onClick={() => (renameFilePath.value = filePath)}
+        title="Rename"
+      />
+      <Icon
+        name="remove"
+        onClick={() => (deleteFilePath.value = filePath)}
+        title="Delete"
+      />
     </>
   );
 };

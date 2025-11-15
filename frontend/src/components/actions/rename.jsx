@@ -7,7 +7,7 @@ import "./style.css";
 import Modal, { ModalContent, ModalHeader } from "../modal";
 import handleError from "../../error";
 import Toast from "../toast";
-import {signal} from "@preact/signals";
+import { signal } from "@preact/signals";
 
 export const renameFilePath = signal(null);
 
@@ -80,14 +80,14 @@ const RenameModal = ({
   );
 };
 
-const Rename = ({refresh, setRefresh}) => {
+const Rename = ({ refresh, setRefresh }) => {
   const [success, setSuccess] = useState(false);
 
   return (
     <>
       <RenameModal
         isOpen={renameFilePath.value != null}
-        close={() => renameFilePath.value = null}
+        close={() => (renameFilePath.value = null)}
         filePath={renameFilePath.value}
         refresh={refresh}
         setRefresh={setRefresh}
