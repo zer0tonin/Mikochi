@@ -7,6 +7,9 @@ import Modal, { ModalContent } from "../modal";
 import "./style.css";
 import handleError from "../../error";
 import Toast from "../toast";
+import {signal} from "@preact/signals";
+
+export const deleteFilePath = signal(null);
 
 const DeleteModal = ({
   isOpen,
@@ -69,17 +72,15 @@ const DeleteModal = ({
   );
 };
 
-export const DeleteIcon = ({ filePath, refresh, setRefresh }) => {
-  const [modalOpen, setModalOpen] = useState(false);
+const Delete = ({ refresh, setRefresh }) => {
   const [success, setSuccess] = useState(false);
 
   return (
     <>
-      <Icon name="remove" onClick={() => setModalOpen(true)} title="Delete" />
       <DeleteModal
-        isOpen={modalOpen}
-        close={() => setModalOpen(false)}
-        filePath={filePath}
+        isOpen={deleteFilePath.value != null}
+        close={() => deleteFilePath.value = null}
+        filePath={deleteFilePath.value}
         refresh={refresh}
         setRefresh={setRefresh}
         setSuccess={setSuccess}
@@ -91,24 +92,4 @@ export const DeleteIcon = ({ filePath, refresh, setRefresh }) => {
   );
 };
 
-export const DeleteListItem = ({ filePath, refresh, setRefresh }) => {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [success, setSuccess] = useState(false);
-
-  return (
-    <>
-      <li onClick={() => setModalOpen(true)}>Delete</li>
-      <DeleteModal
-        isOpen={modalOpen}
-        close={() => setModalOpen(false)}
-        filePath={filePath}
-        refresh={refresh}
-        setRefresh={setRefresh}
-        setSuccess={setSuccess}
-      />
-      {success && (
-        <Toast text="File Deleted Successfully" isVisible={success} />
-      )}
-    </>
-  );
-};
+export default Delete;

@@ -33,7 +33,7 @@ const copyToClipboard = async (textToCopy) => {
   }
 };
 
-const CopyLink = ({ filePath }) => {
+const CopyLink = ({ filePath, children }) => {
   const { jwt } = useContext(AuthContext);
   const [showToast, setShowToast] = useState(false);
 
@@ -60,12 +60,13 @@ const CopyLink = ({ filePath }) => {
   };
   return (
     <>
-      <Icon
-        name="copy"
+      <a
+        href="#"
         onClick={copyWithAuth}
-        title="Copy stream link to clipboard"
-      />
-      ;
+        style={{ color: "#E6E1C5", textDecoration: "none" }}
+      >
+        {children}
+      </a>
       <Toast isVisible={showToast} text="Link copied to clipboard" />
     </>
   );

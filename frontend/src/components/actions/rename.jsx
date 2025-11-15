@@ -2,12 +2,14 @@ import { h } from "preact";
 import { useContext, useEffect, useState } from "preact/hooks";
 
 import { AuthContext } from "../../jwt";
-import Icon from "../icon";
 import "./style.css";
 
 import Modal, { ModalContent, ModalHeader } from "../modal";
 import handleError from "../../error";
 import Toast from "../toast";
+import {signal} from "@preact/signals";
+
+export const renameFilePath = signal(null);
 
 const RenameModal = ({
   isOpen,
@@ -78,17 +80,15 @@ const RenameModal = ({
   );
 };
 
-export const RenameIcon = ({ filePath, refresh, setRefresh }) => {
-  const [modalOpen, setModalOpen] = useState(false);
+const Rename = ({refresh, setRefresh}) => {
   const [success, setSuccess] = useState(false);
 
   return (
     <>
-      <Icon name="rename" onClick={() => setModalOpen(true)} title="Rename" />
       <RenameModal
-        isOpen={modalOpen}
-        close={() => setModalOpen(false)}
-        filePath={filePath}
+        isOpen={renameFilePath.value != null}
+        close={() => renameFilePath.value = null}
+        filePath={renameFilePath.value}
         refresh={refresh}
         setRefresh={setRefresh}
         setSuccess={setSuccess}
@@ -100,26 +100,4 @@ export const RenameIcon = ({ filePath, refresh, setRefresh }) => {
   );
 };
 
-//FIXME: this doesn't work, because when we setModalOpen(true), we also close the menu, thus popping off the RenameModal from the tree
-// we should probably refactor this with signals (like upload)
-export const RenameListItem = ({ filePath, refresh, setRefresh }) => {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [success, setSuccess] = useState(false);
-
-  return (
-    <>
-      <li onClick={() => setModalOpen(true)}>Rename</li>
-      <RenameModal
-        isOpen={modalOpen}
-        close={() => setModalOpen(false)}
-        filePath={filePath}
-        refresh={refresh}
-        setRefresh={setRefresh}
-        setSuccess={setSuccess}
-      />
-      {success && (
-        <Toast text="File Renamed Successfully" isVisible={success} />
-      )}
-    </>
-  );
-};
+export default Rename;
