@@ -78,7 +78,7 @@ const MkdirModal = ({
 };
 
 const Mkdir = ({ dirPath, refresh, setRefresh }) => {
-  const [success, setSuccess] = useState(false); //into signal
+  const [success, setSuccess] = useState(false);
 
   return (
     <>
