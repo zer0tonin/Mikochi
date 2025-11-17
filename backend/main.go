@@ -18,7 +18,7 @@ func main() {
 	viper.SetDefault("DATA_DIR", "/data")
 	viper.SetDefault("JWT_SECRET", auth.GenerateRandomSecret())
 	viper.SetDefault("USERNAME", "root")
-	viper.SetDefault("PASSWORD", "pass")
+	viper.SetDefault("PASSWORD", "password")
 	viper.SetDefault("HOST", "0.0.0.0:8080")
 	viper.SetDefault("ENV", "production")
 	viper.SetDefault("NO_AUTH", "false")
