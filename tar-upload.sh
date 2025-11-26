@@ -1,6 +1,24 @@
 #!/bin/bash
 
-zip_file="mikochi-linux-$(dpkg --print-architecture).tar.gz"
+get_architecture() {
+    case $(uname -m) in
+        x86_64)
+            echo "amd64"
+            ;;
+        aarch64|arm64)
+            echo "arm64"
+            ;;
+        armv7l|armhf)
+            echo "armv7"
+            ;;
+        *)
+            # fallback to dpkg if unsure
+            dpkg --print-architecture
+            ;;
+    esac
+}
+
+zip_file="mikochi-linux-$(get_architecture).tar.gz"
 github_repo="zer0tonin/mikochi"
 
 apt-get update
