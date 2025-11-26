@@ -62,6 +62,6 @@ jobs:
         run: |
           RELEASE_ID=${{ steps.create_release.outputs.id }}
 
-          docker run --env RELEASE=${RELEASE_ID} --env GITHUB_TOKEN=${GH_TOKEN} --platform linux/arm/v7 -v $(PWD)/tar-upload.sh:/tar-upload.sh -it zer0tonin/mikochi:latest /bin/bash /tar-upload.sh
-          docker run --env RELEASE=${RELEASE_ID} --env GITHUB_TOKEN=${GH_TOKEN} --platform linux/arm64 -v $(PWD)/tar-upload.sh:/tar-upload.sh -it zer0tonin/mikochi:latest /bin/bash /tar-upload.sh
-          docker run --env RELEASE=${RELEASE_ID} --env GITHUB_TOKEN=${GH_TOKEN} --platform linux/amd64 -v $(PWD)/tar-upload.sh:/tar-upload.sh -it zer0tonin/mikochi:latest /bin/bash /tar-upload.sh
+          docker run --env RELEASE=${RELEASE_ID} --env GITHUB_TOKEN=${GH_TOKEN} --platform linux/arm/v7 -v ${{ github.workspace }}/tar-upload.sh:/tar-upload.sh zer0tonin/mikochi:latest /bin/bash /tar-upload.sh
+          docker run --env RELEASE=${RELEASE_ID} --env GITHUB_TOKEN=${GH_TOKEN} --platform linux/arm64 -v ${{ github.workspace }}/tar-upload.sh:/tar-upload.sh zer0tonin/mikochi:latest /bin/bash /tar-upload.sh
+          docker run --env RELEASE=${RELEASE_ID} --env GITHUB_TOKEN=${GH_TOKEN} --platform linux/amd64 -v ${{ github.workspace }}/tar-upload.sh:/tar-upload.sh zer0tonin/mikochi:latest /bin/bash /tar-upload.sh
