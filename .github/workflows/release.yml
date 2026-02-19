@@ -10,7 +10,7 @@ jobs:
 
     strategy:
       matrix:
-        platform: [amd64, arm64, arm]
+        platform: [amd64, arm64, armv7]
 
     steps:
       - name: Checkout code
@@ -30,7 +30,7 @@ jobs:
             arm64)
               echo "GOARCH=arm64" >> $GITHUB_ENV
               ;;
-            arm)
+            armv7)
               echo "GOARCH=arm" >> $GITHUB_ENV
               ;;
           esac
@@ -38,13 +38,13 @@ jobs:
 
       - name: Build backend
         working-directory: ./backend
-        run: go build -v -o ./mikochi-${{ matrix.platform }} .
+        run: go build -v -o ./mikochi .
 
       - name: Upload backend
         uses: actions/upload-artifact@v4
         with:
-          name: backend-build
-          path: ./backend/mikochi-${{ matrix.platform }}
+          name: backend-build-${{ matrix.platform }}
+          path: ./backend/mikochi
 
   build-frontend:
     runs-on: ubuntu-latest
@@ -116,33 +116,10 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    outputs:
+      release_id: ${{ steps.create_release.outputs.id }}
+
     steps:
-      - name: Download frontend build
-        uses: actions/download-artifact@v7
-        with:
-          name: frontend-build
-          path: ./frontend/dist/
-
-      - name: Download backend build
-        uses: actions/download-artifact@v7
-        with:
-          name: backend-build
-          path: ./backend/
-
-      - name: Create tar.gz archives
-        run: |
-          mkdir -p release-files
-          for binary in backend/mikochi-*; do
-            if [ -f "$binary" ]; then
-              arch=$(echo "$binary" | sed 's/.*mikochi-//')
-              mkdir -p temp-release/mikochi-${{ github.ref_name }}/
-              cp "$binary" temp-release/mikochi-${{ github.ref_name }}/mikochi
-              cp -r frontend/dist/* temp-release/mikochi-${{ github.ref_name }}/
-              tar -czf "release-files/mikochi-${{ github.ref_name }}-linux-$arch.tar.gz" -C temp-release .
-              rm -rf temp-release/mikochi-${{ github.ref_name }}/
-            fi
-          done
-
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
@@ -154,18 +131,46 @@ jobs:
           draft: false
           prerelease: false
 
+  upload-github:
+    needs: [release-github]
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        platform: [amd64, arm64, armv7]
+
+    steps:
+      - name: Download frontend build
+        uses: actions/download-artifact@v7
+        with:
+          name: frontend-build
+          path: ./frontend/dist/
+
+      - name: Download backend build
+        uses: actions/download-artifact@v7
+        with:
+          name: backend-build-${{ matrix.platform }}
+          path: ./backend
+
+      - name: Create tar.gz archives
+        run: |
+          mkdir -p release-files
+          mkdir -p temp-release/mikochi-${{ github.ref_name }}/
+          cp backend/mikochi temp-release/mikochi-${{ github.ref_name }}/mikochi
+          cp -r frontend/dist/* temp-release/mikochi-${{ github.ref_name }}/
+          tar -czf "release-files/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }}.tar.gz" -C temp-release .
+          rm -rf temp-release/mikochi-${{ github.ref_name }}/
+
       - name: Upload tar.gz builds to release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          RELEASE_ID=${{ steps.create_release.outputs.id }}
-          for file in release-files/*.tar.gz; do
-            if [ -f "$file" ]; then
-              echo "Uploading $file"
-              curl -X POST \
-                -H "Authorization: Bearer $GITHUB_TOKEN" \
-                -H "Content-Type: application/gzip" \
-                --data-binary @"$file" \
-                "https://uploads.github.com/repos/${{ github.repository}}/releases/$RELEASE_ID/assets?name=$(basename "$file")"
-            fi
-          done
+          RELEASE_ID=${{ needs.release-github.outputs.release_id }}
+          FILE="release-files/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }}.tar.gz"
+          echo "Uploading $FILE"
+          curl -X POST \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "Content-Type: application/gzip" \
+            --data-binary @"$FILE" \
+            "https://uploads.github.com/repos/${{ github.repository}}/releases/$RELEASE_ID/assets?name=$(basename "$FILE")"
