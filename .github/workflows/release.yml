@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
 
       - name: Set up Go
         uses: actions/setup-go@v6
@@ -40,7 +40,7 @@ jobs:
         run: go build -v -o ./backend/mikochi-${{ matrix.platform }} backend
 
       - name: Upload backend
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: backend-build
           path: ./backend/mikochi-*
@@ -50,7 +50,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -68,7 +68,7 @@ jobs:
         working-directory: frontend
 
       - name: Upload frontend
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: frontend-build
           path: ./frontend/dist/
@@ -80,10 +80,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
 
       - name: Download frontend build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v7
         with:
           name: frontend-build
           path: ./frontend/dist/
@@ -117,13 +117,13 @@ jobs:
 
     steps:
       - name: Download frontend build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v7
         with:
           name: frontend-build
           path: ./frontend/dist/
 
       - name: Download backend build
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v7
         with:
           name: backend-build
           path: ./backend/
