@@ -5,8 +5,49 @@ on:
     tags:
       - '*'
 jobs:
-  release:
+  build-backend:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        platform: [amd64, arm64, arm]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: 1.25
+
+      - name: Set GOARCH/GOOS
+        run: |
+          case ${{ matrix.platform }} in
+            amd64)
+              echo "GOARCH=amd64" >> $GITHUB_ENV
+              ;;
+            arm64)
+              echo "GOARCH=arm64" >> $GITHUB_ENV
+              ;;
+            arm)
+              echo "GOARCH=arm" >> $GITHUB_ENV
+              ;;
+          esac
+          echo "GOOS=linux" >> $GITHUB_ENV
+
+      - name: Build backend
+        run: go build -v -o ./backend/mikochi-${{ matrix.platform }} backend
+
+      - name: Upload backend
+        uses: actions/upload-artifact@v3
+        with:
+          name: backend-build
+          path: ./backend/mikochi-*
+
+  build-frontend:
+    runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -25,6 +66,27 @@ jobs:
       - name: Build frontend
         run: npm run build
         working-directory: frontend
+
+      - name: Upload frontend
+        uses: actions/upload-artifact@v3
+        with:
+          name: frontend-build
+          path: ./frontend/dist/
+
+  release-docker:
+    needs: [build-backend, build-frontend]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Download frontend build
+        uses: actions/download-artifact@v3
+        with:
+          name: frontend-build
+          path: ./frontend/dist/
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -48,6 +110,38 @@ jobs:
             zer0tonin/mikochi:latest
             zer0tonin/mikochi:${{ github.ref_name }}
 
+  release-github:
+    needs: [build-backend, build-frontend]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download frontend build
+        uses: actions/download-artifact@v3
+        with:
+          name: frontend-build
+          path: ./frontend/dist/
+
+      - name: Download backend build
+        uses: actions/download-artifact@v3
+        with:
+          name: backend-build
+          path: ./backend/
+
+      - name: Create tar.gz archives
+        run: |
+          mkdir -p release-files
+          for binary in backend/mikochi-*; do
+            if [ -f "$binary" ]; then
+              arch=$(echo "$binary" | sed 's/.*mikochi-//')
+              mkdir -p temp-release/mikochi-${{ github.ref_name }}/
+              cp "$binary" temp-release/mikochi-${{ github.ref_name }}/mikochi
+              cp -r frontend/dist/* temp-release/mikochi-${{ github.ref_name }}/
+              tar -czf "release-files/mikochi-${{ github.ref_name }}-linux-$arch.tar.gz" -C temp-release .
+              rm -rf temp-release/mikochi-${{ github.ref_name }}/
+            fi
+          done
+
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
@@ -64,7 +158,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           RELEASE_ID=${{ steps.create_release.outputs.id }}
-
-          docker run --env RELEASE=${RELEASE_ID} --env GITHUB_TOKEN=${GITHUB_TOKEN} --platform linux/arm/v7 -v ${{ github.workspace }}/tar-upload.sh:/tar-upload.sh zer0tonin/mikochi:latest /bin/bash /tar-upload.sh
-          docker run --env RELEASE=${RELEASE_ID} --env GITHUB_TOKEN=${GITHUB_TOKEN} --platform linux/arm64/v8 -v ${{ github.workspace }}/tar-upload.sh:/tar-upload.sh zer0tonin/mikochi:latest /bin/bash /tar-upload.sh
-          docker run --env RELEASE=${RELEASE_ID} --env GITHUB_TOKEN=${GITHUB_TOKEN} --platform linux/amd64 -v ${{ github.workspace }}/tar-upload.sh:/tar-upload.sh zer0tonin/mikochi:latest /bin/bash /tar-upload.sh
+          for file in release-files/*.tar.gz; do
+            if [ -f "$file" ]; then
+              echo "Uploading $file"
+              curl -X POST \
+                -H "Authorization: Bearer $GITHUB_TOKEN" \
+                -H "Content-Type: application/gzip" \
+                --data-binary @"$file" \
+                "https://uploads.github.com/repos/${{ github.repository}}/releases/$RELEASE_ID/assets?name=$(basename "$file")"
+            fi
+          done
