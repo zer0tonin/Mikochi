@@ -200,6 +200,7 @@ jobs:
           mkdir -p temp-release/mikochi-${{ github.ref_name }}/
           mkdir -p temp-release/mikochi-${{ github.ref_name }}/static
           cp backend/mikochi temp-release/mikochi-${{ github.ref_name }}/mikochi
+          chmod 755 temp-release/mikochi-${{ github.ref_name }}/mikochi
           cp -r frontend/dist/* temp-release/mikochi-${{ github.ref_name }}/static
           tar -czf "release-files/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }}.tar.gz" -C temp-release .
           rm -rf temp-release/mikochi-${{ github.ref_name }}/
