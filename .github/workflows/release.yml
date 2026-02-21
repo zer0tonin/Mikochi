@@ -172,7 +172,7 @@ jobs:
           draft: false
           prerelease: false
 
-  upload-github:
+  upload-tar:
     needs: [release-github]
 
     runs-on: ubuntu-latest
@@ -215,5 +215,83 @@ jobs:
           curl -X POST \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
             -H "Content-Type: application/gzip" \
+            --data-binary @"$FILE" \
+            "https://uploads.github.com/repos/${{ github.repository}}/releases/$RELEASE_ID/assets?name=$(basename "$FILE")"
+
+  upload-deb:
+    needs: [release-github]
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        platform: [amd64, arm64, armv7]
+
+    steps:
+      - name: Download frontend build
+        uses: actions/download-artifact@v7
+        with:
+          name: frontend-build
+          path: ./frontend/dist/
+
+      - name: Download backend build
+        uses: actions/download-artifact@v7
+        with:
+          name: backend-build-${{ matrix.platform }}
+          path: ./backend
+
+      - name: Set DEBARCH
+        run: |
+          case ${{ matrix.platform }} in
+            amd64)
+              echo "DEBARCH=amd64" >> $GITHUB_ENV
+              ;;
+            arm64)
+              echo "DEBARCH=arm64" >> $GITHUB_ENV
+              ;;
+            armv7)
+              echo "DEBARCH=armhf" >> $GITHUB_ENV
+              ;;
+          esac
+
+      - name: Create directory structure
+        run: |
+          mkdir -p deb-package/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }}/usr/bin
+          mkdir -p deb-package/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }}/usr/share/mikochi/static
+          mkdir -p deb-package/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }}/DEBIAN
+
+      - name: Copy files
+        run: |
+          cp backend/mikochi deb-package/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }}/usr/bin/
+          chmod 755 deb-package/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }}/usr/bin/mikochi
+          cp -r frontend/dist/* deb-package/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }}/usr/share/mikochi/static/
+
+      - name: Create control file
+          cat > deb-package/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }}/DEBIAN/control << EOF
+Package: mikochi
+Version: ${{ github.ref_name }}
+Section: web
+Priority: optional
+Architecture: $DEBARCH
+Depends: libc6
+Maintainer: Alice Girard Guittard <hi@alicegg.tech>
+Description: Mikochi - A minimalist remote file browser
+EOF
+
+      - name: Build DEB package
+        run: |
+          mkdir -p release-files
+          dpkg-deb --build deb-package/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }} release-files/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }}.deb
+
+      - name: Upload tar.gz builds to release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          RELEASE_ID=${{ needs.release-github.outputs.release_id }}
+          FILE="release-files/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }}.deb"
+          echo "Uploading $FILE"
+          curl -X POST \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "Content-Type: application/octet-stream" \
             --data-binary @"$FILE" \
             "https://uploads.github.com/repos/${{ github.repository}}/releases/$RELEASE_ID/assets?name=$(basename "$FILE")"
