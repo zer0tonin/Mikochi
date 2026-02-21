@@ -267,16 +267,17 @@ jobs:
           cp -r frontend/dist/* deb-package/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }}/usr/share/mikochi/static/
 
       - name: Create control file
+        run: |
           cat > deb-package/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }}/DEBIAN/control << EOF
-Package: mikochi
-Version: ${{ github.ref_name }}
-Section: web
-Priority: optional
-Architecture: $DEBARCH
-Depends: libc6
-Maintainer: Alice Girard Guittard <hi@alicegg.tech>
-Description: Mikochi - A minimalist remote file browser
-EOF
+          Package: mikochi
+          Version: ${{ github.ref_name }}
+          Section: web
+          Priority: optional
+          Architecture: $DEBARCH
+          Depends: libc6
+          Maintainer: Alice Girard Guittard <hi@alicegg.tech>
+          Description: Mikochi - A minimalist remote file browser
+          EOF
 
       - name: Build DEB package
         run: |
