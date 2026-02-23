@@ -323,10 +323,10 @@ jobs:
         run: |
           case ${{ matrix.platform }} in
             amd64)
-              echo "RPMARCH=amd64" >> $GITHUB_ENV
+              echo "RPMARCH=x86_64" >> $GITHUB_ENV
               ;;
             arm64)
-              echo "RPMARCH=arm64" >> $GITHUB_ENV
+              echo "RPMARCH=aarch64" >> $GITHUB_ENV
               ;;
             armv7)
               echo "RPMARCH=armv7hl" >> $GITHUB_ENV
@@ -342,14 +342,14 @@ jobs:
             rpm-package/SOURCES \
             rpm-package/SPECS \
             rpm-package/SRPMS \
-            rpm-package/BUILDROOT/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }}/usr/bin \
-            rpm-package/BUILDROOT/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }}/usr/share/mikochi/static
+            rpm-package/BUILDROOT/mikochi-${{ github.ref_name }}-1.$RPMARCH/usr/bin \
+            rpm-package/BUILDROOT/mikochi-${{ github.ref_name }}-1.$RPMARCH/usr/share/mikochi/static
 
       - name: Copy files
         run: |
-          cp backend/mikochi rpm-package/BUILDROOT/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }}/usr/bin/
-          chmod 755 rpm-package/BUILDROOT/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }}/usr/bin/mikochi
-          cp -r frontend/dist/* rpm-package/BUILDROOT/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }}/usr/share/mikochi/static/
+          cp backend/mikochi rpm-package/BUILDROOT/mikochi-${{ github.ref_name }}-1.$RPMARCH/usr/bin
+          chmod 755 rpm-package/BUILDROOT/mikochi-${{ github.ref_name }}-1.$RPMARCH/usr/bin/mikochi
+          cp -r frontend/dist/* rpm-package/BUILDROOT/mikochi-${{ github.ref_name }}-1.$RPMARCH/usr/share/mikochi/static
 
       - name: Create spec file
         run: |
@@ -359,7 +359,6 @@ jobs:
           Release: 1
           Summary: Mikochi - A minimalist remote file browser
           License: MIT
-          BuildArch: $RPMARCH
           %description
           Mikochi - A minimalist remote file browser
           %prep
@@ -379,9 +378,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y rpm
-          rpmbuild --define "_topdir $(pwd)/rpm-package" -bb rpm-package/SPECS/mikochi.spec
+          rpmbuild --target $RPMARCH-redhat-linux --define "_topdir $(pwd)/rpm-package" -bb rpm-package/SPECS/mikochi.spec
           mkdir -p release-files
-          cp rpm-package/RPMS/$RPMARCH/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }}.rpm release-files/
+          cp rpm-package/RPMS/$RPMARCH/mikochi-${{ github.ref_name }}-1.$RPMARCH.rpm release-files/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }}.rpm
 
       - name: Upload deb builds to release
         env:
