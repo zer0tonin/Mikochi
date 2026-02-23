@@ -378,7 +378,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y rpm
-          rpmbuild --target $RPMARCH-redhat-linux-gnu -bb rpm-package/SPECS/mikochi.spec
+          rpmbuild --target $RPMARCH-redhat-linux-gnu --define "_topdir $(pwd)/rpm-package" -bb rpm-package/SPECS/mikochi.spec
           mkdir -p release-files
           ls -lah rpm-package/RPMS/
           ls -lah rpm-package/RPMS/$RPMARCH
