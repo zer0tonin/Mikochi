@@ -358,10 +358,12 @@ jobs:
           %build
           # Nothing to build
           %install
+          pwd
+          ls -lah
           mkdir -p %{buildroot}%{_bindir}
           mkdir -p %{buildroot}%{_datadir}/mikochi
-          install -m 755 backend/mikochi %{buildroot}/%{_bindir}/mikochi
-          cp -r frontend/dist %{buildroot}/%{_datadir}/mikochi/static
+          install -m 755 backend/mikochi %{buildroot}%{_bindir}/mikochi
+          cp -r frontend/dist %{buildroot}%{_datadir}/mikochi/static
           %files
           %{_bindir}/mikochi
           %{_datadir}/mikochi/static
