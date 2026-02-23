@@ -329,7 +329,7 @@ jobs:
               echo "RPMARCH=aarch64" >> $GITHUB_ENV
               ;;
             armv7)
-              echo "RPMARCH=armv7hl" >> $GITHUB_ENV
+              echo "RPMARCH=arm" >> $GITHUB_ENV
               ;;
           esac
 
@@ -341,15 +341,12 @@ jobs:
             rpm-package/RPMS \
             rpm-package/SOURCES \
             rpm-package/SPECS \
-            rpm-package/SRPMS \
-            rpm-package/BUILDROOT/mikochi-${{ github.ref_name }}-1.$RPMARCH/usr/bin \
-            rpm-package/BUILDROOT/mikochi-${{ github.ref_name }}-1.$RPMARCH/usr/share/mikochi/static
+            rpm-package/SRPMS
 
       - name: Copy files
         run: |
-          cp backend/mikochi rpm-package/BUILDROOT/mikochi-${{ github.ref_name }}-1.$RPMARCH/usr/bin
-          chmod 755 rpm-package/BUILDROOT/mikochi-${{ github.ref_name }}-1.$RPMARCH/usr/bin/mikochi
-          cp -r frontend/dist/* rpm-package/BUILDROOT/mikochi-${{ github.ref_name }}-1.$RPMARCH/usr/share/mikochi/static
+          cp backend/mikochi rpm-package/SOURCES/mikochi
+          cp -r frontend/dist rpm-package/SOURCES/static
 
       - name: Create spec file
         run: |
@@ -366,10 +363,13 @@ jobs:
           %build
           # Nothing to build
           %install
-          # Files are pre-copied to BUILDROOT by the workflow script
+          mkdir -p %{buildroot}/%{_bindir}
+          mkdir -p %{buildroot}/%{_datadir}/mikochi
+          install -m 755 %{sourcedir}/mikochi %{buildroot}/%{_bindir}/
+          cp -r %{sourcedir}/static %{buildroot}/%{_datadir}/mikochi/
           %files
-          /usr/bin/mikochi
-          /usr/share/mikochi/static/*
+          %{_bindir}/mikochi
+          %{_datadir}/mikochi/static
           %changelog
           # N/A
           EOF
@@ -378,8 +378,10 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y rpm
-          rpmbuild --target $RPMARCH-redhat-linux --define "_topdir $(pwd)/rpm-package" -bb rpm-package/SPECS/mikochi.spec
+          rpmbuild --target $RPMARCH-redhat-linux-gnu -bb rpm-package/SPECS/mikochi.spec
           mkdir -p release-files
+          ls -lah rpm-package/RPMS/
+          ls -lah rpm-package/RPMS/$RPMARCH
           cp rpm-package/RPMS/$RPMARCH/mikochi-${{ github.ref_name }}-1.$RPMARCH.rpm release-files/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }}.rpm
 
       - name: Upload deb builds to release
