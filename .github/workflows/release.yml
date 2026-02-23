@@ -343,11 +343,6 @@ jobs:
             rpm-package/SPECS \
             rpm-package/SRPMS
 
-      - name: Copy files
-        run: |
-          cp backend/mikochi rpm-package/SOURCES/mikochi
-          cp -r frontend/dist rpm-package/SOURCES/static
-
       - name: Create spec file
         run: |
           cat > rpm-package/SPECS/mikochi.spec << EOF
@@ -363,10 +358,10 @@ jobs:
           %build
           # Nothing to build
           %install
-          mkdir -p %{buildroot}/%{_bindir}
-          mkdir -p %{buildroot}/%{_datadir}/mikochi
-          install -m 755 %{sourcedir}/mikochi %{buildroot}/%{_bindir}/
-          cp -r %{sourcedir}/static %{buildroot}/%{_datadir}/mikochi/
+          mkdir -p %{buildroot}%{_bindir}
+          mkdir -p %{buildroot}%{_datadir}/mikochi
+          install -m 755 backend/mikochi %{buildroot}/%{_bindir}/mikochi
+          cp -r frontend/dist %{buildroot}/%{_datadir}/mikochi/static
           %files
           %{_bindir}/mikochi
           %{_datadir}/mikochi/static
