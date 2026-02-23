@@ -284,12 +284,111 @@ jobs:
           mkdir -p release-files
           dpkg-deb --build deb-package/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }} release-files/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }}.deb
 
-      - name: Upload tar.gz builds to release
+      - name: Upload deb builds to release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           RELEASE_ID=${{ needs.release-github.outputs.release_id }}
           FILE="release-files/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }}.deb"
+          echo "Uploading $FILE"
+          curl -X POST \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "Content-Type: application/octet-stream" \
+            --data-binary @"$FILE" \
+            "https://uploads.github.com/repos/${{ github.repository}}/releases/$RELEASE_ID/assets?name=$(basename "$FILE")"
+
+  upload-rpm:
+    needs: [release-github]
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        platform: [amd64, arm64, armv7]
+
+    steps:
+      - name: Download frontend build
+        uses: actions/download-artifact@v7
+        with:
+          name: frontend-build
+          path: ./frontend/dist/
+
+      - name: Download backend build
+        uses: actions/download-artifact@v7
+        with:
+          name: backend-build-${{ matrix.platform }}
+          path: ./backend
+
+      - name: Set RPMARCH
+        run: |
+          case ${{ matrix.platform }} in
+            amd64)
+              echo "RPMARCH=amd64" >> $GITHUB_ENV
+              ;;
+            arm64)
+              echo "RPMARCH=arm64" >> $GITHUB_ENV
+              ;;
+            armv7)
+              echo "RPMARCH=armv7hl" >> $GITHUB_ENV
+              ;;
+          esac
+
+      - name: Create directory structure
+        run: |
+          mkdir -p \
+            rpm-package/BUILD \
+            rpm-package/BUILDROOT \
+            rpm-package/RPMS \
+            rpm-package/SOURCES \
+            rpm-package/SPECS \
+            rpm-package/SRPMS \
+            rpm-package/BUILDROOT/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }}/usr/bin \
+            rpm-package/BUILDROOT/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }}/usr/share/mikochi/static
+
+      - name: Copy files
+        run: |
+          cp backend/mikochi rpm-package/BUILDROOT/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }}/usr/bin/
+          chmod 755 rpm-package/BUILDROOT/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }}/usr/bin/mikochi
+          cp -r frontend/dist/* rpm-package/BUILDROOT/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }}/usr/share/mikochi/static/
+
+      - name: Create spec file
+        run: |
+          cat > rpm-package/SPECS/mikochi.spec << EOF
+          Name: mikochi
+          Version: ${{ github.ref_name }}
+          Release: 1
+          Summary: Mikochi - A minimalist remote file browser
+          License: MIT
+          BuildArch: $RPMARCH
+          %description
+          Mikochi - A minimalist remote file browser
+          %prep
+          # Nothing to prepare
+          %build
+          # Nothing to build
+          %install
+          # Files are pre-copied to BUILDROOT by the workflow script
+          %files
+          /usr/bin/mikochi
+          /usr/share/mikochi/static/*
+          %changelog
+          # N/A
+          EOF
+
+      - name: Build RPM package
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y rpm
+          rpmbuild --define "_topdir $(pwd)/rpm-package" -bb rpm-package/SPECS/mikochi.spec
+          mkdir -p release-files
+          cp rpm-package/RPMS/$RPMARCH/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }}.rpm release-files/
+
+      - name: Upload deb builds to release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          RELEASE_ID=${{ needs.release-github.outputs.release_id }}
+          FILE="release-files/mikochi-${{ github.ref_name }}-linux-${{ matrix.platform }}.rpm"
           echo "Uploading $FILE"
           curl -X POST \
             -H "Authorization: Bearer $GITHUB_TOKEN" \
