@@ -356,6 +356,7 @@ jobs:
           Release: 1
           Summary: Mikochi - A minimalist remote file browser
           License: MIT
+          %global __strip /bin/true
           %description
           Mikochi - A minimalist remote file browser
           %prep
