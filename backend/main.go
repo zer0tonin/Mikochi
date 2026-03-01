@@ -23,7 +23,7 @@ func main() {
 	viper.SetDefault("ENV", "production")
 	viper.SetDefault("NO_AUTH", "false")
 	viper.SetDefault("GZIP", "false")
-	viper.SetDefault("FRONTEND_FILES", "./static")
+	viper.SetDefault("FRONTEND_FILES", "/usr/share/mikochi/static")
 	viper.AutomaticEnv()
 
 	authMiddleware := auth.NewAuthMiddleware(viper.GetString("NO_AUTH") != "true", viper.GetString("JWT_SECRET"))

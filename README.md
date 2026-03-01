@@ -53,7 +53,7 @@ wget -c https://github.com/zer0tonin/Mikochi/releases/download/1.9.5/mikochi-1.9
 sudo chmod +x mikochi-1.9.5-linux-amd64.deb
 sudo apt install mikochi-1.9.5-linux-amd64.deb
 sudo mkdir /data
-FRONTEND_FILES=/usr/share/mikochi/static HOST=127.0.0.1:8080 PASSWORD=horsebatterysomething mikochi
+HOST=127.0.0.1:8080 PASSWORD=horsebatterysomething mikochi
 ```
 
 ### Fedora / Red Hat / CentOS
@@ -67,7 +67,7 @@ wget -c https://github.com/zer0tonin/Mikochi/releases/download/1.9.5/mikochi-1.9
 sudo chmod +x mikochi-1.9.5-linux-amd64.rpm
 sudo rpm -ivh mikochi-1.9.5-linux-amd64.rpm
 sudo mkdir /data
-FRONTEND_FILES=/usr/share/mikochi/static HOST=127.0.0.1:8080 PASSWORD=horsebatterysomething mikochi
+HOST=127.0.0.1:8080 PASSWORD=horsebatterysomething mikochi
 ```
 
 ### Binary
@@ -84,18 +84,18 @@ HOST=127.0.0.1:8080 PASSWORD=horsebatterysomething ./mikochi-1.9.5/mikochi
 
 Mikochi is configured using environment variables
 
-| Key            | Description                                 | Default    |
-|----------------|---------------------------------------------|------------|
-| HOST           | The ip:port mikochi will listen on          | 0.0.0.0:80 |
-| DATA_DIR       | The directory accessed by mikochi           | /data      |
-| JWT_SECRET     | A secret string for jwt validation          | [Random]   |
-| USERNAME       | The username to login with                  | root       |
-| PASSWORD       | The password to login with                  | pass       |
-| CERT_CA        | The path to a TLS certificate               | null       |
-| CERT_KEY       | The path to the key associated with CERT_CA | null       |
-| NO_AUTH        | If true, disables all authentication        | false      |
-| GZIP           | If true, enables gzip compression           | false      |
-| FRONTEND_FILES | The location of the frontend static files   | ./static   |
+| Key            | Description                                 | Default                     |
+|----------------|---------------------------------------------|-----------------------------|
+| HOST           | The ip:port mikochi will listen on          | 0.0.0.0:80                  |
+| DATA_DIR       | The directory accessed by mikochi           | /data                       |
+| JWT_SECRET     | A secret string for jwt validation          | [Random]                    |
+| USERNAME       | The username to login with                  | root                        |
+| PASSWORD       | The password to login with                  | pass                        |
+| CERT_CA        | The path to a TLS certificate               | null                        |
+| CERT_KEY       | The path to the key associated with CERT_CA | null                        |
+| NO_AUTH        | If true, disables all authentication        | false                       |
+| GZIP           | If true, enables gzip compression           | false                       |
+| FRONTEND_FILES | The location of the frontend static files   | /usr/share/mikochi/static   |
 
 Note: it is recommended to not manually set JWT_SECRET, as getting a new randomly generated secret everytime when mikochi starts let's you invalidate authentication tokens by restarting the process.
 
