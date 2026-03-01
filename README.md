@@ -38,7 +38,7 @@ For Kubernetes users, Mikochi is installable using a [helm chart](https://artifa
 ```sh
 helm repo add zer0tonin https://zer0tonin.github.io/helm-charts/
 helm install mikochi zer0tonin/mikochi \
---version 1.9.5 --set mikochi.username=zer0tonin \
+--version 1.10.0 --set mikochi.username=zer0tonin \
 --set mikochi.password=my_super_password --set persistence.enabled=true
 ```
 
@@ -49,9 +49,9 @@ Install the app using a .deb package from the latest [release](https://github.co
 NB: frontend files will be installed in /usr/share/mikochi/static, which for now requires you to override the default using environment variables.
 
 ```sh
-wget -c https://github.com/zer0tonin/Mikochi/releases/download/1.9.5/mikochi-1.9.5-linux-amd64.deb
-sudo chmod +x mikochi-1.9.5-linux-amd64.deb
-sudo apt install mikochi-1.9.5-linux-amd64.deb
+wget -c https://github.com/zer0tonin/Mikochi/releases/download/1.10.0/mikochi-1.10.0-linux-amd64.deb
+sudo chmod +x mikochi-1.10.0-linux-amd64.deb
+sudo apt install mikochi-1.10.0-linux-amd64.deb
 sudo mkdir /data
 HOST=127.0.0.1:8080 PASSWORD=horsebatterysomething mikochi
 ```
@@ -63,9 +63,9 @@ Install the app using a .rpm package from the latest [release](https://github.co
 NB: frontend files will be installed in /usr/share/mikochi/static, which for now requires you to override the default using environment variables.
 
 ```sh
-wget -c https://github.com/zer0tonin/Mikochi/releases/download/1.9.5/mikochi-1.9.5-linux-amd64.rpm
-sudo chmod +x mikochi-1.9.5-linux-amd64.rpm
-sudo rpm -ivh mikochi-1.9.5-linux-amd64.rpm
+wget -c https://github.com/zer0tonin/Mikochi/releases/download/1.10.0/mikochi-1.10.0-linux-amd64.rpm
+sudo chmod +x mikochi-1.10.0-linux-amd64.rpm
+sudo rpm -ivh mikochi-1.10.0-linux-amd64.rpm
 sudo mkdir /data
 HOST=127.0.0.1:8080 PASSWORD=horsebatterysomething mikochi
 ```
@@ -75,9 +75,9 @@ HOST=127.0.0.1:8080 PASSWORD=horsebatterysomething mikochi
 Launch the app using a pre-compiled binary from the latest [release](https://github.com/zer0tonin/Mikochi/releases):
 
 ```sh
-wget -c https://github.com/zer0tonin/Mikochi/releases/download/1.9.5/mikochi-1.9.5-linux-amd64.tar.gz -O - | tar -xz
+wget -c https://github.com/zer0tonin/Mikochi/releases/download/1.10.0/mikochi-1.10.0-linux-amd64.tar.gz -O - | tar -xz
 mkdir /data
-HOST=127.0.0.1:8080 PASSWORD=horsebatterysomething ./mikochi-1.9.5/mikochi
+HOST=127.0.0.1:8080 PASSWORD=horsebatterysomething ./mikochi-1.10.0/mikochi
 ```
 
 ## Configuration
