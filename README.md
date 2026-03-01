@@ -46,28 +46,28 @@ helm install mikochi zer0tonin/mikochi \
 
 Install the app using a .deb package from the latest [release](https://github.com/zer0tonin/Mikochi/releases).
 
-NB: frontend files will be installed in /usr/share/mikochi/static, which for now requires you to override the default using environment variables.
-
 ```sh
 wget -c https://github.com/zer0tonin/Mikochi/releases/download/1.10.0/mikochi-1.10.0-linux-amd64.deb
+
 sudo chmod +x mikochi-1.10.0-linux-amd64.deb
 sudo apt install mikochi-1.10.0-linux-amd64.deb
 sudo mkdir /data
-HOST=127.0.0.1:8080 PASSWORD=horsebatterysomething mikochi
+
+PASSWORD=horsebatterysomething mikochi
 ```
 
 ### Fedora / Red Hat / CentOS
 
 Install the app using a .rpm package from the latest [release](https://github.com/zer0tonin/Mikochi/releases).
 
-NB: frontend files will be installed in /usr/share/mikochi/static, which for now requires you to override the default using environment variables.
-
 ```sh
 wget -c https://github.com/zer0tonin/Mikochi/releases/download/1.10.0/mikochi-1.10.0-linux-amd64.rpm
+
 sudo chmod +x mikochi-1.10.0-linux-amd64.rpm
 sudo rpm -ivh mikochi-1.10.0-linux-amd64.rpm
 sudo mkdir /data
-HOST=127.0.0.1:8080 PASSWORD=horsebatterysomething mikochi
+
+PASSWORD=horsebatterysomething mikochi
 ```
 
 ### Binary
@@ -76,8 +76,13 @@ Launch the app using a pre-compiled binary from the latest [release](https://git
 
 ```sh
 wget -c https://github.com/zer0tonin/Mikochi/releases/download/1.10.0/mikochi-1.10.0-linux-amd64.tar.gz -O - | tar -xz
-mkdir /data
-HOST=127.0.0.1:8080 PASSWORD=horsebatterysomething ./mikochi-1.10.0/mikochi
+
+sudo mkdir /data
+sudo mkdir /usr/share/mikochi
+sudo mv ./mikochi-1.10.0/mikochi /usr/bin/mikochi
+sudo mv ./mikochi-1.10.0/static /usr/share/mikochi/static
+
+PASSWORD=horsebatterysomething mikochi
 ```
 
 ## Configuration
