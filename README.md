@@ -1,11 +1,11 @@
 # 🌱 Mikochi: a minimalist remote file browser
 
-Mikochi is a remote file browser, for use in self-hosted servers / NAS.
-It allows you to browse remote folders, upload files, delete, rename, download and stream files to VLC/mpv.
+Mikochi is a remote file browser for your self-hosted server or NAS.
+It allows you to browse remote folders, upload, delete, rename and download files.
+You can also use it to generate streaming links which can be played using VLC or mpv
 
-It comes with a web interface powered by JavaScript/Preact, and an API built in Go/Gin.
+<img width="888" height="480" alt="mikochi" src="https://github.com/user-attachments/assets/48141ba4-7015-45fa-81ee-dfecb347c48f" />
 
-https://github.com/zer0tonin/Mikochi/assets/7149690/3cac61a6-d547-4adb-bd4b-0c312ff0c8c1
 
 ## Features
 
@@ -15,6 +15,8 @@ https://github.com/zer0tonin/Mikochi/assets/7149690/3cac61a6-d547-4adb-bd4b-0c31
 * Rename and delete files
 * Download files and directories (in .tar.gz)
 * Stream files to VLC/MPV
+* Lightweight web interface built in Preact
+* High-performance server built in Go/Gin
 
 ## Getting started
 
