@@ -9,10 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@preact/signals": "^2.9.0",
-    "preact": "^10.29.1",
-    "preact-iso": "^2.11.1",
-    "preact-render-to-string": "^6.6.7"
+    "@preact/signals": "^2.9.1",
+    "preact": "^10.29.2",
+    "preact-iso": "^2.12.0",
+    "preact-render-to-string": "^6.7.0"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.5",
@@ -24,7 +24,7 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^4.6.2",
     "prettier": "^3.8.3",
-    "vite": "^7.3.2"
+    "vite": "^7.3.5"
   },
   "eslintConfig": {
     "extends": "preact",
