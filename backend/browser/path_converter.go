@@ -1,6 +1,11 @@
 package browser
 
-import "path/filepath"
+import (
+	"fmt"
+	"log"
+	"path/filepath"
+	"strings"
+)
 
 type PathConverter struct {
 	dataDir string
@@ -12,10 +17,18 @@ func NewPathConverter(dataDir string) *PathConverter {
 	}
 }
 
-func (p *PathConverter) GetAbsolutePath(path string) string {
+func (p *PathConverter) GetAbsolutePath(path string) (string, error) {
 	cleanedPath := filepath.Clean(path)
-	if cleanedPath == "." || cleanedPath == ".." {
-		return p.dataDir
+	if cleanedPath == "" || cleanedPath == "." || cleanedPath == ".." {
+		return p.dataDir, nil
 	}
-	return filepath.Join(p.dataDir + cleanedPath)
+
+	res := filepath.Join(p.dataDir + cleanedPath)
+
+	if rel, err := filepath.Rel(p.dataDir, res); err != nil || strings.HasPrefix(rel, "..") {
+		log.Printf("Possible directory escape attempt: %s", path)
+		return p.dataDir, fmt.Errorf("Invalid target path: %s (%w)", path, err)
+	}
+
+	return res, nil
 }

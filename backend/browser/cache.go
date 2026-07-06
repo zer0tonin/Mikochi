@@ -51,8 +51,12 @@ func (f *FileCache) Reset() {
 // recursively initalizes the cache
 // we do not use filepath.Walk to avoid a mess with relative / absolute paths
 func (f *FileCache) cacheFolder(cache map[string]fs.FileInfo, path string) {
-	rootPath := f.pathConverter.GetAbsolutePath(path)
-	err := filepath.WalkDir(
+	rootPath, err := f.pathConverter.GetAbsolutePath(path)
+	if err != nil {
+		log.Panicf("Error while refreshing cache: %s", err.Error())
+	}
+
+	err = filepath.WalkDir(
 		rootPath,
 		func(path string, dirEntry fs.DirEntry, err error) error {
 			relativePath := strings.TrimPrefix(path, rootPath)
