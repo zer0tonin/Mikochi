@@ -40,7 +40,7 @@ For Kubernetes users, Mikochi is installable using a [helm chart](https://artifa
 ```sh
 helm repo add zer0tonin https://zer0tonin.github.io/helm-charts/
 helm install mikochi zer0tonin/mikochi \
---version 1.10.0 --set mikochi.username=zer0tonin \
+--version 1.11.0 --set mikochi.username=zer0tonin \
 --set mikochi.password=my_super_password --set persistence.enabled=true
 ```
 
@@ -49,10 +49,10 @@ helm install mikochi zer0tonin/mikochi \
 Install the app using a .deb package from the latest [release](https://github.com/zer0tonin/Mikochi/releases).
 
 ```sh
-wget -c https://github.com/zer0tonin/Mikochi/releases/download/1.10.0/mikochi-1.10.0-linux-amd64.deb
+wget -c https://github.com/zer0tonin/Mikochi/releases/download/1.11.0/mikochi-1.11.0-linux-amd64.deb
 
-sudo chmod +x mikochi-1.10.0-linux-amd64.deb
-sudo apt install mikochi-1.10.0-linux-amd64.deb
+sudo chmod +x mikochi-1.11.0-linux-amd64.deb
+sudo apt install mikochi-1.11.0-linux-amd64.deb
 sudo mkdir /data
 
 PASSWORD=horsebatterysomething mikochi
@@ -63,10 +63,10 @@ PASSWORD=horsebatterysomething mikochi
 Install the app using a .rpm package from the latest [release](https://github.com/zer0tonin/Mikochi/releases).
 
 ```sh
-wget -c https://github.com/zer0tonin/Mikochi/releases/download/1.10.0/mikochi-1.10.0-linux-amd64.rpm
+wget -c https://github.com/zer0tonin/Mikochi/releases/download/1.11.0/mikochi-1.11.0-linux-amd64.rpm
 
-sudo chmod +x mikochi-1.10.0-linux-amd64.rpm
-sudo rpm -ivh mikochi-1.10.0-linux-amd64.rpm
+sudo chmod +x mikochi-1.11.0-linux-amd64.rpm
+sudo rpm -ivh mikochi-1.11.0-linux-amd64.rpm
 sudo mkdir /data
 
 PASSWORD=horsebatterysomething mikochi
@@ -77,12 +77,12 @@ PASSWORD=horsebatterysomething mikochi
 Launch the app using a pre-compiled binary from the latest [release](https://github.com/zer0tonin/Mikochi/releases):
 
 ```sh
-wget -c https://github.com/zer0tonin/Mikochi/releases/download/1.10.0/mikochi-1.10.0-linux-amd64.tar.gz -O - | tar -xz
+wget -c https://github.com/zer0tonin/Mikochi/releases/download/1.11.0/mikochi-1.11.0-linux-amd64.tar.gz -O - | tar -xz
 
 sudo mkdir /data
 sudo mkdir /usr/share/mikochi
-sudo mv ./mikochi-1.10.0/mikochi /usr/bin/mikochi
-sudo mv ./mikochi-1.10.0/static /usr/share/mikochi/static
+sudo mv ./mikochi-1.11.0/mikochi /usr/bin/mikochi
+sudo mv ./mikochi-1.11.0/static /usr/share/mikochi/static
 
 PASSWORD=horsebatterysomething mikochi
 ```
