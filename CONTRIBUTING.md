@@ -6,6 +6,10 @@ Report bugs in Mikochi by opening [a GitHub issue](https://github.com/zer0tonin/
 Please include steps to reproduce the bug you're experiencing.
 Make sure that the bug can be reproduced on the latest Mikochi version.
 
+## Security issues
+
+If you find a vulnerability in Mikochi, either report it [through GitHub](https://github.com/zer0tonin/Mikochi/security) or by email (hi@alicegg.tech).
+
 ## Proposing new features
 
 You're welcome to suggest new features and improvements to Mikochi by opening [a GitHub issue](https://github.com/zer0tonin/Mikochi/issues)
