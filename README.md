@@ -107,9 +107,9 @@ Mikochi is configured using environment variables
 Note: it is recommended to not manually set JWT_SECRET, as getting a new randomly generated secret everytime when mikochi starts let's you invalidate authentication tokens by restarting the process.
 
 
-# Development
+## Development
 
-## Launching the development environment
+### Launching the development environment
 
 The development environment requires Docker and docker-compose.
 
@@ -132,9 +132,10 @@ Backend debugging is exposed on port 2345 and can be accessed using [delve](http
 dlv connect localhost:2345
 ```
 
-## Creating a production build
+### Creating a production build
 
-**Note**: This can be done automatically by running the `release` GitHub Action workflow.
+> [!NOTE]  
+> This can be done automatically by running the `release` GitHub Action workflow.
 
 Build the frontend using npm:
 
