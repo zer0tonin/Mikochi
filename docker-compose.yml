@@ -13,6 +13,12 @@ services:
       - ./frontend:/app
     ports:
       - 5000:5000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.frontend.entrypoints=web"
+      - "traefik.http.routers.frontend.priority=1"
+      - "traefik.http.services.frontend.loadbalancer.server.port=5000"
 
   dev-backend:
     build: ./backend
@@ -25,13 +31,23 @@ services:
     ports:
       - 4000:4000
       - 2345:2345
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=PathPrefix(`/api`)"
+      - "traefik.http.routers.backend.entrypoints=web"
+      - "traefik.http.routers.backend.priority=100"
+      - "traefik.http.services.backend.loadbalancer.server.port=4000"
 
   dev:
-    image: nginx:1.23.3
+    image: traefik:3.7
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:8080"
     depends_on:
       - dev-backend
       - dev-frontend
     ports:
-      - 8080:80
+      - 8080:8080
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
