@@ -107,13 +107,55 @@ Mikochi is configured using environment variables
 Note: it is recommended to not manually set JWT_SECRET, as getting a new randomly generated secret everytime when mikochi starts let's you invalidate authentication tokens by restarting the process.
 
 
+# Development
+
 ## Launching the development environment
 
-The development environment and build pipeline rely on Docker/docker-compose.
+The development environment requires Docker and docker-compose.
 
-Run the dockerized development environment with:
+Starts the `dev` container to run the development environment:
+
 ```sh
-make dev
+docker compose up -d dev
 ```
 
-It will start a frontend container (listening on 5000), a backend container (listening on 4000) and an nginx to wire both (listening on 8080).
+This will start:
+* dev: a Traefik container proxying the frontend and backend on port 8080
+* dev-frontend: a NodeJS container running the Preact frontend (accessible directly on port 5000)
+* dev-backend: a Golang container running the backend (accessible directly on port 4000)
+
+Both the backend and frontend should automatically reload when the code is changed.
+
+Backend debugging is exposed on port 2345 and can be accessed using [delve](https://github.com/go-delve/delve):
+
+```sh
+dlv connect localhost:2345
+```
+
+## Creating a production build
+
+**Note**: This can be done automatically by running the `release` GitHub Action workflow.
+
+Build the frontend using npm:
+
+```sh
+cd frontend
+npm run build
+```
+
+Build the backend using go:
+
+```sh
+cd backend
+go build -o ./mikochi .
+```
+
+Create the docker image using buildx:
+
+```sh
+docker buildx imagetools create \
+    -t "zer0tonin/mikochi:latest" \
+    "zer0tonin/mikochi:latest-amd64" \
+    "zer0tonin/mikochi:latest-arm64" \
+    "zer0tonin/mikochi:latest-armv7"
+```
