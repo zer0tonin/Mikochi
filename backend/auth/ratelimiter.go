@@ -2,6 +2,7 @@ package auth
 
 import (
 	"math"
+	"sync"
 	"time"
 )
 
@@ -12,10 +13,14 @@ type accessLimit struct {
 
 // RateLimiter is used to limit failed login attempts on a username
 type RateLimiter struct {
+	mutex sync.Mutex
 	accessMap map[string]accessLimit
 }
 
 func (r *RateLimiter) checkRateLimit(key string) bool {
+	r.mutex.Lock()
+	defer r.mutex.Unlock()
+
 	limit, ok := r.accessMap[key]
 	if !ok {
 		return true
@@ -29,6 +34,9 @@ func (r *RateLimiter) checkRateLimit(key string) bool {
 }
 
 func (r *RateLimiter) increaseRateLimit(key string) {
+	r.mutex.Lock()
+	defer r.mutex.Unlock()
+
 	limit, ok := r.accessMap[key]
 	if !ok {
 		r.accessMap[key] = accessLimit{
@@ -44,6 +52,9 @@ func (r *RateLimiter) increaseRateLimit(key string) {
 }
 
 func (r *RateLimiter) resetRateLimit(key string) {
+	r.mutex.Lock()
+	defer r.mutex.Unlock()
+
 	r.accessMap[key] = accessLimit{
 		attempts:    0,
 		nextAttempt: time.Now(),
