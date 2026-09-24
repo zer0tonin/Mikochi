@@ -40,6 +40,7 @@ func (j *JwtMiddleware) InvalidateToken(c *gin.Context) error {
 
 	j.invalidatedTokensMutex.Lock()
 	defer j.invalidatedTokensMutex.Unlock()
+
 	j.invalidatedTokens[jtiStr] = struct{}{}
 	log.Printf("Token invalidated: %s\n", jti)
 	return nil
@@ -47,6 +48,9 @@ func (j *JwtMiddleware) InvalidateToken(c *gin.Context) error {
 
 // IsTokenInvalidated checks if a token ID is in the invalidated tokens list
 func (j *JwtMiddleware) IsTokenInvalidated(jti string) bool {
+	j.invalidatedTokensMutex.RLock()
+	defer j.invalidatedTokensMutex.RUnlock()
+
 	_, exists := j.invalidatedTokens[jti]
 	return exists
 }
