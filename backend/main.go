@@ -27,8 +27,10 @@ func main() {
 	viper.AutomaticEnv()
 
 	authMiddleware := auth.NewAuthMiddleware(viper.GetString("NO_AUTH") != "true", viper.GetString("JWT_SECRET"))
+	rateLimiter := auth.NewRateLimiter()
 	authHandlers := auth.NewAuthHandlers(
 		authMiddleware,
+		rateLimiter,
 		viper.GetString("USERNAME"),
 		viper.GetString("PASSWORD"),
 		[]byte(viper.GetString("JWT_SECRET")),

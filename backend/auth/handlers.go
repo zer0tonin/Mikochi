@@ -12,14 +12,16 @@ import (
 
 type AuthHandlers struct {
 	authMiddleware AuthMiddleware
+	rateLimiter    *RateLimiter
 	username       string
 	password       string
 	jwtSecret      []byte
 }
 
-func NewAuthHandlers(authMiddleware AuthMiddleware, username, password string, jwtSecret []byte) *AuthHandlers {
+func NewAuthHandlers(authMiddleware AuthMiddleware, rateLimiter *RateLimiter, username, password string, jwtSecret []byte) *AuthHandlers {
 	return &AuthHandlers{
 		authMiddleware: authMiddleware,
+		rateLimiter:    rateLimiter,
 		username:       username,
 		password:       password,
 		jwtSecret:      jwtSecret,
@@ -41,7 +43,7 @@ func (a *AuthHandlers) Login(c *gin.Context) {
 		return
 	}
 
-	ok := rateLimiter.checkRateLimit(credentials.Username)
+	ok := a.rateLimiter.checkRateLimit(credentials.Username)
 	if !ok {
 		c.AbortWithStatusJSON(http.StatusTooManyRequests, gin.H{
 			"err": "You are being rate limited",
@@ -51,7 +53,7 @@ func (a *AuthHandlers) Login(c *gin.Context) {
 
 	if credentials.Username != a.username || credentials.Password != a.password {
 		log.Printf("Failed login attempt for %s", credentials.Username)
-		rateLimiter.increaseRateLimit(credentials.Username)
+		a.rateLimiter.increaseRateLimit(credentials.Username)
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 			"err": "Invalid credentials",
 		})
@@ -59,7 +61,7 @@ func (a *AuthHandlers) Login(c *gin.Context) {
 	}
 
 	log.Printf("Succesful login as %s", credentials.Username)
-	rateLimiter.resetRateLimit(credentials.Username)
+	a.rateLimiter.resetRateLimit(credentials.Username)
 	signedToken, err := generateAuthToken(a.jwtSecret)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
