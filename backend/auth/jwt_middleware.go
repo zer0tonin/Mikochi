@@ -41,6 +41,7 @@ func (j *JwtMiddleware) InvalidateToken(c *gin.Context) error {
 	j.invalidatedTokensMutex.Lock()
 	defer j.invalidatedTokensMutex.Unlock()
 
+	// 0 size value to avoid unchecked memory growth
 	j.invalidatedTokens[jtiStr] = struct{}{}
 	log.Printf("Token invalidated: %s\n", jti)
 	return nil
@@ -55,8 +56,9 @@ func (j *JwtMiddleware) IsTokenInvalidated(jti string) bool {
 	return exists
 }
 
-// setWhitelist allows a single-use JWTs (for streams)
-// Each token is valid for one route and 24h
+// setWhitelist assigns a JWT ID to the file path it is valid for
+// Each token is valid for only one file and 24h
+// This is used for streams
 func (j *JwtMiddleware) setWhitelist(jti, target string) {
 	j.tokenWhitelistMutex.RLock()
 	defer j.tokenWhitelistMutex.RUnlock()
@@ -111,7 +113,8 @@ func (j *JwtMiddleware) CheckAuth(c *gin.Context) {
 }
 
 // CheckStreamAuth is a middleware that will return an error if the request
-// doesn't contain a valid single-use auth token passed in the auth query param
+// doesn't contain a valid stream auth token matching the file being requested
+// passed in the auth query param
 func (j *JwtMiddleware) CheckStreamAuth(c *gin.Context) {
 	encodedToken := c.Query("auth")
 
