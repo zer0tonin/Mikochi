@@ -17,7 +17,7 @@ type JwtMiddleware struct {
 	tokenWhitelist         map[string]Expirable[string]
 	tokenWhitelistMutex    sync.RWMutex
 
-	invalidatedTokens      map[string]struct{}
+	invalidatedTokens      map[string]Expirable[struct{}]
 	invalidatedTokensMutex sync.RWMutex
 }
 
@@ -26,7 +26,7 @@ func NewJwtMiddleware(secret []byte) *JwtMiddleware {
 	return &JwtMiddleware{
 		jwtSecret:         secret,
 		tokenWhitelist:    make(map[string]Expirable[string]),
-		invalidatedTokens: make(map[string]struct{}),
+		invalidatedTokens: make(map[string]Expirable[struct{}]),
 	}
 }
 
@@ -44,8 +44,8 @@ func (j *JwtMiddleware) InvalidateToken(c *gin.Context) error {
 	j.invalidatedTokensMutex.Lock()
 	defer j.invalidatedTokensMutex.Unlock()
 
-	// 0 size value to avoid unchecked memory growth
-	j.invalidatedTokens[jtiStr] = struct{}{}
+	// struct{}{} = 0 size value
+	j.invalidatedTokens[jtiStr] = NewExpirable(struct{}{}, time.Hour * 730)
 	log.Printf("Token invalidated: %s\n", jti)
 	return nil
 }
@@ -156,8 +156,7 @@ func (j *JwtMiddleware) CheckStreamAuth(c *gin.Context) {
 	c.Next()
 }
 
-// Cleanup deletes stale data from the tokenWhitelist to avoid unchecked memory growth
-func (j *JwtMiddleware) Cleanup() {
+func (j *JwtMiddleware) cleanupStreamWhitelist() {
 	j.tokenWhitelistMutex.Lock()
 	defer j.tokenWhitelistMutex.Unlock()
 
@@ -171,4 +170,25 @@ func (j *JwtMiddleware) Cleanup() {
 	for _, e := range expired {
 		delete(j.tokenWhitelist, e)
 	}
+}
+
+func (j *JwtMiddleware) cleanupInvalidatedTokens() {
+	j.invalidatedTokensMutex.Lock()
+	defer j.invalidatedTokensMutex.Unlock()
+
+	expired := []string{}
+	for key, value := range j.invalidatedTokens {
+		if value.IsExpired() {
+			expired = append(expired, key)
+		}
+	}
+
+	for _, e := range expired {
+		delete(j.invalidatedTokens, e)
+	}
+}
+
+// Cleanup deletes stale data from the tokenWhitelist to avoid unchecked memory growth
+func (j *JwtMiddleware) Cleanup() {
+	j.cleanupStreamWhitelist()
 }

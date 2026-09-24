@@ -93,7 +93,7 @@ func (a *AuthHandlers) Refresh(c *gin.Context) {
 }
 
 // GET /single-use
-// SingleUse returns a new single-use JWT token for use in streams
+// SingleUse returns a new JWT token valid for a single file and for 24 hours
 func (a *AuthHandlers) SingleUse(c *gin.Context) {
 	jti := uuid.New().String()
 
@@ -104,6 +104,7 @@ func (a *AuthHandlers) SingleUse(c *gin.Context) {
 		Issuer:    "Mikochi",
 		IssuedAt:  jwt.NewNumericDate(time.Now()),
 		ID:        jti,
+		Subject:   "stream",
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	signedToken, err := token.SignedString(a.jwtSecret)
