@@ -13,7 +13,7 @@ import (
 type JwtMiddleware struct {
 	jwtSecret              []byte
 	tokenWhitelist         map[string]string
-	tokenWhitelistMutex    sync.Mutex
+	tokenWhitelistMutex    sync.RWMutex
 	invalidatedTokens      map[string]struct{}
 	invalidatedTokensMutex sync.RWMutex
 }
@@ -58,8 +58,8 @@ func (j *JwtMiddleware) IsTokenInvalidated(jti string) bool {
 // setWhitelist allows a single-use JWTs (for streams)
 // Each token is valid for one route and 24h
 func (j *JwtMiddleware) setWhitelist(jti, target string) {
-	j.tokenWhitelistMutex.Lock()
-	defer j.tokenWhitelistMutex.Unlock()
+	j.tokenWhitelistMutex.RLock()
+	defer j.tokenWhitelistMutex.RUnlock()
 
 	j.tokenWhitelist[jti] = target
 }
