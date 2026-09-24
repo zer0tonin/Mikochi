@@ -9,6 +9,7 @@ type AuthMiddleware interface {
 	CheckAuth(c *gin.Context)
 	CheckStreamAuth(c *gin.Context)
 	InvalidateToken(c *gin.Context) error
+	Cleanup()
 }
 
 func NewAuthMiddleware(withAuth bool, jwtSecret string) AuthMiddleware {

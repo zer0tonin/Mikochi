@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/zer0tonin/mikochi/auth"
 	"github.com/zer0tonin/mikochi/browser"
@@ -103,4 +104,9 @@ func main() {
 	if err != nil {
 		log.Panicf("Failed to launch web server: %s", err.Error())
 	}
+
+	go func() {
+		authMiddleware.Cleanup()
+		time.Sleep(1 * time.Hour)
+	}()
 }
