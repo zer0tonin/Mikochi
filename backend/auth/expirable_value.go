@@ -2,6 +2,7 @@ package auth
 
 import "time"
 
+// Expirable is used to clean up values from long-lived maps and avoid memory leaks
 type Expirable[T any] struct {
 	validUntil time.Time
 	value T

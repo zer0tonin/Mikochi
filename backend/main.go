@@ -106,7 +106,8 @@ func main() {
 	}
 
 	go func() {
-		authMiddleware.Cleanup()
 		time.Sleep(1 * time.Hour)
+		log.Print("Running cleanup")
+		authMiddleware.Cleanup()
 	}()
 }
