@@ -59,8 +59,9 @@ func (j *JwtMiddleware) IsTokenInvalidated(jti string) bool {
 // Each token is valid for one route and 24h
 func (j *JwtMiddleware) setWhitelist(jti, target string) {
 	j.tokenWhitelistMutex.Lock()
+	defer j.tokenWhitelistMutex.Unlock()
+
 	j.tokenWhitelist[jti] = target
-	j.tokenWhitelistMutex.Unlock()
 }
 
 // CheckAuth is a middleware that will return an error if the request doesn't contain a valid auth token
@@ -127,6 +128,9 @@ func (j *JwtMiddleware) CheckStreamAuth(c *gin.Context) {
 		})
 		return
 	}
+
+	j.tokenWhitelistMutex.Lock()
+	defer j.tokenWhitelistMutex.Unlock()
 
 	if !token.Valid || !(j.tokenWhitelist[claims.ID] == c.Param("path")) {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
