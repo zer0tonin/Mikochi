@@ -17,6 +17,14 @@ type RateLimiter struct {
 	accessMap map[string]accessLimit
 }
 
+// Initializes a new in-memory rate limiter
+func NewRateLimiter() *RateLimiter {
+	return &RateLimiter{
+		mutex: sync.Mutex{},
+		accessMap: map[string]accessLimit{},
+	}
+}
+
 func (r *RateLimiter) checkRateLimit(key string) bool {
 	r.mutex.Lock()
 	defer r.mutex.Unlock()
@@ -59,8 +67,4 @@ func (r *RateLimiter) resetRateLimit(key string) {
 		attempts:    0,
 		nextAttempt: time.Now(),
 	}
-}
-
-var rateLimiter = RateLimiter{
-	accessMap: map[string]accessLimit{},
 }
