@@ -18,7 +18,6 @@ func NewAuthMiddleware(withAuth bool, jwtSecret string) AuthMiddleware {
 }
 
 type StreamAuthMiddleware interface {
-	setWhitelist(jti, target string)
 	CheckAuth(c *gin.Context)
 }
 
