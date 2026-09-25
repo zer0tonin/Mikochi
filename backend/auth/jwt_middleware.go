@@ -17,7 +17,6 @@ type JwtMiddleware struct {
 	jwtSecret              []byte
 	invalidatedTokens      map[string]Expirable[struct{}]
 	invalidatedTokensMutex sync.RWMutex
-
 }
 
 // Initialize the JwtMiddleware with necessary fields
@@ -40,7 +39,7 @@ func (j *JwtMiddleware) InvalidateToken(c *gin.Context) error {
 	}
 
 	j.invalidatedTokensMutex.Lock()
-	j.invalidatedTokens[jtiStr] = NewExpirable(struct{}{}, time.Hour * 730) // struct{}{} = 0 size value
+	j.invalidatedTokens[jtiStr] = NewExpirable(struct{}{}, time.Hour*730) // struct{}{} = 0 size value
 	j.invalidatedTokensMutex.Unlock()
 
 	log.Printf("Token invalidated: %s\n", jtiStr)
@@ -129,4 +128,3 @@ func parseAuthHeader(header string) (string, error) {
 	}
 	return parts[1], nil
 }
-

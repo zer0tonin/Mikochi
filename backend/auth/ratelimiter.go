@@ -13,14 +13,14 @@ type accessLimit struct {
 
 // RateLimiter is used to limit failed login attempts on a username
 type RateLimiter struct {
-	mutex sync.RWMutex
+	mutex     sync.RWMutex
 	accessMap map[string]accessLimit
 }
 
 // Initializes a new in-memory rate limiter
 func NewRateLimiter() *RateLimiter {
 	return &RateLimiter{
-		mutex: sync.RWMutex{},
+		mutex:     sync.RWMutex{},
 		accessMap: map[string]accessLimit{},
 	}
 }

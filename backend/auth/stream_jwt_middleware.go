@@ -10,13 +10,13 @@ import (
 
 // StreamJwtMiddleware authenticates requests done when streaming files (from VLC, etc...)
 type StreamJwtMiddleware struct {
-	jwtSecret              []byte
+	jwtSecret []byte
 }
 
 // Initialize the JwtMiddleware with necessary fields
 func NewStreamJwtMiddleware(secret []byte) *StreamJwtMiddleware {
 	return &StreamJwtMiddleware{
-		jwtSecret:         secret,
+		jwtSecret: secret,
 	}
 }
 

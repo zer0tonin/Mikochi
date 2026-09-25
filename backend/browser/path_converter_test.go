@@ -6,17 +6,17 @@ import (
 
 func TestGetAbsolutePath(t *testing.T) {
 	tests := []struct {
-		name     string
-		dataDir  string
-		path     string
-		expected string
+		name      string
+		dataDir   string
+		path      string
+		expected  string
 		expectErr bool
 	}{
 		{
-			name:     "Empty path",
-			dataDir:  "/data",
-			path:     "",
-			expected: "/data",
+			name:      "Empty path",
+			dataDir:   "/data",
+			path:      "",
+			expected:  "/data",
 			expectErr: false,
 		},
 		{
@@ -55,7 +55,7 @@ func TestGetAbsolutePath(t *testing.T) {
 			path:      "sub/../../etc/passwd",
 			expectErr: true,
 		},
- 	}
+	}
 
 	for _, test := range tests {
 		pathConverter := NewPathConverter(test.dataDir)
