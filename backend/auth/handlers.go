@@ -101,12 +101,15 @@ func (a *AuthHandlers) SingleUse(c *gin.Context) {
 
 	a.streamAuthMiddleware.setWhitelist(jti, c.Query("target"))
 
-	claims := jwt.RegisteredClaims{
-		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24)),
-		Issuer:    "Mikochi",
-		IssuedAt:  jwt.NewNumericDate(time.Now()),
-		ID:        jti,
-		Subject:   "stream",
+	claims := Claims{
+		Scope: c.Query("target"),
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24)),
+			Issuer:    "Mikochi",
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+			ID:        jti,
+			Subject:   "stream",
+		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	signedToken, err := token.SignedString(a.jwtSecret)

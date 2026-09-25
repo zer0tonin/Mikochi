@@ -41,7 +41,7 @@ func (j *StreamJwtMiddleware) setWhitelist(jti, target string) {
 func (j *StreamJwtMiddleware) CheckAuth(c *gin.Context) {
 	encodedToken := c.Query("auth")
 
-	claims := jwt.RegisteredClaims{}
+	claims := Claims{}
 	token, err := jwt.ParseWithClaims(encodedToken, &claims, func(token *jwt.Token) (any, error) {
 		if len(j.jwtSecret) > 0 {
 			return j.jwtSecret, nil
