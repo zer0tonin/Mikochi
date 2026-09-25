@@ -72,6 +72,14 @@ func main() {
 		}
 	})
 
+	go func() {
+		for true {
+			time.Sleep(60 * time.Second)
+			authMiddleware.Cleanup()
+			rateLimiter.Cleanup()
+		}
+	}()
+
 	api := r.Group("/api")
 
 	// business logic
@@ -106,10 +114,4 @@ func main() {
 	if err != nil {
 		log.Panicf("Failed to launch web server: %s", err.Error())
 	}
-
-	go func() {
-		time.Sleep(1 * time.Hour)
-		log.Print("Running cleanup")
-		authMiddleware.Cleanup()
-	}()
 }
