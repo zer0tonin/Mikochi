@@ -6,4 +6,4 @@ If you find a vulnerability in Mikochi, either report it [through GitHub](https:
 
 ## Supported Version
 
-Only the latest version is supported (1.11.0).
+Only the latest version is supported (1.12.0).
