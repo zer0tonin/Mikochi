@@ -5,9 +5,7 @@ import (
 )
 
 type AuthMiddleware interface {
-	setWhitelist(jti, target string)
 	CheckAuth(c *gin.Context)
-	CheckStreamAuth(c *gin.Context)
 	InvalidateToken(c *gin.Context) error
 	Cleanup()
 }
@@ -15,6 +13,18 @@ type AuthMiddleware interface {
 func NewAuthMiddleware(withAuth bool, jwtSecret string) AuthMiddleware {
 	if withAuth {
 		return NewJwtMiddleware([]byte(jwtSecret))
+	}
+	return &NoauthMiddleware{}
+}
+
+type StreamAuthMiddleware interface {
+	setWhitelist(jti, target string)
+	CheckAuth(c *gin.Context)
+}
+
+func NewStreamAuthMiddleware(withAuth bool, jwtSecret string) StreamAuthMiddleware {
+	if withAuth {
+		return NewStreamJwtMiddleware([]byte(jwtSecret))
 	}
 	return &NoauthMiddleware{}
 }

@@ -12,15 +12,17 @@ import (
 
 type AuthHandlers struct {
 	authMiddleware AuthMiddleware
+	streamAuthMiddleware StreamAuthMiddleware
 	rateLimiter    *RateLimiter
 	username       string
 	password       string
 	jwtSecret      []byte
 }
 
-func NewAuthHandlers(authMiddleware AuthMiddleware, rateLimiter *RateLimiter, username, password string, jwtSecret []byte) *AuthHandlers {
+func NewAuthHandlers(authMiddleware AuthMiddleware, streamAuthMiddleware StreamAuthMiddleware, rateLimiter *RateLimiter, username, password string, jwtSecret []byte) *AuthHandlers {
 	return &AuthHandlers{
 		authMiddleware: authMiddleware,
+		streamAuthMiddleware: streamAuthMiddleware,
 		rateLimiter:    rateLimiter,
 		username:       username,
 		password:       password,
@@ -97,7 +99,7 @@ func (a *AuthHandlers) Refresh(c *gin.Context) {
 func (a *AuthHandlers) SingleUse(c *gin.Context) {
 	jti := uuid.New().String()
 
-	a.authMiddleware.setWhitelist(jti, c.Query("target"))
+	a.streamAuthMiddleware.setWhitelist(jti, c.Query("target"))
 
 	claims := jwt.RegisteredClaims{
 		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24)),
