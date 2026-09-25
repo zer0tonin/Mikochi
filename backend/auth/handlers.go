@@ -99,8 +99,6 @@ func (a *AuthHandlers) Refresh(c *gin.Context) {
 func (a *AuthHandlers) SingleUse(c *gin.Context) {
 	jti := uuid.New().String()
 
-	a.streamAuthMiddleware.setWhitelist(jti, c.Query("target"))
-
 	claims := Claims{
 		Scope: c.Query("target"),
 		RegisteredClaims: jwt.RegisteredClaims{
