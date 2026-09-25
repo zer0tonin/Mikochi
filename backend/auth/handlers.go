@@ -128,7 +128,6 @@ func (a *AuthHandlers) StreamToken(c *gin.Context) {
 			Issuer:    "Mikochi",
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			ID:        jti,
-			Subject:   "stream",
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
