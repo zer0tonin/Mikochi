@@ -11,22 +11,22 @@ import (
 )
 
 type AuthHandlers struct {
-	authMiddleware AuthMiddleware
+	authMiddleware       AuthMiddleware
 	streamAuthMiddleware StreamAuthMiddleware
-	rateLimiter    *RateLimiter
-	username       string
-	password       string
-	jwtSecret      []byte
+	rateLimiter          *RateLimiter
+	username             string
+	password             string
+	jwtSecret            []byte
 }
 
 func NewAuthHandlers(authMiddleware AuthMiddleware, streamAuthMiddleware StreamAuthMiddleware, rateLimiter *RateLimiter, username, password string, jwtSecret []byte) *AuthHandlers {
 	return &AuthHandlers{
-		authMiddleware: authMiddleware,
+		authMiddleware:       authMiddleware,
 		streamAuthMiddleware: streamAuthMiddleware,
-		rateLimiter:    rateLimiter,
-		username:       username,
-		password:       password,
-		jwtSecret:      jwtSecret,
+		rateLimiter:          rateLimiter,
+		username:             username,
+		password:             password,
+		jwtSecret:            jwtSecret,
 	}
 }
 
