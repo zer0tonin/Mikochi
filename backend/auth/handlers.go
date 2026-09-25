@@ -116,9 +116,9 @@ func generateAuthToken(secret []byte) (string, error) {
 	return signedToken, nil
 }
 
-// GET /single-use
-// SingleUse returns a new JWT token valid for a single file and for 24 hours
-func (a *AuthHandlers) SingleUse(c *gin.Context) {
+// GET /stream-token
+// StreamToken returns a new JWT token valid for a single file and for 24 hours
+func (a *AuthHandlers) StreamToken(c *gin.Context) {
 	jti := uuid.New().String()
 
 	claims := Claims{

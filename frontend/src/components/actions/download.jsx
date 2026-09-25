@@ -15,7 +15,7 @@ const Download = ({ filePath, children }) => {
   const downloadWithAuth = async () => {
     const target = new URLSearchParams();
     target.append("target", filePath);
-    const response = await fetch(`/api/single-use?${target.toString()}`, {
+    const response = await fetch(`/api/stream-token?${target.toString()}`, {
       headers: {
         Accept: "application/json",
         Authorization: `Bearer ${jwt}`,
