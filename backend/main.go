@@ -84,7 +84,7 @@ func main() {
 
 	// authentication
 	api.GET("/refresh", authMiddleware.CheckAuth, authHandlers.Refresh)
-	api.GET("/single-use", authMiddleware.CheckAuth, authHandlers.SingleUse)
+	api.GET("/stream-token", authMiddleware.CheckAuth, authHandlers.StreamToken)
 	api.POST("/login", authHandlers.Login)
 	api.POST("/logout", authMiddleware.CheckAuth, authHandlers.Logout)
 
