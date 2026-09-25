@@ -12,21 +12,18 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+// JwtMiddleware authenticates requests done from Mikochi's UI with a JWT
 type JwtMiddleware struct {
 	jwtSecret              []byte
-
-	tokenWhitelist         map[string]Expirable[string]
-	tokenWhitelistMutex    sync.RWMutex
-
 	invalidatedTokens      map[string]Expirable[struct{}]
 	invalidatedTokensMutex sync.RWMutex
+
 }
 
 // Initialize the JwtMiddleware with necessary fields
 func NewJwtMiddleware(secret []byte) *JwtMiddleware {
 	return &JwtMiddleware{
 		jwtSecret:         secret,
-		tokenWhitelist:    make(map[string]Expirable[string]),
 		invalidatedTokens: make(map[string]Expirable[struct{}]),
 	}
 }
@@ -58,16 +55,6 @@ func (j *JwtMiddleware) IsTokenInvalidated(jti string) bool {
 
 	_, exists := j.invalidatedTokens[jti]
 	return exists
-}
-
-// setWhitelist assigns a JWT ID to the file path it is valid for
-// Each token is valid for only one file and 24h
-// This is used for streams
-func (j *JwtMiddleware) setWhitelist(jti, target string) {
-	j.tokenWhitelistMutex.Lock()
-	defer j.tokenWhitelistMutex.Unlock()
-
-	j.tokenWhitelist[jti] = NewExpirable(target, 24 * time.Hour)
 }
 
 // CheckAuth is a middleware that will return an error if the request doesn't contain a valid auth token
@@ -116,64 +103,8 @@ func (j *JwtMiddleware) CheckAuth(c *gin.Context) {
 	c.Next()
 }
 
-// CheckStreamAuth is a middleware that will return an error if the request
-// doesn't contain a valid stream auth token matching the file being requested
-// passed in the auth query param
-func (j *JwtMiddleware) CheckStreamAuth(c *gin.Context) {
-	encodedToken := c.Query("auth")
-
-	claims := jwt.RegisteredClaims{}
-	token, err := jwt.ParseWithClaims(encodedToken, &claims, func(token *jwt.Token) (any, error) {
-		if len(j.jwtSecret) > 0 {
-			return j.jwtSecret, nil
-		}
-		return j.jwtSecret, fmt.Errorf("jwt_secret not set")
-	})
-	if err != nil {
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-			"err": "Failed to parse token",
-		})
-		return
-	}
-
-	if !token.Valid || claims.ID == "" {
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-			"error": "Invalid token",
-		})
-		return
-	}
-
-	j.tokenWhitelistMutex.RLock()
-	expirable, ok := j.tokenWhitelist[claims.ID]
-	j.tokenWhitelistMutex.RUnlock()
-
-	if !ok || expirable.IsExpired() || expirable.GetValue() != c.Param("path") {
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-			"error": "Expired token",
-		})
-		return
-	}
-
-	c.Next()
-}
-
-func (j *JwtMiddleware) cleanupStreamWhitelist() {
-	j.tokenWhitelistMutex.Lock()
-	defer j.tokenWhitelistMutex.Unlock()
-
-	expired := []string{}
-	for key, value := range j.tokenWhitelist {
-		if value.IsExpired() {
-			expired = append(expired, key)
-		}
-	}
-
-	for _, e := range expired {
-		delete(j.tokenWhitelist, e)
-	}
-}
-
-func (j *JwtMiddleware) cleanupInvalidatedTokens() {
+// Cleanup deletes stale data from the invalidatedTokens map avoid unchecked memory growth
+func (j *JwtMiddleware) Cleanup() {
 	j.invalidatedTokensMutex.Lock()
 	defer j.invalidatedTokensMutex.Unlock()
 
@@ -187,11 +118,6 @@ func (j *JwtMiddleware) cleanupInvalidatedTokens() {
 	for _, e := range expired {
 		delete(j.invalidatedTokens, e)
 	}
-}
-
-// Cleanup deletes stale data from the tokenWhitelist to avoid unchecked memory growth
-func (j *JwtMiddleware) Cleanup() {
-	j.cleanupStreamWhitelist()
 }
 
 func parseAuthHeader(header string) (string, error) {

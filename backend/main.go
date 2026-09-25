@@ -28,9 +28,11 @@ func main() {
 	viper.AutomaticEnv()
 
 	authMiddleware := auth.NewAuthMiddleware(viper.GetString("NO_AUTH") != "true", viper.GetString("JWT_SECRET"))
+	streamAuthMiddleware := auth.NewStreamAuthMiddleware(viper.GetString("NO_AUTH") != "true", viper.GetString("JWT_SECRET"))
 	rateLimiter := auth.NewRateLimiter()
 	authHandlers := auth.NewAuthHandlers(
 		authMiddleware,
+		streamAuthMiddleware,
 		rateLimiter,
 		viper.GetString("USERNAME"),
 		viper.GetString("PASSWORD"),
@@ -74,7 +76,7 @@ func main() {
 
 	// business logic
 	api.GET("/browse/*path", authMiddleware.CheckAuth, browserHandlers.BrowseFolder)
-	api.GET("/stream/*path", authMiddleware.CheckStreamAuth, browserHandlers.StreamFile)
+	api.GET("/stream/*path", streamAuthMiddleware.CheckAuth, browserHandlers.StreamFile)
 	api.PUT("/move/*path", authMiddleware.CheckAuth, browserHandlers.Move)
 	api.DELETE("/delete/*path", authMiddleware.CheckAuth, browserHandlers.Delete)
 	api.PUT("/upload/*path", authMiddleware.CheckAuth, browserHandlers.Upload)
