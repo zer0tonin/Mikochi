@@ -119,6 +119,10 @@ func (j *JwtMiddleware) Cleanup() {
 	for _, e := range expired {
 		delete(j.invalidatedTokens, e)
 	}
+
+	if len(expired) != 0 {
+		log.Printf("Cleaned up %d expired keys from authentication middleware", len(expired))
+	}
 }
 
 func parseAuthHeader(header string) (string, error) {
