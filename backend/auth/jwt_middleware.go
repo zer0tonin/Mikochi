@@ -32,19 +32,18 @@ func NewJwtMiddleware(secret []byte) *JwtMiddleware {
 func (j *JwtMiddleware) InvalidateToken(c *gin.Context) error {
 	jti, exists := c.Get("jti")
 	if !exists {
-		return fmt.Errorf("No JIT in context")
+		return fmt.Errorf("No JTI in context")
 	}
 	jtiStr, ok := jti.(string)
 	if !ok {
-		return fmt.Errorf("JIT is not a string")
+		return fmt.Errorf("JTI is not a string")
 	}
 
 	j.invalidatedTokensMutex.Lock()
-	defer j.invalidatedTokensMutex.Unlock()
+	j.invalidatedTokens[jtiStr] = NewExpirable(struct{}{}, time.Hour * 730) // struct{}{} = 0 size value
+	j.invalidatedTokensMutex.Unlock()
 
-	// struct{}{} = 0 size value
-	j.invalidatedTokens[jtiStr] = NewExpirable(struct{}{}, time.Hour * 730)
-	log.Printf("Token invalidated: %s\n", jti)
+	log.Printf("Token invalidated: %s\n", jtiStr)
 	return nil
 }
 
@@ -83,21 +82,21 @@ func (j *JwtMiddleware) CheckAuth(c *gin.Context) {
 
 	if !token.Valid {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-			"error": "Invalid token",
+			"err": "Invalid token",
 		})
 		return
 	}
 
 	if claims.ID == "" || j.isTokenInvalidated(claims.ID) {
 		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
-			"error": "Invalid token",
+			"err": "Invalid token",
 		})
 		return
 	}
 
 	if claims.Scope != "mikochi-user" {
 		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
-			"error": "Invalid token",
+			"err": "Invalid token",
 		})
 		return
 	}

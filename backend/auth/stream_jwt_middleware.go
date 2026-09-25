@@ -42,14 +42,14 @@ func (j *StreamJwtMiddleware) CheckAuth(c *gin.Context) {
 
 	if !token.Valid || claims.ID == "" {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-			"error": "Invalid token",
+			"err": "Invalid token",
 		})
 		return
 	}
 
 	if claims.Scope != c.Param("path") {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-			"error": "Expired token",
+			"err": "Expired token",
 		})
 		return
 	}
