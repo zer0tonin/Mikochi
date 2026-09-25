@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 	"sync"
 	"time"
 
@@ -192,3 +193,12 @@ func (j *JwtMiddleware) cleanupInvalidatedTokens() {
 func (j *JwtMiddleware) Cleanup() {
 	j.cleanupStreamWhitelist()
 }
+
+func parseAuthHeader(header string) (string, error) {
+	parts := strings.SplitN(header, " ", 2)
+	if len(parts) != 2 || strings.ToLower(parts[0]) != "bearer" {
+		return "", fmt.Errorf("Invalid header")
+	}
+	return parts[1], nil
+}
+

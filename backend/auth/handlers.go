@@ -132,3 +132,21 @@ func (h *AuthHandlers) Logout(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Logged out successfully"})
 }
+
+// generateAuthToken makes a new signed JWT token valid ~1 month
+func generateAuthToken(secret []byte) (string, error) {
+	jti := uuid.New().String() // Generate a unique jti
+	claims := jwt.RegisteredClaims{
+		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 730)),
+		Issuer:    "Mikochi",
+		IssuedAt:  jwt.NewNumericDate(time.Now()),
+		ID:        jti, // Add the jti claim
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	signedToken, err := token.SignedString(secret)
+	if err != nil {
+		return "", err
+	}
+
+	return signedToken, nil
+}
