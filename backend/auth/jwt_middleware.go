@@ -48,8 +48,8 @@ func (j *JwtMiddleware) InvalidateToken(c *gin.Context) error {
 	return nil
 }
 
-// IsTokenInvalidated checks if a token ID is in the invalidated tokens list
-func (j *JwtMiddleware) IsTokenInvalidated(jti string) bool {
+// isTokenInvalidated checks if a token ID is in the invalidated tokens list
+func (j *JwtMiddleware) isTokenInvalidated(jti string) bool {
 	j.invalidatedTokensMutex.RLock()
 	defer j.invalidatedTokensMutex.RUnlock()
 
@@ -67,7 +67,8 @@ func (j *JwtMiddleware) CheckAuth(c *gin.Context) {
 		return
 	}
 
-	token, err := jwt.Parse(encodedToken, func(token *jwt.Token) (any, error) {
+	claims := Claims{}
+	token, err := jwt.ParseWithClaims(encodedToken, &claims, func(token *jwt.Token) (any, error) {
 		if len(j.jwtSecret) > 0 {
 			return j.jwtSecret, nil
 		}
@@ -82,24 +83,26 @@ func (j *JwtMiddleware) CheckAuth(c *gin.Context) {
 
 	if !token.Valid {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-			"error": "Invalid or expired token",
+			"error": "Invalid token",
 		})
 		return
 	}
 
-	// Check if the token is invalidated and set the jti in the context
-	if claims, ok := token.Claims.(jwt.MapClaims); ok {
-		if jti, ok := claims["jti"].(string); ok {
-			if j.IsTokenInvalidated(jti) {
-				c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
-					"error": "Token has been invalidated",
-				})
-				return
-			}
-			c.Set("jti", jti)
-		}
+	if claims.ID == "" || j.isTokenInvalidated(claims.ID) {
+		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
+			"error": "Invalid token",
+		})
+		return
 	}
 
+	if claims.Scope != "mikochi-user" {
+		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
+			"error": "Invalid token",
+		})
+		return
+	}
+
+	c.Set("jti", claims.ID) // useful for logout
 	c.Next()
 }
 
