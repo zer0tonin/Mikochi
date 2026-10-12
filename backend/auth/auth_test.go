@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 )
 
 func TestParseAuthHeader(t *testing.T) {
@@ -57,7 +58,8 @@ func TestGenerateAuthToken(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			encodedToken, err := generateAuthToken([]byte(test.secret))
+			jti := uuid.New().String()
+			encodedToken, err := generateAuthToken([]byte(test.secret), jti)
 			if err != nil {
 				t.Fail()
 			}

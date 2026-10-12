@@ -100,7 +100,7 @@ func (j *JwtMiddleware) CheckAuth(c *gin.Context) {
 		return
 	}
 
-	c.Set("jti", claims.ID) // useful for logout
+	c.Set("jti", claims.ID) // useful for logout and refresh
 	c.Next()
 }
 

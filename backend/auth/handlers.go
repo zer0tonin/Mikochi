@@ -64,7 +64,9 @@ func (a *AuthHandlers) Login(c *gin.Context) {
 
 	log.Printf("Succesful login as %s", credentials.Username)
 	a.rateLimiter.resetRateLimit(credentials.Username)
-	signedToken, err := generateAuthToken(a.jwtSecret)
+
+	jti := uuid.New().String()
+	signedToken, err := generateAuthToken(a.jwtSecret, jti)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"err": "Failed to generate authentication token",
@@ -80,7 +82,22 @@ func (a *AuthHandlers) Login(c *gin.Context) {
 // GET /refresh
 // Refresh returns a new JWT token (should be called after an auth check)
 func (a *AuthHandlers) Refresh(c *gin.Context) {
-	signedToken, err := generateAuthToken(a.jwtSecret)
+	jti, exists := c.Get("jti")
+	if !exists {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"err": "Failed to parse token",
+		})
+		return
+	}
+	jtiStr, ok := jti.(string)
+	if !ok {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"err": "Failed to parse token",
+		})
+		return
+	}
+
+	signedToken, err := generateAuthToken(a.jwtSecret, jtiStr)
 
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
@@ -95,8 +112,7 @@ func (a *AuthHandlers) Refresh(c *gin.Context) {
 }
 
 // generateAuthToken makes a new signed JWT token valid ~1 month
-func generateAuthToken(secret []byte) (string, error) {
-	jti := uuid.New().String()
+func generateAuthToken(secret []byte, jti string) (string, error) {
 	claims := Claims{
 		Scope: "mikochi-user",
 		RegisteredClaims: jwt.RegisteredClaims{
