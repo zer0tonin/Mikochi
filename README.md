@@ -163,3 +163,7 @@ docker buildx imagetools create \
     "zer0tonin/mikochi:latest-arm64" \
     "zer0tonin/mikochi:latest-armv7"
 ```
+
+## Related projects
+
+* [Mikochi-Player](https://github.com/ymistyy/Mikochi-Player): web-based video player made to work alongside Mikochi
