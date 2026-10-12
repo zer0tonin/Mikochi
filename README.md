@@ -91,20 +91,23 @@ PASSWORD=horsebatterysomething mikochi
 
 Mikochi is configured using environment variables
 
-| Key            | Description                                 | Default                     |
-|----------------|---------------------------------------------|-----------------------------|
-| HOST           | The ip:port mikochi will listen on          | 0.0.0.0:80                  |
-| DATA_DIR       | The directory accessed by mikochi           | /data                       |
-| JWT_SECRET     | A secret string for jwt validation          | [Random]                    |
-| USERNAME       | The username to login with                  | root                        |
-| PASSWORD       | The password to login with                  | pass                        |
-| CERT_CA        | The path to a TLS certificate               | null                        |
-| CERT_KEY       | The path to the key associated with CERT_CA | null                        |
-| NO_AUTH        | If true, disables all authentication        | false                       |
-| GZIP           | If true, enables gzip compression           | false                       |
-| FRONTEND_FILES | The location of the frontend static files   | /usr/share/mikochi/static   |
+| Key            | Description                                              | Default                     |
+|----------------|----------------------------------------------------------|-----------------------------|
+| HOST           | The ip:port Mikochi will listen on                       | 0.0.0.0:80                  |
+| DATA_DIR       | The directory accessed by Mikochi                        | /data                       |
+| JWT_SECRET     | A secret string for JWT validation (see warning)         | [Random]                    |
+| USERNAME       | The username for login                                   | root                        |
+| PASSWORD       | The password for login                                   | pass                        |
+| CERT_CA        | The path to a TLS certificate                            | null                        |
+| CERT_KEY       | The path to the key associated with CERT_CA              | null                        |
+| NO_AUTH        | If true, disables all authentication                     | false                       |
+| GZIP           | If true, enables gzip compression                        | false                       |
+| FRONTEND_FILES | The location of the frontend static files                | /usr/share/mikochi/static   |
 
-Note: it is recommended to not manually set JWT_SECRET, as getting a new randomly generated secret everytime when mikochi starts let's you invalidate authentication tokens by restarting the process.
+> [!WARNING]  
+> Do not touch the JWT_SECRET configuration key if you are not 100% sure you need to do so.
+> By default, Mikochi will regenerate a new random secret every startup, which is more secure.
+> Using hardcoded secrets can lead to sharing the secret between multiple processes, making token invalidation ineffective.
 
 
 ## Development
