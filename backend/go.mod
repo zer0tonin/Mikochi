@@ -1,6 +1,6 @@
 module github.com/zer0tonin/mikochi
 
-go 1.26.0
+go 1.27.1
 
 require (
 	github.com/gin-contrib/gzip v1.2.8
