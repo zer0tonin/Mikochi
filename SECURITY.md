@@ -2,7 +2,7 @@
 
 ## Reporting a Vulnerability
 
-If you find a vulnerability in Mikochi, please report it by email: [hi@alicegg.tech](hi@alicegg.tech).
+If you find a vulnerability in Mikochi, please report it by email: [hi@alicegg.tech](mailto:hi@alicegg.tech).
 
 ## Supported Version
 
