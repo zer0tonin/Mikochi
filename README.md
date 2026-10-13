@@ -104,11 +104,29 @@ Mikochi is configured using environment variables
 | GZIP           | If true, enables gzip compression                        | false                       |
 | FRONTEND_FILES | The location of the frontend static files                | /usr/share/mikochi/static   |
 
-> [!WARNING]  
-> Do not touch the JWT_SECRET configuration key if you are not 100% sure you need to do so.
-> By default, Mikochi will regenerate a new random secret every startup, which is more secure.
-> Using hardcoded secrets can lead to sharing the secret between multiple processes, making token invalidation ineffective.
 
+## Security considerations
+
+`USERNAME` and `PASSWORD` values should be changed from the default root/pass combination, as this one is obviously extremely insecure.
+For the sake of minimalism, Mikochi authentication supports a single username / password combo.
+More sophisticated setups can be easily implemented by forking this repository.
+
+Binding the entire file system by setting `DATA_DIR` to `/` is probably a bad idea.
+This could have dire consequences for your system's integrity if an attacker gained attack to Mikochi.
+
+If `NO_AUTH` is set to true, anyone will be able to access your Mikochi instance.
+It's a bad idea to do that on the open internet, as anyone could use your instance to upload and store files you would not want anywhere near your hard disk.
+Only use that on machines that are not accessible outside of a private network.
+
+Do not touch the `JWT_SECRET` configuration key unless you are 100% sure your use case requires it.
+If `JWT_SECRET` is not set, Mikochi will regenerate a new random secret every startup.
+This is more secure than setting a hard-coded secret.
+Using hard-coded secrets can lead to sharing the secret between multiple processes over time.
+This renders token invalidation on logout ineffective.
+
+It's a very good idea to run Mikochi with TLS (HTTPS).
+You can obtain free certificates using [Let's Encrypt](https://letsencrypt.org/).
+They can be configured using `CERT_CA` and `CERT_KEY` or through a reverse proxy.
 
 ## Development
 
@@ -138,7 +156,7 @@ dlv connect localhost:2345
 ### Creating a production build
 
 > [!NOTE]  
-> This can be done automatically by running the `release` GitHub Action workflow.
+> This can be done automatically by running the `release` GitHub Action workflow (triggered on tag).
 
 Build the frontend using npm:
 
