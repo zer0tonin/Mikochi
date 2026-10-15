@@ -17,9 +17,10 @@ type AuthHandlers struct {
 	username             string
 	password             string
 	jwtSecret            []byte
+	disabled             bool
 }
 
-func NewAuthHandlers(authMiddleware AuthMiddleware, streamAuthMiddleware StreamAuthMiddleware, rateLimiter *RateLimiter, username, password string, jwtSecret []byte) *AuthHandlers {
+func NewAuthHandlers(authMiddleware AuthMiddleware, streamAuthMiddleware StreamAuthMiddleware, rateLimiter *RateLimiter, username, password string, jwtSecret []byte, disabled bool) *AuthHandlers {
 	return &AuthHandlers{
 		authMiddleware:       authMiddleware,
 		streamAuthMiddleware: streamAuthMiddleware,
@@ -27,6 +28,7 @@ func NewAuthHandlers(authMiddleware AuthMiddleware, streamAuthMiddleware StreamA
 		username:             username,
 		password:             password,
 		jwtSecret:            jwtSecret,
+		disabled:             disabled,
 	}
 }
 
@@ -82,6 +84,15 @@ func (a *AuthHandlers) Login(c *gin.Context) {
 // GET /refresh
 // Refresh returns a new JWT token (should be called after an auth check)
 func (a *AuthHandlers) Refresh(c *gin.Context) {
+	if a.disabled {
+		// FIXME: this is a bit dirty
+		// by the way do we really need stream-tokens when NO_AUTH = true?
+		c.JSON(http.StatusOK, gin.H{
+			"token": "no_auth",
+		})
+		return
+	}
+
 	jti, exists := c.Get("jti")
 	if !exists {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{

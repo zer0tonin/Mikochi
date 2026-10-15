@@ -37,6 +37,7 @@ func main() {
 		viper.GetString("USERNAME"),
 		viper.GetString("PASSWORD"),
 		[]byte(viper.GetString("JWT_SECRET")),
+		viper.GetString("NO_AUTH") == "true",
 	)
 
 	pathConverter := browser.NewPathConverter(viper.GetString("DATA_DIR"))
