@@ -25,6 +25,7 @@ func main() {
 	viper.SetDefault("NO_AUTH", "false")
 	viper.SetDefault("GZIP", "false")
 	viper.SetDefault("FRONTEND_FILES", "/usr/share/mikochi/static")
+	viper.SetDefault("PATH_PREFIX", "/")
 	viper.AutomaticEnv()
 
 	authMiddleware := auth.NewAuthMiddleware(viper.GetString("NO_AUTH") != "true", viper.GetString("JWT_SECRET"))
@@ -81,7 +82,15 @@ func main() {
 		}
 	}()
 
-	api := r.Group("/api")
+	pathPrefix := viper.GetString("PATH_PREFIX")
+	if !strings.HasSuffix(pathPrefix, "/") {
+		pathPrefix = pathPrefix + "/"
+	}
+	if !strings.HasPrefix(pathPrefix, "/") {
+		pathPrefix = "/" + pathPrefix
+	}
+
+	api := r.Group(pathPrefix + "api")
 
 	// business logic
 	api.GET("/browse/*path", authMiddleware.CheckAuth, browserHandlers.BrowseFolder)
