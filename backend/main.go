@@ -61,17 +61,14 @@ func main() {
 		r.Use(gzip.Gzip(gzip.DefaultCompression))
 	}
 
+	pathPrefix := normalizePath(viper.GetString("PATH_PREFIX"))
+	frontendFiles := normalizePath(viper.GetString("FRONTEND_FILES"))
+
 	// in production builds, this route serves the frontend files
 	// in the dev environment, this is handled by the frontend container
-	staticLocation := viper.GetString("FRONTEND_FILES")
-	r.Use(static.ServeRoot("/", staticLocation))
+	r.Use(serveIndexMiddleware(frontendFiles, pathPrefix), static.ServeRoot("/", frontendFiles))
 	r.NoRoute(func(c *gin.Context) {
-		// we let the client-side routing take over
-		if strings.HasSuffix(staticLocation, "/") {
-			c.File(staticLocation + "index.html")
-		} else {
-			c.File(staticLocation + "/index.html")
-		}
+		serveIndex(c, frontendFiles, pathPrefix)
 	})
 
 	go func() {
@@ -81,14 +78,6 @@ func main() {
 			rateLimiter.Cleanup()
 		}
 	}()
-
-	pathPrefix := viper.GetString("PATH_PREFIX")
-	if !strings.HasSuffix(pathPrefix, "/") {
-		pathPrefix = pathPrefix + "/"
-	}
-	if !strings.HasPrefix(pathPrefix, "/") {
-		pathPrefix = "/" + pathPrefix
-	}
 
 	api := r.Group(pathPrefix + "api")
 
