@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/zer0tonin/mikochi/auth"
@@ -66,8 +65,10 @@ func main() {
 
 	// in production builds, this route serves the frontend files
 	// in the dev environment, this is handled by the frontend container
-	r.Use(serveIndexMiddleware(frontendFiles, pathPrefix), static.ServeRoot("/", frontendFiles))
+	r.Use(serveIndexMiddleware(frontendFiles, pathPrefix))
+	r.Use(static.ServeRoot(pathPrefix, frontendFiles))
 	r.NoRoute(func(c *gin.Context) {
+		// we serve index.html on unknown route to preserve client-side routing
 		serveIndex(c, frontendFiles, pathPrefix)
 	})
 

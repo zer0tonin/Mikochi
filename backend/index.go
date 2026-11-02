@@ -20,14 +20,14 @@ func serveIndex(c *gin.Context, frontendFiles string, pathPrefix string) bool {
 	}
 
 	configScript := fmt.Sprintf(
-		"<script>window.__MIKOCHI_CONFIG__={pathPrefix:%q};</script>",
+		"<script>window.__MIKOCHI_CONFIG__={pathPrefix:%q};</script></head>",
 		pathPrefix,
 	)
 
 	html := string(data)
 	html = strings.Replace(
 		html,
-		"<!-- mikochi-config -->",
+		"</head>",
 		configScript,
 		1,
 	)
@@ -42,6 +42,7 @@ func serveIndex(c *gin.Context, frontendFiles string, pathPrefix string) bool {
 func serveIndexMiddleware(frontendFiles string, pathPrefix string) gin.HandlerFunc {
     return func(c *gin.Context) {
         path := normalizePath(c.Request.URL.Path)
+
         isRoot := path == pathPrefix
         isIndex := path == pathPrefix + "index.html"
 
