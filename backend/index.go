@@ -56,3 +56,19 @@ func serveIndexMiddleware(frontendFiles string, pathPrefix string) gin.HandlerFu
         c.Next()
     }
 }
+
+func normalizePath(path string) string {
+    if path == "" {
+        path = "/"
+    }
+
+    if !strings.HasPrefix(path, "/") {
+        path = "/" + path
+    }
+
+    if !strings.HasSuffix(path, "/") {
+        path = path + "/"
+    }
+
+    return path
+}
