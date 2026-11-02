@@ -1,6 +1,7 @@
 import { h } from "preact";
 import { useContext } from "preact/hooks";
 import { AuthContext } from "../../jwt";
+import {getApiUrl} from "../../api";
 
 const LogOut = () => {
   const { jwt } = useContext(AuthContext);
@@ -10,7 +11,7 @@ const LogOut = () => {
         console.error("No token found in context");
         return;
       }
-      await fetch("/api/logout", {
+      await fetch(getApiUrl("logout"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

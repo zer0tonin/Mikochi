@@ -9,6 +9,7 @@ import handleError from "../../error";
 import Toast from "../toast";
 import { signal } from "@preact/signals";
 import { refresh } from "../../pages/Directory";
+import {getApiUrl} from "../../api";
 
 export const renameFilePath = signal(null);
 
@@ -28,7 +29,7 @@ const RenameModal = ({ isOpen, close, filePath, setSuccess }) => {
   const onSubmit = (e) => {
     e.preventDefault();
     const putMove = async () => {
-      const response = await fetch(`/api/move${filePath}`, {
+      const response = await fetch(getApiUrl(`move${filePath}`), {
         method: "PUT",
         headers: {
           Accept: "application/json",

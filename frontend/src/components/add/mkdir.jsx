@@ -8,6 +8,7 @@ import "./style.css";
 import handleError from "../../error";
 import Toast from "../toast";
 import { refresh } from "../../pages/Directory";
+import {getApiUrl} from "../../api";
 
 export const mkdirOpen = signal(false);
 
@@ -24,7 +25,7 @@ const MkdirModal = ({ isOpen, close, dirPath, setSuccess }) => {
     e.preventDefault();
     const putMkdir = async () => {
       const response = await fetch(
-        dirPath != "" ? `/api/mkdir/${dirPath}/${name}` : `/api/mkdir/${name}`,
+        dirPath != "" ? getApiUrl(`mkdir/${dirPath}/${name}`) : getApiUrl(`mkdir/${name}`),
         {
           method: "PUT",
           headers: {

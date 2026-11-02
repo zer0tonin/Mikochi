@@ -4,6 +4,7 @@ import "./style.css";
 
 import { AuthContext } from "../../jwt";
 import handleError from "../../error";
+import {getApiUrl} from "../../api";
 
 const Login = () => {
   const { setJWT } = useContext(AuthContext);
@@ -18,7 +19,7 @@ const Login = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     const postLogin = async () => {
-      const response = await fetch("/api/login", {
+      const response = await fetch(getApiUrl("login"), {
         method: "POST",
         headers: {
           Accept: "application/json",
