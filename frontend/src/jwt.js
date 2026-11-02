@@ -1,5 +1,5 @@
 import { createContext } from "preact";
-import {getApiUrl} from "./url";
+import { getApiUrl } from "./url";
 
 export const AuthContext = createContext(null);
 

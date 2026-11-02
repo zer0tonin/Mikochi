@@ -40,35 +40,35 @@ func serveIndex(c *gin.Context, frontendFiles string, pathPrefix string) bool {
 
 // serveIndexMiddleware will call custom serveIndex logic before static.ServeRoot
 func serveIndexMiddleware(frontendFiles string, pathPrefix string) gin.HandlerFunc {
-    return func(c *gin.Context) {
-        path := normalizePath(c.Request.URL.Path)
+	return func(c *gin.Context) {
+		path := normalizePath(c.Request.URL.Path)
 
-        isRoot := path == pathPrefix
-        isIndex := path == pathPrefix + "index.html"
+		isRoot := path == pathPrefix
+		isIndex := path == pathPrefix+"index.html"
 
-        if isRoot || isIndex {
-            if serveIndex(c, frontendFiles, pathPrefix) {
-                c.Abort()
-                return
-            }
-        }
+		if isRoot || isIndex {
+			if serveIndex(c, frontendFiles, pathPrefix) {
+				c.Abort()
+				return
+			}
+		}
 
-        c.Next()
-    }
+		c.Next()
+	}
 }
 
 func normalizePath(path string) string {
-    if path == "" {
-        path = "/"
-    }
+	if path == "" {
+		path = "/"
+	}
 
-    if !strings.HasPrefix(path, "/") {
-        path = "/" + path
-    }
+	if !strings.HasPrefix(path, "/") {
+		path = "/" + path
+	}
 
-    if !strings.HasSuffix(path, "/") {
-        path = path + "/"
-    }
+	if !strings.HasSuffix(path, "/") {
+		path = path + "/"
+	}
 
-    return path
+	return path
 }

@@ -9,7 +9,7 @@ import handleError from "../../error";
 import Toast from "../toast";
 import { signal } from "@preact/signals";
 import { refresh } from "../../pages/Directory";
-import {getApiUrl} from "../../url";
+import { getApiUrl } from "../../url";
 
 export const renameFilePath = signal(null);
 
