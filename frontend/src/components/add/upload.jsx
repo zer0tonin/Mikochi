@@ -10,6 +10,7 @@ import { getHttpErrorDescription } from "../../error";
 import Toast from "../toast";
 import ProgressBar from "./progress";
 import { refresh } from "../../pages/Directory";
+import {getApiUrl} from "../../api";
 
 export const uploadOpen = signal(false);
 
@@ -35,8 +36,8 @@ const UploadModal = ({ isOpen, close, dirPath, setSuccess }) => {
         xhr.open(
           "PUT",
           dirPath != ""
-            ? `/api/upload/${dirPath}/${file.name}`
-            : `/api/upload/${file.name}`,
+            ? getApiUrl(`upload/${dirPath}/${file.name}`)
+            : getApiUrl(`upload/${file.name}`),
         );
         xhr.setRequestHeader("Accept", "application/json");
         xhr.setRequestHeader("Authorization", `Bearer ${jwt}`);

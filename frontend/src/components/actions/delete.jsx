@@ -9,6 +9,7 @@ import handleError from "../../error";
 import Toast from "../toast";
 import { signal } from "@preact/signals";
 import { refresh } from "../../pages/Directory";
+import {getApiUrl} from "../../api";
 
 export const deleteFilePath = signal(null);
 
@@ -23,7 +24,7 @@ const DeleteModal = ({ isOpen, close, filePath, setSuccess }) => {
   const onSubmit = (e) => {
     e.preventDefault();
     const sendDelete = async () => {
-      const response = await fetch(`/api/delete${filePath}`, {
+      const response = await fetch(getApiUrl(`delete${filePath}`), {
         method: "DELETE",
         headers: {
           Accept: "application/json",

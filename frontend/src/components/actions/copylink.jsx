@@ -3,6 +3,7 @@ import { useContext, useState } from "preact/hooks";
 
 import { AuthContext } from "../../jwt";
 import Toast from "../toast";
+import {getApiUrl} from "../../api";
 
 // copyToClipboard will copy text to the clipboard using navigator.clipboard if available
 // or fallback to document.execCommand
@@ -39,7 +40,7 @@ const CopyLink = ({ filePath, children }) => {
   const copyWithAuth = async () => {
     const target = new URLSearchParams();
     target.append("target", filePath);
-    const response = await fetch(`/api/stream-token?${target.toString()}`, {
+    const response = await fetch(getApiUrl(`stream-token?${target.toString()}`), {
       headers: {
         Accept: "application/json",
         Authorization: `Bearer ${jwt}`,

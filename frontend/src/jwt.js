@@ -1,4 +1,5 @@
 import { createContext } from "preact";
+import {getApiUrl} from "./api";
 
 export const AuthContext = createContext(null);
 
@@ -9,7 +10,7 @@ export const refreshJWT = (setJWT) => {
 
     // we always check refresh, to handle NO_AUTH=true backends
 
-    const response = await fetch(`/api/refresh`, {
+    const response = await fetch(getApiUrl(`refresh`), {
       headers: {
         Accept: "application/json",
         Authorization: `Bearer ${storedToken}`,

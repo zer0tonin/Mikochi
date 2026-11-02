@@ -12,6 +12,7 @@ import {
 } from "../../components/path";
 import Icon from "../../components/icon";
 import { NameHeader, SizeHeader, sorting } from "../../components/sorting";
+import {getApiUrl} from "../../api";
 
 const formatFileSize = (bytes) => {
   if (bytes === 0) return "0 bytes";
@@ -37,7 +38,7 @@ const DirectoryTable = ({ searchQuery, compare, setCompare }) => {
       }
 
       const response = await fetch(
-        `/api/browse${location.path}?${params.toString()}`,
+        getApiUrl(`browse${location.path}?${params.toString()}`),
         {
           headers: {
             Accept: "application/json",
