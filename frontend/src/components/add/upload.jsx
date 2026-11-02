@@ -10,7 +10,7 @@ import { getHttpErrorDescription } from "../../error";
 import Toast from "../toast";
 import ProgressBar from "./progress";
 import { refresh } from "../../pages/Directory";
-import {getApiUrl} from "../../api";
+import {getApiUrl} from "../../url";
 
 export const uploadOpen = signal(false);
 

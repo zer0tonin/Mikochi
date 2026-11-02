@@ -8,7 +8,7 @@ import "./style.css";
 import handleError from "../../error";
 import Toast from "../toast";
 import { refresh } from "../../pages/Directory";
-import {getApiUrl} from "../../api";
+import {getApiUrl} from "../../url";
 
 export const mkdirOpen = signal(false);
 

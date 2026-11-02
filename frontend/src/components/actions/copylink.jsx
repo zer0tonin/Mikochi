@@ -3,7 +3,7 @@ import { useContext, useState } from "preact/hooks";
 
 import { AuthContext } from "../../jwt";
 import Toast from "../toast";
-import {getApiUrl} from "../../api";
+import {getApiUrl, getStreamUrl} from "../../url";
 
 // copyToClipboard will copy text to the clipboard using navigator.clipboard if available
 // or fallback to document.execCommand
@@ -51,9 +51,7 @@ const CopyLink = ({ filePath, children }) => {
     const auth = new URLSearchParams();
     auth.append("auth", json["token"]);
     await copyToClipboard(
-      `${window.location.protocol}//${window.location.hostname}${
-        window.location.port == "" ? "" : `:${window.location.port}`
-      }/api/stream${filePath}?${auth.toString()}`,
+      getStreamUrl(filePath, auth)
     );
     setShowToast(true);
     setTimeout(() => setShowToast(false), 2000);

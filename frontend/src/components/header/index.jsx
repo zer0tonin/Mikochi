@@ -4,7 +4,7 @@ import "./style.css";
 import Search from "../search";
 import Menu from "../menu";
 import { useLocation } from "preact-iso";
-import {getAssetUrl} from "../../api";
+import {getAssetUrl} from "../../url";
 
 const Header = ({ searchQuery, setSearchQuery }) => {
   const location = useLocation();
