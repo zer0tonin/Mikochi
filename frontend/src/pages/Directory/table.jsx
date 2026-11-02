@@ -12,7 +12,7 @@ import {
 } from "../../components/path";
 import Icon from "../../components/icon";
 import { NameHeader, SizeHeader, sorting } from "../../components/sorting";
-import {getApiUrl} from "../../api";
+import {getApiUrl} from "../../url";
 
 const formatFileSize = (bytes) => {
   if (bytes === 0) return "0 bytes";

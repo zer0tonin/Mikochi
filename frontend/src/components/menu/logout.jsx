@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { useContext } from "preact/hooks";
 import { AuthContext } from "../../jwt";
-import {getApiUrl} from "../../api";
+import {getApiUrl} from "../../url";
 
 const LogOut = () => {
   const { jwt } = useContext(AuthContext);

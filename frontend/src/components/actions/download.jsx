@@ -1,7 +1,7 @@
 import { h } from "preact";
 import { useContext } from "preact/hooks";
 import { AuthContext } from "../../jwt";
-import {getApiUrl} from "../../api";
+import {getApiUrl, getStreamUrl} from "../../url";
 
 const downloadFile = (request, fileName) => {
   const link = document.createElement("a");
@@ -27,9 +27,7 @@ const Download = ({ filePath, children }) => {
     const auth = new URLSearchParams();
     auth.append("auth", json["token"]);
     downloadFile(
-      `${window.location.protocol}//${window.location.hostname}${
-        window.location.port == "" ? "" : `:${window.location.port}`
-      }/api/stream${filePath}?${auth.toString()}`,
+      getStreamUrl(filePath, auth),
       filePath.split("/").at(-1),
     );
   };
