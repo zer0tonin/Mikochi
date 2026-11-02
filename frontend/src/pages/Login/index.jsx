@@ -4,7 +4,7 @@ import "./style.css";
 
 import { AuthContext } from "../../jwt";
 import handleError from "../../error";
-import {getApiUrl} from "../../url";
+import { getApiUrl } from "../../url";
 
 const Login = () => {
   const { setJWT } = useContext(AuthContext);

@@ -1,20 +1,29 @@
 export const getApiUrl = (path) => {
-  if (window.__MIKOCHI_CONFIG__ != null && 'pathPrefix' in window.__MIKOCHI_CONFIG__) {
-    return `${window.__MIKOCHI_CONFIG__['pathPrefix']}api/${path}`
+  if (
+    window.__MIKOCHI_CONFIG__ != null &&
+    "pathPrefix" in window.__MIKOCHI_CONFIG__
+  ) {
+    return `${window.__MIKOCHI_CONFIG__["pathPrefix"]}api/${path}`;
   }
-  return `/api/${path}`
-}
+  return `/api/${path}`;
+};
 
 export const getAssetUrl = (path) => {
-  if (window.__MIKOCHI_CONFIG__ != null && 'pathPrefix' in window.__MIKOCHI_CONFIG__) {
-    return `${window.__MIKOCHI_CONFIG__['pathPrefix']}${path}`
+  if (
+    window.__MIKOCHI_CONFIG__ != null &&
+    "pathPrefix" in window.__MIKOCHI_CONFIG__
+  ) {
+    return `${window.__MIKOCHI_CONFIG__["pathPrefix"]}${path}`;
   }
-  return `/${path}`
-}
+  return `/${path}`;
+};
 
 export const getStreamUrl = (path, token) => {
-  if (window.__MIKOCHI_CONFIG__ != null && 'pathPrefix' in window.__MIKOCHI_CONFIG__) {
-    return `${window.location.protocol}//${window.location.hostname}${window.location.port == "" ? "" : `:${window.location.port}`}${window.__MIKOCHI_CONFIG__['pathPrefix']}api/stream${path}?${token.toString()}`
+  if (
+    window.__MIKOCHI_CONFIG__ != null &&
+    "pathPrefix" in window.__MIKOCHI_CONFIG__
+  ) {
+    return `${window.location.protocol}//${window.location.hostname}${window.location.port == "" ? "" : `:${window.location.port}`}${window.__MIKOCHI_CONFIG__["pathPrefix"]}api/stream${path}?${token.toString()}`;
   }
-    return `${window.location.protocol}//${window.location.hostname}${window.location.port == "" ? "" : `:${window.location.port}`}/api/stream${path}?${token.toString()}`
-}
+  return `${window.location.protocol}//${window.location.hostname}${window.location.port == "" ? "" : `:${window.location.port}`}/api/stream${path}?${token.toString()}`;
+};
