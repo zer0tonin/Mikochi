@@ -4,6 +4,7 @@ import "./style.css";
 import Search from "../search";
 import Menu from "../menu";
 import { useLocation } from "preact-iso";
+import {getAssetUrl} from "../../api";
 
 const Header = ({ searchQuery, setSearchQuery }) => {
   const location = useLocation();
@@ -17,7 +18,7 @@ const Header = ({ searchQuery, setSearchQuery }) => {
       <nav role="navigation" aria-label="main navigation">
         <Menu onHomeClick={onHomeClick} />
         <a onClick={onHomeClick}>
-          <img src="/logo.png" width="56" height="56" />
+          <img src={getAssetUrl("logo.png")} width="56" height="56" />
           Mikochi
         </a>
         <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
