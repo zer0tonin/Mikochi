@@ -2,6 +2,7 @@ import { h } from "preact";
 import { useContext } from "preact/hooks";
 import { AuthContext } from "../../jwt";
 import { getApiUrl } from "../../url";
+import {addPrefix} from "../../location";
 
 const LogOut = () => {
   const { jwt } = useContext(AuthContext);
@@ -19,14 +20,7 @@ const LogOut = () => {
         },
       });
 
-      if (
-        window.__MIKOCHI_CONFIG__ != null &&
-        "pathPrefix" in window.__MIKOCHI_CONFIG__
-      ) {
-        window.location.href = window.__MIKOCHI_CONFIG__.pathPrefix;
-        return
-      }
-      window.location.href = "/";
+      window.location.href = addPrefix("/");
     } catch (error) {
       console.error("Error logging out:", error);
     } finally {
