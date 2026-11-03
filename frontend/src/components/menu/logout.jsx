@@ -19,6 +19,13 @@ const LogOut = () => {
         },
       });
 
+      if (
+        window.__MIKOCHI_CONFIG__ != null &&
+        "pathPrefix" in window.__MIKOCHI_CONFIG__
+      ) {
+        window.location.href = window.__MIKOCHI_CONFIG__.pathPrefix;
+        return
+      }
       window.location.href = "/";
     } catch (error) {
       console.error("Error logging out:", error);
