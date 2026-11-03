@@ -1,6 +1,7 @@
 import { h } from "preact";
 import { useLocation } from "preact-iso";
 import Icon from "./icon";
+import {getLocation} from "../url";
 
 export const Path = ({ fileInfo, currentDir, isSearch }) => {
   const location = useLocation();
@@ -12,7 +13,7 @@ export const Path = ({ fileInfo, currentDir, isSearch }) => {
         : fileInfo.path.slice(decodeURI(currentDir).length + 1);
     // browse
     if (fileInfo.isDir) {
-      return <a onClick={() => location.route(fileInfo.path)}>{fileName}</a>;
+      return <a onClick={() => location.route(getLocation(fileInfo.path))}>{fileName}</a>;
     }
     return <span>{fileName}</span>;
   }
@@ -28,7 +29,7 @@ export const Path = ({ fileInfo, currentDir, isSearch }) => {
           if (i == splitPath.length - 1 && !fileInfo.isDir) {
             return <span key={i}>{val}</span>;
           }
-          const target = `${splitPath.slice(0, i + 1).join("/")}/`;
+          const target = getLocation(`${splitPath.slice(0, i + 1).join("/")}/`);
           return (
             <a key={i} onClick={() => location.route(target)}>
               {val}
@@ -46,13 +47,13 @@ export const Path = ({ fileInfo, currentDir, isSearch }) => {
 export const FolderIcon = ({ fileInfo }) => {
   const location = useLocation();
 
-  return <Icon name="folder" onClick={() => location.route(fileInfo.path)} />;
+  return <Icon name="folder" onClick={() => location.route(getLocation(fileInfo.path))} />;
 };
 
 export const DoubleDotPath = ({ currentDir }) => {
   const location = useLocation();
   const split = currentDir.split("/");
-  const target = split.slice(0, split.length - 1).join("/");
+  const target = getLocation(split.slice(0, split.length - 1).join("/"));
 
   return <a onClick={() => location.route(target == "" ? "/" : target)}>..</a>;
 };
@@ -61,7 +62,7 @@ export const DoubleDotFolderIcon = ({ currentDir }) => {
   const location = useLocation();
 
   const split = currentDir.split("/");
-  const target = split.slice(0, split.length - 1).join("/");
+  const target = getLocation(split.slice(0, split.length - 1).join("/"));
 
   return (
     <Icon
