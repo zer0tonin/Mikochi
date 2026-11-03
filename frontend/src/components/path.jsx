@@ -8,9 +8,9 @@ export const Path = ({ fileInfo, currentDir, isSearch }) => {
 
   if (!isSearch) {
     const fileName =
-      currentDir === "/" // FIXME broken
-        ? fileInfo.path.slice(decodeURI(currentDir).length)
-        : fileInfo.path.slice(decodeURI(currentDir).length + 1);
+      currentDir === ""
+        ? fileInfo.path.slice(1)
+        : fileInfo.path.slice(decodeURI(currentDir).length + 2);
     // browse
     if (fileInfo.isDir) {
       return <a onClick={() => location.route(addPrefix(fileInfo.path))}>{fileName}</a>;
