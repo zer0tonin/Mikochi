@@ -26,6 +26,7 @@ jobs:
           case ${{ matrix.platform }} in
             amd64)
               echo "GOARCH=amd64" >> $GITHUB_ENV
+              echo "GOAMD64=v1" >> $GITHUB_ENV
               ;;
             arm64)
               echo "GOARCH=arm64" >> $GITHUB_ENV
