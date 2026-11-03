@@ -13,7 +13,7 @@ import Rename from "../../components/actions/rename";
 import Delete from "../../components/actions/delete";
 import { signal } from "@preact/signals";
 import DirectoryTable from "./table";
-import { getLocation } from "../../url";
+import {removePrefix} from "../../location";
 
 export const refresh = signal(0);
 
@@ -43,10 +43,10 @@ const Directory = () => {
 
   useEffect(() => {
     if (!location.url.endsWith("/")) {
-      location.route(getLocation(`${location.path}/`), true);
+      location.route(`${location.path}/`, true);
     }
 
-    setDirPath(getLocation(decodeURI(location.path)));
+    setDirPath(removePrefix(decodeURI(location.path)));
 
     if (searchQuery != "") {
       setSearchQuery("");
