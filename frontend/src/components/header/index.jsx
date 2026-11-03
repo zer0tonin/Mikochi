@@ -4,13 +4,13 @@ import "./style.css";
 import Search from "../search";
 import Menu from "../menu";
 import { useLocation } from "preact-iso";
-import { getAssetUrl } from "../../url";
+import { getAssetUrl, getLocation } from "../../url";
 
 const Header = ({ searchQuery, setSearchQuery }) => {
   const location = useLocation();
   const onHomeClick = () => {
     setSearchQuery("");
-    location.route("/");
+    location.route(getLocation("/"));
   };
 
   return (

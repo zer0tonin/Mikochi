@@ -43,7 +43,7 @@ const Directory = () => {
 
   useEffect(() => {
     if (!location.url.endsWith("/")) {
-      location.route(`${location.path}/`, true);
+      location.route(getLocation(`${location.path}/`), true);
     }
 
     setDirPath(getLocation(decodeURI(location.path)));
