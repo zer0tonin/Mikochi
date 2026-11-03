@@ -27,3 +27,13 @@ export const getStreamUrl = (path, token) => {
   }
   return `${window.location.protocol}//${window.location.hostname}${window.location.port == "" ? "" : `:${window.location.port}`}/api/stream${path}?${token.toString()}`;
 };
+
+export const getLocation = (path) => {
+  if (
+    window.__MIKOCHI_CONFIG__ != null &&
+    "pathPrefix" in window.__MIKOCHI_CONFIG__
+  ) {
+    return path.slice(window.__MIKOCHI_CONFIG__["pathPrefix"].length);
+  }
+  return path;
+}

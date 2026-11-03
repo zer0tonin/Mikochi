@@ -13,6 +13,7 @@ import Rename from "../../components/actions/rename";
 import Delete from "../../components/actions/delete";
 import { signal } from "@preact/signals";
 import DirectoryTable from "./table";
+import { getLocation } from "../../url";
 
 export const refresh = signal(0);
 
@@ -20,6 +21,7 @@ const Directory = () => {
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
   const [compare, setCompare] = useState("name_asc");
+  const [dirPath, setDirPath] = useState("/");
 
   useEffect(() => {
     refresh.value = refresh.value + 1;
@@ -32,14 +34,19 @@ const Directory = () => {
   }, [searchQuery]);
 
   useEffect(() => {
+    if (dirPath == "/") {
+      document.title = `Mikochi`;
+    } else {
+      document.title = `Mikochi - ${dirPath}/`;
+    }
+  }, [dirPath]);
+
+  useEffect(() => {
     if (!location.url.endsWith("/")) {
       location.route(`${location.path}/`, true);
     }
-    if (location.path == "/") {
-      document.title = `Mikochi`;
-    } else {
-      document.title = `Mikochi - ${decodeURI(location.path)}/`;
-    }
+
+    setDirPath(getLocation(decodeURI(location.path)));
 
     if (searchQuery != "") {
       setSearchQuery("");
@@ -58,10 +65,11 @@ const Directory = () => {
           searchQuery={searchQuery}
           compare={compare}
           setCompare={setCompare}
+          dirPath={dirPath}
         />
         <Add />
-        <Upload dirPath={location.path} />
-        <Mkdir dirPath={location.path} />
+        <Upload dirPath={dirPath} />
+        <Mkdir dirPath={dirPath} />
         <Rename />
         <Delete />
       </main>

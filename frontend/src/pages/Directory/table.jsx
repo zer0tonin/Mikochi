@@ -23,9 +23,8 @@ const formatFileSize = (bytes) => {
   return `${size} ${sizes[i]}`;
 };
 
-const DirectoryTable = ({ searchQuery, compare, setCompare }) => {
+const DirectoryTable = ({ searchQuery, compare, setCompare, dirPath }) => {
   const { jwt } = useContext(AuthContext);
-  const location = useLocation();
   const [isRoot, setIsRoot] = useState(true);
   const [fileInfos, setFileInfos] = useState([]);
 
@@ -38,7 +37,7 @@ const DirectoryTable = ({ searchQuery, compare, setCompare }) => {
       }
 
       const response = await fetch(
-        getApiUrl(`browse${location.path}?${params.toString()}`),
+        getApiUrl(`browse${dirPath}?${params.toString()}`),
         {
           headers: {
             Accept: "application/json",
@@ -74,10 +73,10 @@ const DirectoryTable = ({ searchQuery, compare, setCompare }) => {
         {!isRoot && (
           <tr>
             <td>
-              <DoubleDotFolderIcon currentDir={location.path} />
+              <DoubleDotFolderIcon currentDir={dirPath} />
             </td>
             <td>
-              <DoubleDotPath currentDir={location.path} />
+              <DoubleDotPath currentDir={dirPath} />
             </td>
             <td />
             <td />
@@ -94,7 +93,7 @@ const DirectoryTable = ({ searchQuery, compare, setCompare }) => {
                 <td>
                   <Path
                     fileInfo={fileInfo}
-                    currentDir={location.path}
+                    currentDir={dirPath}
                     isSearch={searchQuery !== ""}
                   />
                 </td>
@@ -113,7 +112,7 @@ const DirectoryTable = ({ searchQuery, compare, setCompare }) => {
               <td>
                 <Path
                   fileInfo={fileInfo}
-                  currentDir={location.path}
+                  currentDir={dirPath}
                   isSearch={searchQuery !== ""}
                 />
               </td>
