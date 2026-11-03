@@ -49,6 +49,12 @@ const DirectoryTable = ({ searchQuery, compare, setCompare, dirPath }) => {
 
       setIsRoot(json["isRoot"]);
       setFileInfos(json["fileInfos"]);
+
+      if (isRoot) {
+        document.title = `Mikochi`;
+      } else {
+        document.title = `Mikochi - ${dirPath}/`;
+      }
     };
 
     if (refresh.value == 0 && searchQuery == "") {
@@ -94,6 +100,7 @@ const DirectoryTable = ({ searchQuery, compare, setCompare, dirPath }) => {
                     fileInfo={fileInfo}
                     currentDir={dirPath}
                     isSearch={searchQuery !== ""}
+                    isRoot={isRoot}
                   />
                 </td>
                 <td />
@@ -113,6 +120,7 @@ const DirectoryTable = ({ searchQuery, compare, setCompare, dirPath }) => {
                   fileInfo={fileInfo}
                   currentDir={dirPath}
                   isSearch={searchQuery !== ""}
+                  isRoot={isRoot}
                 />
               </td>
               <td>{formatFileSize(fileInfo.size)}</td>

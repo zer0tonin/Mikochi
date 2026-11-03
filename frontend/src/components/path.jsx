@@ -3,14 +3,14 @@ import { useLocation } from "preact-iso";
 import Icon from "./icon";
 import {addPrefix} from "../location";
 
-export const Path = ({ fileInfo, currentDir, isSearch }) => {
+export const Path = ({ fileInfo, currentDir, isSearch, isRoot }) => {
   const location = useLocation();
 
   if (!isSearch) {
     const fileName =
-      currentDir === ""
-        ? fileInfo.path.slice(1)
-        : fileInfo.path.slice(decodeURI(currentDir).length + 2);
+      isRoot
+        ? fileInfo.path.slice(1) // remove /
+        : fileInfo.path.slice(decodeURI(currentDir).length + 2); // remove /path/
     // browse
     if (fileInfo.isDir) {
       return <a onClick={() => location.route(addPrefix(fileInfo.path))}>{fileName}</a>;
