@@ -8,7 +8,7 @@ export const Path = ({ fileInfo, currentDir, isSearch }) => {
 
   if (!isSearch) {
     const fileName =
-      currentDir === "/"
+      currentDir === "/" // FIXME broken
         ? fileInfo.path.slice(decodeURI(currentDir).length)
         : fileInfo.path.slice(decodeURI(currentDir).length + 1);
     // browse
