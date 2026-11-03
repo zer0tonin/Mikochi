@@ -60,13 +60,13 @@ PASSWORD=horsebatterysomething mikochi
 
 ### Fedora / Red Hat / CentOS
 
-Install the app using a .rpm package from the latest [release](https://github.com/zer0tonin/Mikochi/releases).
+Install the app using a .rpm package from [release 1.12](https://github.com/zer0tonin/Mikochi/releases/tag/1.12.2).
 
 ```sh
-wget -c https://github.com/zer0tonin/Mikochi/releases/download/1.13.0/mikochi-1.13.0-linux-amd64.rpm
+wget -c https://github.com/zer0tonin/Mikochi/releases/download/1.12.2/mikochi-1.13.0-linux-amd64.rpm
 
-sudo chmod +x mikochi-1.13.0-linux-amd64.rpm
-sudo rpm -ivh mikochi-1.13.0-linux-amd64.rpm
+sudo chmod +x mikochi-1.12.2-linux-amd64.rpm
+sudo rpm -ivh mikochi-1.12.2-linux-amd64.rpm
 sudo mkdir /data
 
 PASSWORD=horsebatterysomething mikochi
