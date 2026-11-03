@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -11,12 +12,12 @@ import (
 )
 
 // serveIndex serves the index.html file while injecting a JS config in the head
-func serveIndex(c *gin.Context, frontendFiles string, pathPrefix string) bool {
+func serveIndex(c *gin.Context, frontendFiles string, pathPrefix string) {
 	indexPath := filepath.Join(frontendFiles, "index.html")
 
 	data, err := os.ReadFile(indexPath)
 	if err != nil {
-		return false
+		log.Panicf("Index.html unreadable")
 	}
 
 	configScript := fmt.Sprintf(
@@ -34,8 +35,6 @@ func serveIndex(c *gin.Context, frontendFiles string, pathPrefix string) bool {
 
 	c.Header("Content-Type", "text/html; charset=utf-8")
 	c.String(http.StatusOK, html)
-
-	return true
 }
 
 // serveIndexMiddleware will call custom serveIndex logic before static.ServeRoot
@@ -47,10 +46,9 @@ func serveIndexMiddleware(frontendFiles string, pathPrefix string) gin.HandlerFu
 		isIndex := path == pathPrefix+"index.html"
 
 		if isRoot || isIndex {
-			if serveIndex(c, frontendFiles, pathPrefix) {
-				c.Abort()
-				return
-			}
+			serveIndex(c, frontendFiles, pathPrefix)
+			c.Abort()
+			return
 		}
 
 		c.Next()
