@@ -13,7 +13,10 @@ export const addPrefix = (path) => {
     window.__MIKOCHI_CONFIG__ != null &&
     "pathPrefix" in window.__MIKOCHI_CONFIG__
   ) {
-    return `${window.__MIKOCHI_CONFIG__["pathPrefix"]}${path}` // FIXME: frequenty introduces double slash
+    if (path.startsWith('/')) {
+      return `${window.__MIKOCHI_CONFIG__["pathPrefix"]}${path.slice(1)}`;
+    }
+    return `${window.__MIKOCHI_CONFIG__["pathPrefix"]}${path}`;
   }
   return path;
 }

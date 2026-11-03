@@ -34,6 +34,7 @@ const Directory = () => {
   }, [searchQuery]);
 
   useEffect(() => {
+    // FIXME: why are we not relying on isRoot?
     if (dirPath == "/") {
       document.title = `Mikochi`;
     } else {

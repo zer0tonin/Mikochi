@@ -37,7 +37,7 @@ const DirectoryTable = ({ searchQuery, compare, setCompare, dirPath }) => {
       }
 
       const response = await fetch(
-        getApiUrl(`browse${dirPath}?${params.toString()}`),
+        getApiUrl(`browse/${dirPath}?${params.toString()}`),
         {
           headers: {
             Accept: "application/json",
