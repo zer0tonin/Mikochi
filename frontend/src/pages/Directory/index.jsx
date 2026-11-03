@@ -13,7 +13,7 @@ import Rename from "../../components/actions/rename";
 import Delete from "../../components/actions/delete";
 import { signal } from "@preact/signals";
 import DirectoryTable from "./table";
-import {removePrefix} from "../../location";
+import { removePrefix } from "../../location";
 
 export const refresh = signal(0);
 

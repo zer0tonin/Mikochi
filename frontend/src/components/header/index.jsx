@@ -5,7 +5,7 @@ import Search from "../search";
 import Menu from "../menu";
 import { useLocation } from "preact-iso";
 import { getAssetUrl } from "../../url";
-import {addPrefix} from "../../location";
+import { addPrefix } from "../../location";
 
 const Header = ({ searchQuery, setSearchQuery }) => {
   const location = useLocation();
