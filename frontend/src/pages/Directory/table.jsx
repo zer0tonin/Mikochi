@@ -2,7 +2,6 @@ import { h } from "preact";
 import { useContext, useEffect, useState } from "preact/hooks";
 import { AuthContext } from "../../jwt";
 import { refresh } from ".";
-import { useLocation } from "preact-iso";
 import { DirActions, FileActions } from "../../components/actions";
 import {
   DoubleDotFolderIcon,

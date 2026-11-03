@@ -1,19 +1,22 @@
 import { h } from "preact";
 import { useLocation } from "preact-iso";
 import Icon from "./icon";
-import {addPrefix} from "../location";
+import { addPrefix } from "../location";
 
 export const Path = ({ fileInfo, currentDir, isSearch, isRoot }) => {
   const location = useLocation();
 
   if (!isSearch) {
-    const fileName =
-      isRoot
-        ? fileInfo.path.slice(1) // remove /
-        : fileInfo.path.slice(decodeURI(currentDir).length + 2); // remove /path/
+    const fileName = isRoot
+      ? fileInfo.path.slice(1) // remove /
+      : fileInfo.path.slice(decodeURI(currentDir).length + 2); // remove /path/
     // browse
     if (fileInfo.isDir) {
-      return <a onClick={() => location.route(addPrefix(fileInfo.path))}>{fileName}</a>;
+      return (
+        <a onClick={() => location.route(addPrefix(fileInfo.path))}>
+          {fileName}
+        </a>
+      );
     }
     return <span>{fileName}</span>;
   }
@@ -47,7 +50,12 @@ export const Path = ({ fileInfo, currentDir, isSearch, isRoot }) => {
 export const FolderIcon = ({ fileInfo }) => {
   const location = useLocation();
 
-  return <Icon name="folder" onClick={() => location.route(addPrefix(fileInfo.path))} />;
+  return (
+    <Icon
+      name="folder"
+      onClick={() => location.route(addPrefix(fileInfo.path))}
+    />
+  );
 };
 
 export const DoubleDotPath = ({ currentDir }) => {
