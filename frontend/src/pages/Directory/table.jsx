@@ -50,7 +50,6 @@ const DirectoryTable = ({ searchQuery, compare, setCompare, dirPath }) => {
       setIsRoot(json["isRoot"]);
       setFileInfos(json["fileInfos"]);
     };
-    console.log("here");
 
     if (refresh.value == 0 && searchQuery == "") {
       return;
