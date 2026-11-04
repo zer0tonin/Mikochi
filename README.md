@@ -87,6 +87,10 @@ sudo mv ./mikochi-1.13.3/static /usr/share/mikochi/static
 PASSWORD=horsebatterysomething mikochi
 ```
 
+## One-Click Deploy
+
+[![Deploy on RepoCloud](https://d16t0pc4846x52.cloudfront.net/deploylobe.svg)](https://repocloud.io/details/Mikochi/)
+
 ## Configuration
 
 Mikochi is configured using environment variables
