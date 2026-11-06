@@ -347,8 +347,8 @@ jobs:
 
       - name: Copy files
         run: |
-          cp backend/mikochi rpm-package/BUILD/mikochi
-          cp -r frontend/dist rpm-package/BUILD/static
+          cp backend/mikochi rpm-package/SOURCES/mikochi
+          cp -r frontend/dist rpm-package/SOURCES/static
 
       - name: Create spec file
         run: |
@@ -368,8 +368,8 @@ jobs:
           %install
           mkdir -p %{buildroot}%{_bindir}
           mkdir -p %{buildroot}%{_datadir}/mikochi
-          install -m 755 mikochi %{buildroot}/%{_bindir}/mikochi
-          cp -r static %{buildroot}/%{_datadir}/mikochi/static
+          install -m 755 %{_sourcedir}/mikochi %{buildroot}%{_bindir}/mikochi
+          cp -r %{_sourcedir}/static %{buildroot}%{_datadir}/mikochi/static
           %files
           %{_bindir}/mikochi
           %{_datadir}/mikochi/static
