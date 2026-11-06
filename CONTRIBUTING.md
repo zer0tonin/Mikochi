@@ -8,7 +8,7 @@ Make sure that the bug can be reproduced on the latest Mikochi version.
 
 ## Security issues
 
-If you find a vulnerability in Mikochi, either report it [through GitHub](https://github.com/zer0tonin/Mikochi/security) or by email (hi@alicegg.tech).
+If you find a vulnerability in Mikochi, please report it by email (hi@alicegg.tech).
 
 ## Proposing new features
 
