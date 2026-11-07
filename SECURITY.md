@@ -6,4 +6,4 @@ If you find a vulnerability in Mikochi, please report it by email: [hi@alicegg.t
 
 ## Supported Version
 
-Only the latest version is supported (1.13.4).
+Only the latest version is supported (1.13.5).
