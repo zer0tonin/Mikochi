@@ -19,18 +19,28 @@ func serveIndex(c *gin.Context, frontendFiles string, pathPrefix string) {
 	if err != nil {
 		log.Panicf("Index.html unreadable")
 	}
+	html := string(data)
 
+
+	// injecting Mikochi config
 	configScript := fmt.Sprintf(
 		"<script>window.__MIKOCHI_CONFIG__={pathPrefix:%q};</script></head>",
 		pathPrefix,
 	)
-
-	html := string(data)
 	html = strings.Replace(
 		html,
 		"</head>",
 		configScript,
 		1,
+	)
+
+	// rewriting js/css assets path
+	assetsPath := fmt.Sprintf("%sassets", pathPrefix)
+	html = strings.Replace(
+		html,
+		"/assets",
+		assetsPath,
+		-1,
 	)
 
 	c.Header("Content-Type", "text/html; charset=utf-8")
