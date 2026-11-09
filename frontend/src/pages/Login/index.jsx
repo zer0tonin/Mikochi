@@ -41,37 +41,37 @@ const Login = () => {
 
   return (
     <main>
-      <form onSubmit={onSubmit} class="form">
-        <div class="container">
+      <form onSubmit={onSubmit} class="login-form">
+        <div class="login-container">
           <input
             type="text"
             value={username}
             onInput={(e) => setUsername(e.target.value)}
-            class="input"
+            class="login-input"
             id="username"
             placeholder="Username"
             aria-label="Username"
           />
-          <i class="userIcon gg-user" />
+          <i class="login-userIcon gg-user" />
         </div>
-        <div class="container">
+        <div class="login-container">
           <input
             type="password"
             value={password}
             onInput={(e) => setPassword(e.target.value)}
-            class="input"
+            class="login-input"
             id="password"
             placeholder="Password"
             aria-label="Password"
           />
-          <i class="keyIcon gg-key" />
+          <i class="login-keyIcon gg-key" />
         </div>
-        <div class="buttonContainer">
-          <button type="submit" class="submit">
+        <div class="login-buttonContainer">
+          <button type="submit" class="login-submit">
             Login
           </button>
         </div>
-        {error !== "" && <div class="error">{error}</div>}
+        {error !== "" && <div class="login-error">{error}</div>}
       </form>
     </main>
   );
