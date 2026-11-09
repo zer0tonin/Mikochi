@@ -52,7 +52,9 @@ const Login = () => {
             placeholder="Username"
             aria-label="Username"
           />
-          <i class="login-userIcon gg-user" />
+          {
+            //<i class="login-userIcon gg-user" />
+          }
         </div>
         <div class="login-container">
           <input
@@ -64,7 +66,9 @@ const Login = () => {
             placeholder="Password"
             aria-label="Password"
           />
-          <i class="login-keyIcon gg-key" />
+          {
+            //<i class="login-keyIcon gg-key" />
+          }
         </div>
         <div class="login-buttonContainer">
           <button type="submit" class="login-submit">
