@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// serveIndex serves the index.html file while injecting a JS config in the head
+// serveIndex serves the index.html file while adapting it for a custom path prefix
 func serveIndex(c *gin.Context, frontendFiles string, pathPrefix string) {
 	indexPath := filepath.Join(frontendFiles, "index.html")
 
@@ -34,12 +34,19 @@ func serveIndex(c *gin.Context, frontendFiles string, pathPrefix string) {
 		1,
 	)
 
-	// rewriting js/css assets path
+	// rewriting assets path
 	assetsPath := fmt.Sprintf("%sassets", pathPrefix)
 	html = strings.Replace(
 		html,
 		"/assets",
 		assetsPath,
+		-1,
+	)
+	faviconPath := fmt.Sprintf("%sfavicon.ico", pathPrefix)
+	html = strings.Replace(
+		html,
+		"/favicon.ico",
+		faviconPath,
 		-1,
 	)
 
