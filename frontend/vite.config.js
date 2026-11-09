@@ -7,4 +7,12 @@ export default defineConfig({
   server: {
     allowedHosts: ["dev-frontend"],
   },
+  build: {
+    cssCodeSplit: false,
+    rolldownOptions: {
+      output: {
+        codeSplitting: false,
+      }
+    }
+  }
 });
