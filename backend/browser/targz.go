@@ -8,18 +8,24 @@ import (
 	"path/filepath"
 )
 
-func writeTarGz(filepath string, w io.Writer) error {
+type TarGzCompressor struct {}
+
+func NewTarGzCompressor() *TarGzCompressor {
+	return &TarGzCompressor{}
+}
+
+func (t *TarGzCompressor) CompressDirectory(filepath string, w io.Writer) error {
 	gzipWriter := gzip.NewWriter(w)
 	defer gzipWriter.Close()
 	tarWriter := tar.NewWriter(gzipWriter)
 	defer tarWriter.Close()
 
-	writeDirectoryToTarGz(filepath, tarWriter, filepath)
+	t.writeDirectoryToTarGz(filepath, tarWriter, filepath)
 
 	return nil
 }
 
-func writeDirectoryToTarGz(directory string, tarWriter *tar.Writer, subPath string) error {
+func (t *TarGzCompressor) writeDirectoryToTarGz(directory string, tarWriter *tar.Writer, subPath string) error {
 	files, err := os.ReadDir(directory)
 	if err != nil {
 		return err
@@ -28,7 +34,7 @@ func writeDirectoryToTarGz(directory string, tarWriter *tar.Writer, subPath stri
 	for _, file := range files {
 		currentPath := filepath.Join(directory, file.Name())
 		if file.IsDir() {
-			err := writeDirectoryToTarGz(currentPath, tarWriter, subPath)
+			err := t.writeDirectoryToTarGz(currentPath, tarWriter, subPath)
 			if err != nil {
 				return err
 			}
@@ -37,7 +43,7 @@ func writeDirectoryToTarGz(directory string, tarWriter *tar.Writer, subPath stri
 			if err != nil {
 				return err
 			}
-			err = writeFileToTarGz(currentPath, tarWriter, fileInfo, subPath)
+			err = t.writeFileToTarGz(currentPath, tarWriter, fileInfo, subPath)
 			if err != nil {
 				return err
 			}
@@ -47,7 +53,7 @@ func writeDirectoryToTarGz(directory string, tarWriter *tar.Writer, subPath stri
 	return nil
 }
 
-func writeFileToTarGz(path string, tarWriter *tar.Writer, fileInfo os.FileInfo, subPath string) error {
+func (t *TarGzCompressor) writeFileToTarGz(path string, tarWriter *tar.Writer, fileInfo os.FileInfo, subPath string) error {
 	file, err := os.Open(path)
 	if err != nil {
 		return err
