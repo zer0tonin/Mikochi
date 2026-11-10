@@ -17,12 +17,18 @@ import (
 type BrowserHandlers struct {
 	fileCache     *FileCache
 	pathConverter *PathConverter
+	compressor    Compressor
 }
 
-func NewBrowserHandlers(fileCache *FileCache, pathConverter *PathConverter) *BrowserHandlers {
+type Compressor interface {
+	CompressDirectory(string, io.Writer) error
+}
+
+func NewBrowserHandlers(fileCache *FileCache, pathConverter *PathConverter, compressor Compressor) *BrowserHandlers {
 	return &BrowserHandlers{
 		fileCache:     fileCache,
 		pathConverter: pathConverter,
+		compressor:    compressor,
 	}
 }
 
@@ -53,7 +59,7 @@ func (b *BrowserHandlers) StreamFile(c *gin.Context) {
 			"Content-Disposition",
 			fmt.Sprintf("attachment; filename=%s.tar.gz", path[1:len(path)-1]),
 		)
-		writeTarGz(pathInDataDir, c.Writer)
+		b.compressor.CompressDirectory(pathInDataDir, c.Writer)
 	} else {
 		c.File(pathInDataDir)
 	}

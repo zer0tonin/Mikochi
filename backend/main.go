@@ -41,12 +41,11 @@ func main() {
 	)
 
 	pathConverter := browser.NewPathConverter(viper.GetString("DATA_DIR"))
-
 	cache := browser.NewFileCache(viper.GetString("DATA_DIR"), pathConverter)
 	cache.Reset()
 	go cache.WatchDataDir()
-
-	browserHandlers := browser.NewBrowserHandlers(cache, pathConverter)
+	compressor := browser.NewTarGzCompressor()
+	browserHandlers := browser.NewBrowserHandlers(cache, pathConverter, compressor)
 
 	if viper.GetString("ENV") == "production" {
 		gin.SetMode(gin.ReleaseMode)
