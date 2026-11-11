@@ -122,3 +122,7 @@ func (z *ZipCompressor) writeFileToZip(path string, root string, zipWriter *zip.
 	_, err = io.Copy(zipFileWriter, file)
 	return err
 }
+
+func (z *ZipCompressor) GetFileExtension() string {
+	return ".zip"
+}
