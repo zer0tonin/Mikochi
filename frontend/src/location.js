@@ -5,7 +5,7 @@ export const removePrefix = (path) => {
   ) {
     return path.slice(window.__MIKOCHI_CONFIG__["pathPrefix"].length);
   }
-  return path;
+  return path.slice(1);
 };
 
 export const addPrefix = (path) => {
