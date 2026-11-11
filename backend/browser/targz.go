@@ -84,3 +84,7 @@ func (t *TarGzCompressor) writeFileToTarGz(path string, tarWriter *tar.Writer, f
 	_, err = io.Copy(tarWriter, file)
 	return err
 }
+
+func (t *TarGzCompressor) GetFileExtension() string {
+	return ".tar.gz"
+}

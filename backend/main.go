@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/zer0tonin/mikochi/auth"
@@ -25,6 +26,7 @@ func main() {
 	viper.SetDefault("GZIP", "false")
 	viper.SetDefault("FRONTEND_FILES", "/usr/share/mikochi/static")
 	viper.SetDefault("PATH_PREFIX", "/")
+	viper.SetDefault("DIRECTORY_DOWNLOAD", "TARGZ")
 	viper.AutomaticEnv()
 
 	authMiddleware := auth.NewAuthMiddleware(viper.GetString("NO_AUTH") != "true", viper.GetString("JWT_SECRET"))
@@ -41,10 +43,18 @@ func main() {
 	)
 
 	pathConverter := browser.NewPathConverter(viper.GetString("DATA_DIR"))
+
 	cache := browser.NewFileCache(viper.GetString("DATA_DIR"), pathConverter)
 	cache.Reset()
 	go cache.WatchDataDir()
-	compressor := browser.NewTarGzCompressor()
+
+	var compressor browser.Compressor
+	if strings.ToUpper(viper.GetString("DIRECTORY_DOWNLOAD")) == "ZIP" {
+		compressor = browser.NewZipCompressor()
+	} else {
+		compressor = browser.NewTarGzCompressor()
+	}
+
 	browserHandlers := browser.NewBrowserHandlers(cache, pathConverter, compressor)
 
 	if viper.GetString("ENV") == "production" {

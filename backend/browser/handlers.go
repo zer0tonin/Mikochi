@@ -22,6 +22,7 @@ type BrowserHandlers struct {
 
 type Compressor interface {
 	CompressDirectory(string, io.Writer) error
+	GetFileExtension() string
 }
 
 func NewBrowserHandlers(fileCache *FileCache, pathConverter *PathConverter, compressor Compressor) *BrowserHandlers {
@@ -57,9 +58,16 @@ func (b *BrowserHandlers) StreamFile(c *gin.Context) {
 	if dir {
 		c.Header(
 			"Content-Disposition",
-			fmt.Sprintf("attachment; filename=%s.tar.gz", path[1:len(path)-1]),
+			fmt.Sprintf("attachment; filename=%s%s", path[1:len(path)-1], b.compressor.GetFileExtension()),
 		)
-		b.compressor.CompressDirectory(pathInDataDir, c.Writer)
+		err = b.compressor.CompressDirectory(pathInDataDir, c.Writer)
+		if err != nil {
+			log.Printf("Err: %s", err.Error())
+			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+				"err": "Failed to compress directory",
+			})
+			return
+		}
 	} else {
 		c.File(pathInDataDir)
 	}
