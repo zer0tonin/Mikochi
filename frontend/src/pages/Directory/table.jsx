@@ -49,7 +49,7 @@ const DirectoryTable = ({ searchQuery, compare, setCompare, dirPath }) => {
       setIsRoot(json["isRoot"]);
       setFileInfos(json["fileInfos"]);
 
-      if (isRoot) {
+      if (json["isRoot"]) {
         document.title = `Mikochi`;
       } else {
         document.title = `Mikochi - ${dirPath}/`;
