@@ -79,20 +79,20 @@ func (b *BrowserHandlers) StreamFile(c *gin.Context) {
 // GET /browse
 // BrowseFolder returns the content of a directory and/or search results
 func (b *BrowserHandlers) BrowseFolder(c *gin.Context) {
-	path := filepath.Clean(c.Param("path"))
+	relativePath := filepath.Clean(c.Param("path"))
 	search := c.Query("search")
 
 	var results []FileDescription
 	if search == "" {
-		results = b.browseDir(path)
+		results = b.browseDir(relativePath)
 	} else {
 		search = filepath.Clean(search)
-		results = b.searchInDir(path, search)
+		results = b.searchInDir(relativePath, search)
 	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"fileInfos": results,
-		"isRoot":    path == "/",
+		"isRoot":    relativePath == "/",
 	})
 }
 
@@ -146,7 +146,7 @@ func (b *BrowserHandlers) Move(c *gin.Context) {
 	// we make a synchronous reset cache to avoid querying /browse on stale data
 	defer b.fileCache.Reset()
 
-	path, err := b.pathConverter.GetAbsolutePath(c.Param("path"))
+	absolutePath, err := b.pathConverter.GetAbsolutePath(c.Param("path"))
 	if err != nil {
 		log.Printf("Err: %s", err.Error())
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
@@ -155,7 +155,7 @@ func (b *BrowserHandlers) Move(c *gin.Context) {
 		return
 	}
 
-	newPath, err := b.pathConverter.GetAbsolutePath(command.NewPath)
+	newAbsolutePath, err := b.pathConverter.GetAbsolutePath(command.NewPath)
 	if err != nil {
 		log.Printf("Err: %s", err.Error())
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
@@ -164,7 +164,7 @@ func (b *BrowserHandlers) Move(c *gin.Context) {
 		return
 	}
 
-	err = os.Rename(path, newPath)
+	err = os.Rename(absolutePath, newAbsolutePath)
 	if err != nil {
 		log.Printf("Err: %s", err.Error())
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
@@ -184,7 +184,7 @@ func (b *BrowserHandlers) Delete(c *gin.Context) {
 	// we make a synchronous reset cache to avoid querying /browse on stale data
 	defer b.fileCache.Reset()
 
-	path, err := b.pathConverter.GetAbsolutePath(c.Param("path"))
+	absolutePath, err := b.pathConverter.GetAbsolutePath(c.Param("path"))
 	if err != nil {
 		log.Printf("Err: %s", err.Error())
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
@@ -193,7 +193,7 @@ func (b *BrowserHandlers) Delete(c *gin.Context) {
 		return
 	}
 
-	err = os.RemoveAll(path)
+	err = os.RemoveAll(absolutePath)
 	if err != nil {
 		log.Printf("Err: %s", err.Error())
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
@@ -222,7 +222,7 @@ func (b *BrowserHandlers) Upload(c *gin.Context) {
 	// we make a synchronous reset cache to avoid querying /browse on stale data
 	defer b.fileCache.Reset()
 
-	pathInDataDir, err := b.pathConverter.GetAbsolutePath(c.Param("path"))
+	absolutePath, err := b.pathConverter.GetAbsolutePath(c.Param("path"))
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"err": "Invalid path",
@@ -230,7 +230,7 @@ func (b *BrowserHandlers) Upload(c *gin.Context) {
 		return
 	}
 
-	dst, err := os.Create(pathInDataDir)
+	dst, err := os.Create(absolutePath)
 	if err != nil {
 		log.Printf("Err: %s", err.Error())
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
@@ -271,7 +271,7 @@ func (b *BrowserHandlers) Mkdir(c *gin.Context) {
 	// we make a synchronous reset cache to avoid querying /browse on stale data
 	defer b.fileCache.Reset()
 
-	pathInDataDir, err := b.pathConverter.GetAbsolutePath(c.Param("path"))
+	absolutePath, err := b.pathConverter.GetAbsolutePath(c.Param("path"))
 	if err != nil {
 		log.Printf("Err: %s", err.Error())
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
@@ -280,7 +280,7 @@ func (b *BrowserHandlers) Mkdir(c *gin.Context) {
 		return
 	}
 
-	err = os.Mkdir(pathInDataDir, 0755)
+	err = os.Mkdir(absolutePath, 0755)
 	if err != nil {
 		log.Printf("Err: %s", err.Error())
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
