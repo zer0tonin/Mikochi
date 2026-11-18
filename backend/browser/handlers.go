@@ -36,8 +36,8 @@ func NewBrowserHandlers(fileCache *FileCache, pathConverter *PathConverter, comp
 // GET /stream
 // StreamFile streams the content of the requested file
 func (b *BrowserHandlers) StreamFile(c *gin.Context) {
-	path := c.Param("path")
-	pathInDataDir, err := b.pathConverter.GetAbsolutePath(path)
+	relativePath := c.Param("path")
+	absolutePath, err := b.pathConverter.GetAbsolutePath(relativePath)
 	if err != nil {
 		log.Printf("Err: %s", err.Error())
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
@@ -47,25 +47,23 @@ func (b *BrowserHandlers) StreamFile(c *gin.Context) {
 	}
 
 	// TODO:
-	// 2. check why are we caching fileInfos when we could be caching fileDescriptions
 	// 3. replace isDir call by cache.Get -> fileInfoToFileDescription -> fileDescription.IsDir
 	// 4. set content-length for file download
 	// 5. figure out if we can set content length for zip / targz
-	dir, err := isDir(pathInDataDir)
-	if err != nil {
-		log.Printf("Err: %s", err.Error())
-		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-			"err": "Failed to stat file",
+	fileDescription, ok := b.fileCache.Get(relativePath)
+	if !ok {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
+			"err": "File not found",
 		})
 		return
 	}
 
-	if dir {
+	if fileDescription.IsDir {
 		c.Header(
 			"Content-Disposition",
-			fmt.Sprintf("attachment; filename=%s%s", path[1:len(path)-1], b.compressor.GetFileExtension()),
+			fmt.Sprintf("attachment; filename=%s%s", relativePath[1:len(relativePath)-1], b.compressor.GetFileExtension()),
 		)
-		err = b.compressor.CompressDirectory(pathInDataDir, c.Writer)
+		err = b.compressor.CompressDirectory(absolutePath, c.Writer)
 		if err != nil {
 			log.Printf("Err: %s", err.Error())
 			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
@@ -74,7 +72,7 @@ func (b *BrowserHandlers) StreamFile(c *gin.Context) {
 			return
 		}
 	} else {
-		c.File(pathInDataDir)
+		c.File(absolutePath)
 	}
 }
 
@@ -226,7 +224,6 @@ func (b *BrowserHandlers) Upload(c *gin.Context) {
 
 	pathInDataDir, err := b.pathConverter.GetAbsolutePath(c.Param("path"))
 	if err != nil {
-		log.Printf("Err: %s", err.Error())
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"err": "Invalid path",
 		})
