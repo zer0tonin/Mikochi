@@ -24,7 +24,7 @@ func main() {
 	viper.SetDefault("NO_AUTH", "false")
 	viper.SetDefault("FRONTEND_FILES", "/usr/share/mikochi/static")
 	viper.SetDefault("PATH_PREFIX", "/")
-	viper.SetDefault("DIRECTORY_DOWNLOAD", "TARGZ")
+	viper.SetDefault("DIRECTORY_COMPRESSION", "targz")
 	viper.AutomaticEnv()
 
 	authMiddleware := auth.NewAuthMiddleware(viper.GetString("NO_AUTH") != "true", viper.GetString("JWT_SECRET"))
@@ -47,7 +47,7 @@ func main() {
 	go cache.WatchDataDir()
 
 	var compressor browser.Compressor
-	if strings.ToUpper(viper.GetString("DIRECTORY_DOWNLOAD")) == "ZIP" {
+	if strings.ToLower(viper.GetString("DIRECTORY_COMPRESSION")) == "zip" {
 		compressor = browser.NewZipCompressor()
 	} else {
 		compressor = browser.NewTarGzCompressor()
