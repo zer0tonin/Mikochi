@@ -47,9 +47,8 @@ func (b *BrowserHandlers) StreamFile(c *gin.Context) {
 	}
 
 	// TODO:
-	// 1. replace isDir call by os.Stat -> fileInfoToFileDescription -> fileDescription.IsDir
-	// 2. rework cache.Get to directly get a fileDescription and skip os.Stat call
-	// 3. check why are we caching fileInfos when we could be caching fileDescriptions
+	// 2. check why are we caching fileInfos when we could be caching fileDescriptions
+	// 3. replace isDir call by cache.Get -> fileInfoToFileDescription -> fileDescription.IsDir
 	// 4. set content-length for file download
 	// 5. figure out if we can set content length for zip / targz
 	dir, err := isDir(pathInDataDir)
@@ -124,12 +123,9 @@ func (b *BrowserHandlers) searchInDir(dir, search string) []FileDescription {
 
 	results := []FileDescription{}
 	for _, match := range matches {
-		fileInfo, ok := b.fileCache.Get(match.Target)
-		if !ok {
-			continue
+		if fileDescription, ok := b.fileCache.Get(match.Target); ok {
+			results = append(results, fileDescription)
 		}
-		fileDescription := fileInfoToFileDescription(fileInfo, match.Target)
-		results = append(results, fileDescription)
 	}
 	return results
 }
