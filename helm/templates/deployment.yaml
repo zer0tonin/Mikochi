@@ -53,6 +53,18 @@ spec:
                 secretKeyRef:
                   name: {{ include "Mikochi.fullname" . }}
                   key: password
+            {{ if .Values.mikochi.directory_compression }}
+            - name: DIRECTORY_COMPRESSION
+              value: {{ .Values.mikochi.directory_compression }}
+            {{ end }}
+            {{ if .Values.mikochi.no_auth }}
+            - name: NO_AUTH
+              value: true
+            {{ end }}
+            {{ if .Values.mikochi.env }}
+            - name: ENV
+              value: {{ .Values.mikochi.env }}
+            {{ end }}
           volumeMounts:
             - name: mikochi-data
               mountPath: "/data"

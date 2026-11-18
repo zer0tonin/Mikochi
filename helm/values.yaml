@@ -5,6 +5,9 @@
 mikochi:
   username: "root"
   password: "pass"
+  directory_compression: "targz"
+  env: "production"
+  no_auth: false
 
 image:
   repository: zer0tonin/mikochi
