@@ -101,9 +101,9 @@ func (b *BrowserHandlers) BrowseFolder(c *gin.Context) {
 // browseDir returns the content of a directory
 func (b *BrowserHandlers) browseDir(dir string) []FileDescription {
 	results := []FileDescription{}
-	for file, fileInfo := range b.fileCache.Iterate() {
+	for file, fileDescription := range b.fileCache.Iterate() {
 		if fileInDir(file, dir) {
-			results = append(results, fileInfoToFileDescription(fileInfo, file))
+			results = append(results, fileDescription)
 		}
 	}
 	return results
