@@ -14,5 +14,11 @@ jobs:
       - name: Check what's going on with GCC
         working-directory: ./backend
         run: |
-          cc --version | head -1
-          echo | cc -dM -E - | grep -E '__(AVX2?|SSE2)__'
+          type -a cc; readlink -f "$(command -v cc)"; cc --version
+          cc -v 2>&1 | tail -3
+          cc -Q --help=target | grep -E '^\s+-march=|^\s+-mtune='
+          gcc -print-file-name=specs
+          gcc -dumpspecs 2>/dev/null | grep -B2 -A2 march
+          ls -l /etc/clang/ ~/.config/clang/ 2>/dev/null
+          env | grep -Ei '^(CC|CFLAGS|CPPFLAGS|CXXFLAGS|CPATH|GCC_EXEC_PREFIX|CCC_OVERRIDE_OPTIONS)='
+          dpkg --print-architecture; dpkg --print-foreign-architectures
