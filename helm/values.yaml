@@ -5,7 +5,6 @@
 mikochi:
   username: "root"
   password: "pass"
-  gzip: false
 
 image:
   repository: zer0tonin/mikochi

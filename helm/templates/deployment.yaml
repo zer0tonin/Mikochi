@@ -53,10 +53,6 @@ spec:
                 secretKeyRef:
                   name: {{ include "Mikochi.fullname" . }}
                   key: password
-            {{ if .Values.mikochi.gzip }}
-            - name: GZIP 
-              value: "true"
-            {{ end }}
           volumeMounts:
             - name: mikochi-data
               mountPath: "/data"
