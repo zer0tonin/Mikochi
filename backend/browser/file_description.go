@@ -13,11 +13,11 @@ type FileDescription struct {
 	Path  string `json:"path"`
 }
 
-func fileInfoToFileDescription(fileInfo fs.FileInfo, path string) FileDescription {
+func fileInfoToFileDescription(fileInfo fs.FileInfo, relativePath string) FileDescription {
 	return FileDescription{
 		IsDir: fileInfo.IsDir(),
 		Size:  fileInfo.Size(),
-		Path:  path,
+		Path:  relativePath,
 	}
 }
 
