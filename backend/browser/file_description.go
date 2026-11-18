@@ -2,7 +2,6 @@ package browser
 
 import (
 	"io/fs"
-	"os"
 	"path/filepath"
 )
 
@@ -21,16 +20,6 @@ func fileInfoToFileDescription(fileInfo fs.FileInfo, relativePath string) FileDe
 	}
 }
 
-// fileInDir returns if a file is contained in a directory (and not a sub-directory)
-func fileInDir(file, dir string) bool {
-	return filepath.Dir(file) == dir
-}
-
-func isDir(filepath string) (bool, error) {
-	fileInfo, err := os.Stat(filepath)
-	if err != nil {
-		return false, err
-	}
-
-	return fileInfo.IsDir(), nil
+func (f *FileDescription) IsInDir(dir string) bool {
+	return filepath.Dir(f.Path) == dir
 }
