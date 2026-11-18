@@ -93,6 +93,7 @@ Mikochi is configured using environment variables
 
 | Key                   | Description                                              | Default                     |
 |-----------------------|----------------------------------------------------------|-----------------------------|
+| ENV                   | Switch between "development" and "debug" mode            | production                  |
 | HOST                  | The ip:port Mikochi will listen on                       | 0.0.0.0:80                  |
 | DATA_DIR              | The directory accessed by Mikochi                        | /data                       |
 | JWT_SECRET            | A secret string for JWT validation (see warning)         | [Random]                    |
