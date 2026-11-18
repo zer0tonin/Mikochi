@@ -98,7 +98,10 @@ func (f *FileCache) Iterate() iter.Seq2[string, fs.FileInfo] {
 	return maps.All(f.cache)
 }
 
-func (f *FileCache) Get(key string) (fs.FileInfo, bool) {
-	res, ok := f.cache[key]
-	return res, ok
+func (f *FileCache) Get(path string) (FileDescription, bool) {
+	fileInfo, ok := f.cache[path]
+	if !ok {
+		return FileDescription{}, ok
+	}
+	return fileInfoToFileDescription(fileInfo, path), ok
 }
