@@ -29,11 +29,26 @@ func TestFileInDir(t *testing.T) {
 			dir:      "/test",
 			expected: false,
 		},
+		{
+			name:     "Dir in a dir",
+			file:     "/test/inner",
+			dir:      "/test",
+			expected: true,
+		},
+		{
+			name:     "Dir outside a dir",
+			file:     "/unrelated/",
+			dir:      "/test",
+			expected: false,
+		},
 	}
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			if fileInDir(test.file, test.dir) != test.expected {
+			fileDescription := FileDescription{
+				Path: test.file,
+			}
+			if fileDescription.IsInDir(test.dir) != test.expected {
 				t.Fail()
 			}
 		})
