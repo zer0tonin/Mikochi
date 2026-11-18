@@ -51,10 +51,6 @@ func (b *BrowserHandlers) StreamFile(c *gin.Context) {
 		return
 	}
 
-	// TODO:
-	// 3. replace isDir call by cache.Get -> fileInfoToFileDescription -> fileDescription.IsDir
-	// 4. set content-length for file download
-	// 5. figure out if we can set content length for zip / targz
 	fileDescription, ok := b.fileCache.Get(relativePath)
 	if !ok {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
