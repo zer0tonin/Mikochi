@@ -50,7 +50,7 @@
 .login-error {
   display: flex;
   justify-content: center;
- align-items: center;
+  align-items: center;
   padding: 20px;
   background-color: #ff6b6c;
   color: #073642;

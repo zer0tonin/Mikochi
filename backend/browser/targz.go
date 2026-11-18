@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 )
 
-type TarGzCompressor struct {}
+type TarGzCompressor struct{}
 
 func NewTarGzCompressor() *TarGzCompressor {
 	return &TarGzCompressor{}
