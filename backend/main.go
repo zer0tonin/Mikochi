@@ -55,10 +55,10 @@ func main() {
 
 	browserHandlers := browser.NewBrowserHandlers(cache, pathConverter, compressor)
 
-	if viper.GetString("ENV") == "production" {
-		gin.SetMode(gin.ReleaseMode)
-	} else {
+	if viper.GetString("ENV") == "development" {
 		gin.SetMode(gin.DebugMode)
+	} else {
+		gin.SetMode(gin.ReleaseMode)
 	}
 
 	r := gin.Default()
