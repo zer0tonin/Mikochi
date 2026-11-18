@@ -37,6 +37,11 @@ func NewBrowserHandlers(fileCache *FileCache, pathConverter *PathConverter, comp
 // StreamFile streams the content of the requested file
 func (b *BrowserHandlers) StreamFile(c *gin.Context) {
 	relativePath := c.Param("path")
+	if strings.HasSuffix(relativePath, "/") {
+		// path do not have a trailing / in the cache
+		relativePath = relativePath[:len(relativePath)-1]
+	}
+
 	absolutePath, err := b.pathConverter.GetAbsolutePath(relativePath)
 	if err != nil {
 		log.Printf("Err: %s", err.Error())
