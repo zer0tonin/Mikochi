@@ -16,22 +16,8 @@ jobs:
         with:
           go-version: 1.27.3
 
-      - name: Set GOARCH/GOOS
-        run: |
-          echo "GOARCH=amd64" >> $GITHUB_ENV
-          echo "GOAMD64=v1" >> $GITHUB_ENV
-          echo "GOOS=linux" >> $GITHUB_ENV
-
-      - name: Build backend and check output
+      - name: Check what's going on with GCC
         working-directory: ./backend
         run: |
-          go build -v -o ./mikochi .
-          go version
-          echo GOOS
-          echo GOARCH
-          echo GOAMD64
-          echo CGO_ENABLED
-          echo CGO_FLAGS
-          go tool objdump ./mikochi | grep VMOVQ
           cc --version | head -1
           echo | cc -dM -E - | grep -E '__(AVX2?|SSE2)__'
