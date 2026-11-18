@@ -101,7 +101,6 @@ Mikochi is configured using environment variables
 | CERT_CA        | The path to a TLS certificate                            | null                        |
 | CERT_KEY       | The path to the key associated with CERT_CA              | null                        |
 | NO_AUTH        | If true, disables all authentication                     | false                       |
-| GZIP           | If true, enables gzip compression                        | false                       |
 | FRONTEND_FILES | The location of the frontend static files                | /usr/share/mikochi/static   |
 | PATH_PREFIX    | A prefix to Mikochi's URL path                           | /                           |
 

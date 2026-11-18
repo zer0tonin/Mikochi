@@ -9,7 +9,6 @@ import (
 	"github.com/zer0tonin/mikochi/auth"
 	"github.com/zer0tonin/mikochi/browser"
 
-	"github.com/gin-contrib/gzip"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
@@ -23,7 +22,6 @@ func main() {
 	viper.SetDefault("HOST", "0.0.0.0:8080")
 	viper.SetDefault("ENV", "production")
 	viper.SetDefault("NO_AUTH", "false")
-	viper.SetDefault("GZIP", "false")
 	viper.SetDefault("FRONTEND_FILES", "/usr/share/mikochi/static")
 	viper.SetDefault("PATH_PREFIX", "/")
 	viper.SetDefault("DIRECTORY_DOWNLOAD", "TARGZ")
@@ -65,9 +63,6 @@ func main() {
 
 	r := gin.Default()
 	r.Use(gin.Recovery())
-	if viper.GetBool("GZIP") {
-		r.Use(gzip.Gzip(gzip.DefaultCompression))
-	}
 
 	pathPrefix := normalizePath(viper.GetString("PATH_PREFIX"))
 	frontendFiles := normalizePath(viper.GetString("FRONTEND_FILES"))
