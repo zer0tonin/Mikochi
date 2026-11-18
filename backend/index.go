@@ -21,7 +21,6 @@ func serveIndex(c *gin.Context, frontendFiles string, pathPrefix string) {
 	}
 	html := string(data)
 
-
 	// injecting Mikochi config
 	configScript := fmt.Sprintf(
 		"<script>window.__MIKOCHI_CONFIG__={pathPrefix:%q};</script></head>",

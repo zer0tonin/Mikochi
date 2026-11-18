@@ -14,8 +14,8 @@ export function App() {
     "pathPrefix" in window.__MIKOCHI_CONFIG__
   ) {
     window.__MIKOCHI_CONFIG__ = {
-      "pathPrefix": "/",
-    }
+      pathPrefix: "/",
+    };
   }
 
   const [jwt, setJWT] = useState(null);
