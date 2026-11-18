@@ -13,7 +13,7 @@ import (
 )
 
 type FileCache struct {
-	cache         map[string]fs.FileInfo
+	cache         map[string]FileDescription
 	mutex         sync.Mutex
 	dataDir       string
 	pathConverter *PathConverter
@@ -21,7 +21,7 @@ type FileCache struct {
 
 func NewFileCache(dataDir string, pathConverter *PathConverter) *FileCache {
 	return &FileCache{
-		cache:         map[string]fs.FileInfo{},
+		cache:         map[string]FileDescription{},
 		mutex:         sync.Mutex{},
 		dataDir:       dataDir,
 		pathConverter: pathConverter,
@@ -40,7 +40,7 @@ func (f *FileCache) Reset() {
 		}
 	}()
 
-	newFileCache := map[string]fs.FileInfo{}
+	newFileCache := map[string]FileDescription{}
 	f.cacheFolder(newFileCache, "/")
 
 	// just doing this at once should avoid excessive lock/unlock
@@ -50,7 +50,7 @@ func (f *FileCache) Reset() {
 
 // recursively initalizes the cache
 // we do not use filepath.Walk to avoid a mess with relative / absolute paths
-func (f *FileCache) cacheFolder(cache map[string]fs.FileInfo, path string) {
+func (f *FileCache) cacheFolder(cache map[string]FileDescription, path string) {
 	rootPath, err := f.pathConverter.GetAbsolutePath(path)
 	if err != nil {
 		log.Panicf("Error while refreshing cache: %s", err.Error())
@@ -68,7 +68,7 @@ func (f *FileCache) cacheFolder(cache map[string]fs.FileInfo, path string) {
 				return err
 			}
 
-			cache[relativePath] = fileInfo
+			cache[relativePath] = fileInfoToFileDescription(fileInfo, relativePath)
 			return nil
 		},
 	)
@@ -94,14 +94,11 @@ func (f *FileCache) WatchDataDir() {
 	}
 }
 
-func (f *FileCache) Iterate() iter.Seq2[string, fs.FileInfo] {
+func (f *FileCache) Iterate() iter.Seq2[string, FileDescription] {
 	return maps.All(f.cache)
 }
 
 func (f *FileCache) Get(path string) (FileDescription, bool) {
-	fileInfo, ok := f.cache[path]
-	if !ok {
-		return FileDescription{}, ok
-	}
-	return fileInfoToFileDescription(fileInfo, path), ok
+	fileDescription, ok := f.cache[path]
+	return fileDescription, ok
 }
