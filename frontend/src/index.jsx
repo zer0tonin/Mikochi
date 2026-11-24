@@ -10,8 +10,8 @@ import "./index.css";
 
 export function App() {
   if (
-    window.__MIKOCHI_CONFIG__ != null &&
-    "pathPrefix" in window.__MIKOCHI_CONFIG__
+    window.__MIKOCHI_CONFIG__ == null ||
+    !("pathPrefix" in window.__MIKOCHI_CONFIG__)
   ) {
     window.__MIKOCHI_CONFIG__ = {
       pathPrefix: "/",
