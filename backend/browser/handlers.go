@@ -62,7 +62,7 @@ func (b *BrowserHandlers) StreamFile(c *gin.Context) {
 	if fileDescription.IsDir {
 		c.Header(
 			"Content-Disposition",
-			fmt.Sprintf("attachment; filename=%s%s", relativePath[1:len(relativePath)-1], b.compressor.GetFileExtension()),
+			fmt.Sprintf("attachment; filename=%s%s", relativePath[1:len(relativePath)], b.compressor.GetFileExtension()),
 		)
 		err = b.compressor.CompressDirectory(absolutePath, c.Writer)
 		if err != nil {
